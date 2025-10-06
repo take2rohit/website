@@ -264,8 +264,8 @@ For advanced customization, search for "LIQUID GLASS" comments in the code.
             top: 2rem;
             left: 50%;
             transform: translateX(-50%);
-            width: calc(100% - 4rem);
-            max-width: 1100px;
+            width: calc(100% - 2rem);
+            max-width: 1400px;
             height: 80px;
             border-radius: 28px;
             isolation: isolate;
@@ -416,9 +416,9 @@ For advanced customization, search for "LIQUID GLASS" comments in the code.
         }
 
         .container {
-            max-width: 1100px;
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 7rem 2rem 2rem;
+            padding: 7rem 1rem 2rem;
             position: relative;
             z-index: 1;
         }
@@ -428,7 +428,7 @@ For advanced customization, search for "LIQUID GLASS" comments in the code.
         }
 
         .about-container {
-            max-width: 1100px;
+            max-width: 1400px;
             margin: 0 auto;
         }
 
@@ -557,19 +557,21 @@ For advanced customization, search for "LIQUID GLASS" comments in the code.
         }
 
         .social-links {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
+            display: flex;
+            gap: 0.75rem;
             width: 100%;
+            justify-content: center;
+            flex-wrap: wrap;
         }
 
         .social-btn {
-            padding: 1rem;
+            padding: 0;
             font-size: 0;
             white-space: nowrap;
             margin-top: 0;
-            width: 100%;
-            height: 70px;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -578,15 +580,19 @@ For advanced customization, search for "LIQUID GLASS" comments in the code.
         }
 
         .social-btn svg {
-            width: 36px;
-            height: 36px;
+            width: 22px;
+            height: 22px;
             fill: white;
             filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
             transition: all 0.3s ease;
         }
 
+        .social-btn:hover {
+            transform: scale(1.1) translateY(-2px);
+        }
+
         .social-btn:hover svg {
-            transform: scale(1.15) rotate(5deg);
+            transform: scale(1.1);
             filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.4));
         }
 
@@ -659,6 +665,7 @@ For advanced customization, search for "LIQUID GLASS" comments in the code.
         .section {
             margin-bottom: 5rem;
             position: relative;
+            scroll-margin-top: 140px;
         }
 
         .section::before {
@@ -1199,6 +1206,20 @@ For advanced customization, search for "LIQUID GLASS" comments in the code.
         }
 
         @media (max-width: 968px) {
+            .social-links {
+                gap: 0.5rem;
+            }
+
+            .social-btn {
+                width: 42px;
+                height: 42px;
+            }
+
+            .social-btn svg {
+                width: 20px;
+                height: 20px;
+            }
+
             .about-card {
                 grid-template-columns: 1fr;
                 gap: 2rem;
@@ -1247,9 +1268,13 @@ For advanced customization, search for "LIQUID GLASS" comments in the code.
         @media (max-width: 768px) {
             .navbarGlass {
                 top: 1rem;
-                width: calc(100% - 2rem);
+                width: calc(100% - 1rem);
                 height: auto;
                 min-height: 60px;
+            }
+
+            .container {
+                padding: 7rem 0.75rem 2rem;
             }
 
             .navbarContent {
@@ -1335,9 +1360,6 @@ For advanced customization, search for "LIQUID GLASS" comments in the code.
                 </li>
                 <li>
                     <button data-section="publications" class="nav-item">Publications</button>
-                </li>
-                <li>
-                    <button data-section="skills" class="nav-item">Skills</button>
                 </li>
             </ul>
         </div>
@@ -2109,7 +2131,7 @@ For advanced customization, search for "LIQUID GLASS" comments in the code.
                 
                 // Handle bottom of page - always show last section
                 if (scrollY + windowHeight >= documentHeight - 100) {
-                    return sections[sections.length - 1]?.id || 'skills';
+                    return sections[sections.length - 1]?.id || 'publications';
                 }
                 
                 // Find section that occupies most of the viewport
@@ -2146,10 +2168,10 @@ For advanced customization, search for "LIQUID GLASS" comments in the code.
                 if (!targetSection) return true; // If section doesn't exist, consider reached
                 
                 const rect = targetSection.getBoundingClientRect();
-                const navbarHeight = 150; // Account for navbar
+                const targetOffset = 140; // Match scroll offset
                 
-                // Section is considered "reached" if it's near the top of viewport
-                return rect.top <= navbarHeight && rect.top >= -100;
+                // Section is considered "reached" if it's at the correct offset position
+                return Math.abs(rect.top - targetOffset) < 50;
             }
 
             // Set initial bubble position
@@ -2179,12 +2201,16 @@ For advanced customization, search for "LIQUID GLASS" comments in the code.
                     // Update bubble immediately
                     updateBubble(this, false);
                     
-                    // Smooth scroll to section
+                    // Smooth scroll to section with offset for navbar
                     const section = document.getElementById(sectionId);
                     if (section) {
-                        section.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'start'
+                        const navbarHeight = 140; // Navbar height + desired spacing
+                        const elementPosition = section.getBoundingClientRect().top;
+                        const offsetPosition = elementPosition + window.pageYOffset - navbarHeight;
+
+                        window.scrollTo({
+                            top: offsetPosition,
+                            behavior: 'smooth'
                         });
                     }
                     
