@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rohit Lal • Research Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/+U8vz0Uv6fRvW0Qb6Y9v8w6jzrWeNseyX2VINqbodZ4x0drfac+4cP2nZCk8w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
+</head>
+<body>
+  <div class="aurora"></div>
+  <header class="hero" id="top">
+    <nav class="nav">
+      <div class="logo">RL</div>
+      <button class="nav-toggle" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links">
+        <li><a href="#bio">Bio</a></li>
+        <li><a href="#news">News</a></li>
+        <li><a href="#experience">Experience</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#publications">Publications</a></li>
+        <li><a href="#achievements">Achievements</a></li>
+        <li><a href="#courses">Courses & Skills</a></li>
+      </ul>
+    </nav>
+    <div class="hero-content" id="bio">
+      <div class="hero-card glass" id="bio-card"></div>
+      <div class="map-card glass" id="map-card"></div>
+    </div>
+  </header>
+
+  <main>
+    <section class="section" id="news">
+      <div class="section-header">
+        <h2>News</h2>
+        <p class="section-subtitle">Latest highlights and archive</p>
+      </div>
+      <div class="news-wrapper">
+        <div class="glass news-column" id="news-latest">
+          <h3>Latest</h3>
+          <div class="chip-row" id="news-filters"></div>
+          <div class="card-list" id="news-latest-list"></div>
+        </div>
+        <div class="glass news-column" id="news-archive">
+          <h3>Archive</h3>
+          <details open>
+            <summary>View previous updates</summary>
+            <div class="card-list" id="news-archive-list"></div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="experience">
+      <div class="section-header">
+        <h2>Experience</h2>
+        <p class="section-subtitle">A timeline of my research and leadership journey</p>
+      </div>
+      <div class="timeline" id="experience-timeline"></div>
+    </section>
+
+    <section class="section" id="projects">
+      <div class="section-header">
+        <h2>Projects</h2>
+        <p class="section-subtitle">Selected explorations in AI, robotics, and design</p>
+      </div>
+      <div class="grid" id="projects-grid"></div>
+    </section>
+
+    <section class="section" id="publications">
+      <div class="section-header">
+        <h2>Publications</h2>
+        <p class="section-subtitle">Peer-reviewed research, workshops, and journals</p>
+      </div>
+      <div class="stack" id="publications-stack"></div>
+    </section>
+
+    <section class="section" id="achievements">
+      <div class="section-header">
+        <h2>Achievements &amp; Patents</h2>
+        <p class="section-subtitle">Recognitions, awards, and intellectual property</p>
+      </div>
+      <div class="grid" id="achievements-grid"></div>
+    </section>
+
+    <section class="section" id="courses">
+      <div class="section-header">
+        <h2>Courses &amp; Skills</h2>
+        <p class="section-subtitle">Continuous learning and technical toolkit</p>
+      </div>
+      <div class="courses-skills">
+        <div class="glass" id="courses-list"></div>
+        <div class="glass" id="skills-cloud"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>Crafted with curiosity • © <span id="footer-year"></span> Rohit Lal</p>
+    <a class="back-to-top" href="#top" aria-label="Back to top">
+      <i class="fa-solid fa-arrow-up"></i>
+    </a>
+  </footer>
+
+  <script src="assets/js/main.js" type="module"></script>
+</body>
+</html>
