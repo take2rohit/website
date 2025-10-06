@@ -1,0 +1,1669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rohit Lal - Research Portfolio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 100%;
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+
+        /* Smooth scrolling with momentum */
+        * {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Parallax background layers */
+        .parallax-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .parallax-layer-1 {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 300vh;
+            background-image: url('./bg.jpeg');
+            background-size: cover;
+            background-position: center bottom;
+            background-repeat: no-repeat;
+        }
+
+        .parallax-layer-2 {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 300vh;
+            background: radial-gradient(circle at 30% 50%, rgba(120, 119, 198, 0.2) 0%, transparent 60%),
+                radial-gradient(circle at 70% 80%, rgba(255, 119, 198, 0.15) 0%, transparent 60%);
+        }
+
+        .parallax-layer-3 {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 300vh;
+            background: radial-gradient(circle at 80% 20%, rgba(120, 219, 255, 0.15) 0%, transparent 50%);
+        }
+
+        /* Remove parallax card effects */
+        .parallax-card {
+            /* No animations on scroll */
+        }
+
+        .glass {
+            position: relative;
+            background: rgba(255, 255, 255, 0.15) !important;
+            backdrop-filter: blur(15px) saturate(150%);
+            -webkit-backdrop-filter: blur(15px) saturate(150%);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            border-radius: 2rem;
+            padding: 1.25rem;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.2), inset 0 4px 20px rgba(255, 255, 255, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .glass::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 2rem;
+            box-shadow: inset -10px -8px 0px -11px rgba(255, 255, 255, 1),
+                inset 0px -9px 0px -8px rgba(255, 255, 255, 1);
+            opacity: 0.4;
+            z-index: -1;
+            filter: drop-shadow(10px 4px 6px black) brightness(115%);
+            pointer-events: none;
+        }
+
+        .glass:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(31, 38, 135, 0.3);
+        }
+
+        nav {
+            position: fixed;
+            top: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            max-width: 1100px;
+            width: calc(100% - 4rem);
+            animation: slideDown 0.6s ease forwards;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        .nav-glass-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+            background: transparent;
+            border-radius: 2rem;
+            overflow: hidden;
+            box-shadow: 0 6px 6px rgba(0, 0, 0, 0.2), 0 0 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 2.2);
+        }
+
+        .nav-glass-container:hover {
+            box-shadow: 0 8px 8px rgba(0, 0, 0, 0.25), 0 0 24px rgba(0, 0, 0, 0.15);
+        }
+
+        .nav-glass-container:hover .nav-glass-specular {
+            box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.85),
+                inset 0 0 8px rgba(255, 255, 255, 0.85);
+        }
+
+        .nav-glass-filter,
+        .nav-glass-overlay,
+        .nav-glass-specular {
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            pointer-events: none;
+        }
+
+        .nav-glass-filter {
+            z-index: 0;
+            backdrop-filter: blur(10px) saturate(150%);
+            -webkit-backdrop-filter: blur(10px) saturate(150%);
+        }
+
+        .nav-glass-overlay {
+            z-index: 1;
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .nav-glass-specular {
+            z-index: 2;
+            box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.75),
+                inset 0 0 5px rgba(255, 255, 255, 0.75);
+            transition: box-shadow 0.3s ease;
+        }
+
+        .nav-content {
+            position: relative;
+            z-index: 3;
+            display: flex;
+            flex: 1 1 auto;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 2rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            animation: fadeIn 0.5s ease 0.2s forwards;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            list-style: none;
+        }
+
+        .nav-links li {
+            opacity: 0;
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        .nav-links li:nth-child(1) { animation-delay: 0.3s; }
+        .nav-links li:nth-child(2) { animation-delay: 0.4s; }
+        .nav-links li:nth-child(3) { animation-delay: 0.5s; }
+        .nav-links li:nth-child(4) { animation-delay: 0.6s; }
+        .nav-links li:nth-child(5) { animation-delay: 0.7s; }
+        .nav-links li:nth-child(6) { animation-delay: 0.8s; }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.75rem;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+            position: relative;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-links a:hover {
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+            box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.6),
+                0 2px 10px rgba(0, 0, 0, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .nav-links a:active {
+            transform: translateY(0);
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 7rem 2rem 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero {
+            padding: 2rem 0 3rem;
+        }
+
+        .about-container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .about-card {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 3rem;
+            padding: 2.5rem;
+            align-items: start;
+        }
+
+        .about-left {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding-right: 2rem;
+            border-right: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .hero-avatar {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            margin-bottom: 1.5rem;
+            border: 4px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            object-fit: cover;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .hero-name {
+            font-size: 2rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+
+        .hero-expertise {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 1.5rem;
+        }
+
+        .about-right {
+            display: flex;
+            flex-direction: column;
+            padding-left: 1rem;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.9375rem;
+            margin-bottom: 0.9375rem;
+        }
+
+        .icon {
+            position: relative;
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 0.625rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .icon::after {
+            border-radius: 0.625rem;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: white;
+            margin: 0;
+        }
+
+        .card-subtitle {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin: 0.3125rem 0 0 0;
+        }
+
+        .social-links {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.8rem;
+            width: 100%;
+        }
+
+        .social-btn {
+            padding: 0.75rem 1rem;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            margin-top: 0;
+        }
+
+        .about-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .about-content {
+            color: white;
+            line-height: 1.8;
+            font-size: 1.05rem;
+        }
+
+        .about-content p {
+            margin-bottom: 1rem;
+        }
+
+        .about-content p:last-child {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .about-content strong {
+            color: rgba(255, 255, 255, 1);
+        }
+
+        .about-content a {
+            color: rgba(255, 255, 255, 0.95);
+            text-decoration: underline;
+            transition: color 0.3s;
+        }
+
+        .about-content a:hover {
+            color: white;
+        }
+
+        .section {
+            margin-bottom: 5rem;
+            position: relative;
+        }
+
+        .section::before {
+            content: '';
+            position: absolute;
+            top: -2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            opacity: 0.5;
+        }
+
+        .section-container {
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .section-icon {
+            font-size: 3.5rem;
+            line-height: 1;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: white;
+            margin: 0;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .subcard {
+            background: rgba(255, 255, 255, 0.08) !important;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .subcard:hover {
+            background: rgba(255, 255, 255, 0.12) !important;
+            transform: translateY(-3px) scale(1.02) !important;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .experience-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card-content {
+            color: white;
+            line-height: 1.6;
+        }
+
+        .card-content a {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: underline;
+        }
+
+        .news-date {
+            display: inline-block;
+            padding: 0.4rem 0.9rem;
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            border-radius: 0.5rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+            color: white;
+        }
+
+        .experience-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .experience-card:hover {
+            transform: translateY(-8px) scale(1.02) !important;
+            box-shadow: 0 16px 48px rgba(31, 38, 135, 0.35) !important;
+        }
+
+        .experience-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .experience-icon {
+            font-size: 2rem;
+            min-width: 2.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .experience-card:hover .experience-icon {
+            transform: scale(1.2) rotate(5deg);
+        }
+
+        .experience-info {
+            flex: 1;
+        }
+
+        .experience-date {
+            display: inline-block;
+            padding: 0.4rem 0.9rem;
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            border-radius: 0.5rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .experience-card:hover .experience-date {
+            background: rgba(255, 255, 255, 0.35);
+            transform: scale(1.05);
+        }
+
+        .experience-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 0.4rem;
+        }
+
+        .experience-company {
+            color: rgba(255, 255, 255, 0.85);
+            margin-bottom: 0.8rem;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .experience-description {
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.7;
+            font-size: 0.98rem;
+        }
+
+        /* Glass Button Styles */
+        .btn-glass, .social-btn {
+            all: unset;
+            cursor: pointer;
+            position: relative;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+            pointer-events: auto;
+            overflow: hidden;
+            z-index: 3;
+            background: linear-gradient(
+                -75deg,
+                rgba(255, 255, 255, 0.12),
+                rgba(255, 255, 255, 0.32),
+                rgba(255, 255, 255, 0.12)
+            );
+            border-radius: 999vw;
+            box-shadow: inset 0 0.125rem 0.125rem rgba(0, 0, 0, 0.08),
+                inset 0 -0.125rem 0.125rem rgba(255, 255, 255, 0.65),
+                0 0.25rem 0.25rem -0.125rem rgba(0, 0, 0, 0.25),
+                0 0 0 0.15rem inset rgba(255, 255, 255, 0.35),
+                0 0.125rem 0.5rem rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(6px) saturate(120%);
+            -webkit-backdrop-filter: blur(6px) saturate(120%);
+            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            color: white;
+            font-weight: 500;
+            text-decoration: none;
+            font-size: 0.95rem;
+            text-shadow: 0 0.125rem 0.3rem rgba(0, 0, 0, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.45);
+            margin-top: 0.9375rem;
+        }
+
+        .btn-glass:hover, .social-btn:hover {
+            transform: scale(0.97) translateY(-3px);
+            backdrop-filter: blur(8px) saturate(130%);
+            -webkit-backdrop-filter: blur(8px) saturate(130%);
+            box-shadow: inset 0 0.125rem 0.125rem rgba(0, 0, 0, 0.05),
+                inset 0 -0.125rem 0.15rem rgba(255, 255, 255, 0.75),
+                0 0.4rem 0.35rem -0.125rem rgba(0, 0, 0, 0.3),
+                0 0 0 0.2rem inset rgba(255, 255, 255, 0.45),
+                0 0.125rem 0.75rem rgba(0, 0, 0, 0.2);
+            background: linear-gradient(
+                -75deg,
+                rgba(255, 255, 255, 0.18),
+                rgba(255, 255, 255, 0.38),
+                rgba(255, 255, 255, 0.18)
+            );
+            border-color: rgba(255, 255, 255, 0.55);
+        }
+
+        .btn-glass:active, .social-btn:active {
+            transform: scale(0.95) translateY(0);
+            backdrop-filter: blur(6px) saturate(110%);
+            -webkit-backdrop-filter: blur(6px) saturate(110%);
+            box-shadow: inset 0 0.15rem 0.2rem rgba(0, 0, 0, 0.15),
+                inset 0 -0.1rem 0.125rem rgba(255, 255, 255, 0.5),
+                0 0.1rem 0.15rem -0.125rem rgba(0, 0, 0, 0.2),
+                inset 0 0.3rem 0.3rem 0 rgba(0, 0, 0, 0.12),
+                0 0 0 0.1rem inset rgba(255, 255, 255, 0.25);
+        }
+
+        /* Glass button specular highlight */
+        .btn-glass::after, .social-btn::after {
+            content: "";
+            display: block;
+            position: absolute;
+            z-index: 3;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            box-sizing: border-box;
+            border-radius: 999vw;
+            background: linear-gradient(
+                -45deg,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0.6) 45% 50%,
+                rgba(255, 255, 255, 0) 55%
+            );
+            mix-blend-mode: screen;
+            pointer-events: none;
+            background-size: 200% 200%;
+            background-position: 0% 50%;
+            background-repeat: no-repeat;
+            transition: background-position 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .btn-glass:hover::after, .social-btn:hover::after {
+            background-position: 100% 50%;
+        }
+
+        .btn-glass:active::after, .social-btn:active::after {
+            background-position: 150% 15%;
+        }
+
+        /* Ensure text and icons are above the highlight */
+        .btn-glass > *, .social-btn > * {
+            position: relative;
+            z-index: 4;
+        }
+
+        /* Touch device optimizations */
+        @media (hover: none) and (pointer: coarse) {
+            .btn-glass:hover::after, .social-btn:hover::after,
+            .btn-glass:active::after, .social-btn:active::after {
+                background-position: 50% 50%;
+            }
+            
+            .btn-glass:hover, .social-btn:hover {
+                transform: scale(0.97) translateY(-2px);
+            }
+            
+            .btn-glass:active, .social-btn:active {
+                transform: scale(0.93);
+            }
+        }
+
+        /* Button press animation */
+        @keyframes buttonPress {
+            0% { transform: scale(1); }
+            50% { transform: scale(0.95); }
+            100% { transform: scale(1); }
+        }
+
+        /* Subtle button entrance animation */
+        .btn-glass, .social-btn {
+            animation: none;
+        }
+
+        @keyframes buttonGlow {
+            0%, 100% { 
+                box-shadow: inset 0 0.125rem 0.125rem rgba(0, 0, 0, 0.08),
+                    inset 0 -0.125rem 0.125rem rgba(255, 255, 255, 0.65),
+                    0 0.25rem 0.25rem -0.125rem rgba(0, 0, 0, 0.25),
+                    0 0 0 0.15rem inset rgba(255, 255, 255, 0.35),
+                    0 0.125rem 0.5rem rgba(0, 0, 0, 0.15);
+            }
+            50% { 
+                box-shadow: inset 0 0.125rem 0.125rem rgba(0, 0, 0, 0.08),
+                    inset 0 -0.125rem 0.125rem rgba(255, 255, 255, 0.7),
+                    0 0.25rem 0.25rem -0.125rem rgba(0, 0, 0, 0.25),
+                    0 0 0 0.2rem inset rgba(255, 255, 255, 0.4),
+                    0 0.125rem 0.6rem rgba(255, 255, 255, 0.2);
+            }
+        }
+
+        .project-links {
+            display: flex;
+            gap: 0.8rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .project-links .btn-glass {
+            margin-top: 0;
+        }
+
+        .pub-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+
+        .pub-authors {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 0.3rem;
+            font-size: 0.95rem;
+        }
+
+        .pub-venue {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 0.5rem;
+            color: white;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            font-size: 0.85rem;
+        }
+
+        .pub-links {
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+        .pub-links .btn-glass {
+            margin-top: 0;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .skill-card {
+            text-align: center;
+            padding: 1.5rem 1rem;
+        }
+
+        .skill-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .skill-name {
+            color: white;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .course-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 0.3rem;
+        }
+
+        .course-source {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+        }
+
+        .patent-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+
+        .patent-number {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 0.5rem;
+            color: white;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 0.85rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 3rem 0;
+            color: rgba(255, 255, 255, 0.9);
+            position: relative;
+            z-index: 1;
+        }
+
+        @media (max-width: 968px) {
+            .about-card {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+                text-align: center;
+            }
+
+            .about-left {
+                margin: 0 auto;
+                padding-right: 0;
+                border-right: none;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+                padding-bottom: 2rem;
+            }
+
+            .about-right {
+                align-items: center;
+            }
+
+            .about-title {
+                justify-content: center;
+            }
+
+            .about-content {
+                text-align: left;
+            }
+
+            .section-container {
+                padding: 1.5rem;
+            }
+
+            .section-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+
+            .section-icon {
+                font-size: 2.5rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                top: 1rem;
+                width: calc(100% - 2rem);
+            }
+
+            .nav-content {
+                padding: 0.75rem 1.5rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .logo {
+                font-size: 1.2rem;
+            }
+
+            .hero-name {
+                font-size: 1.75rem;
+            }
+
+            .hero-avatar {
+                width: 160px;
+                height: 160px;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .experience-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .social-links {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Parallax Background -->
+    <div class="parallax-bg">
+        <div class="parallax-layer-1"></div>
+        <div class="parallax-layer-2"></div>
+        <div class="parallax-layer-3"></div>
+    </div>
+
+    <nav>
+        <div class="nav-glass-container">
+            <div class="nav-glass-filter"></div>
+            <div class="nav-glass-overlay"></div>
+            <div class="nav-glass-specular"></div>
+            <div class="nav-content">
+                <div class="logo">Rohit Lal</div>
+                <ul class="nav-links">
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#news">News</a></li>
+                    <li><a href="#experience">Experience</a></li>
+                    <li><a href="#projects">Projects</a></li>
+                    <li><a href="#publications">Publications</a></li>
+                    <li><a href="#skills">Skills</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- SVG Filter for liquid glass effect -->
+    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+        <filter id="lensFilter" x="0%" y="0%" width="100%" height="100%" filterUnits="objectBoundingBox">
+            <feComponentTransfer in="SourceAlpha" result="alpha">
+                <feFuncA type="identity" />
+            </feComponentTransfer>
+            <feGaussianBlur in="alpha" stdDeviation="50" result="blur" />
+            <feDisplacementMap in="SourceGraphic" in2="blur" scale="50" xChannelSelector="A" yChannelSelector="A" />
+        </filter>
+    </svg>
+
+    <div class="container">
+        <section id="about" class="hero">
+            <div class="about-container">
+                <div class="about-card glass">
+                    <div class="about-left">
+                        <div class="hero-avatar"></div>
+                        <h1 class="hero-name">Rohit Lal</h1>
+                        <p class="hero-expertise">Computer Vision | Generative AI | NLP</p>
+                        <div class="social-links">
+                            <a href="https://github.com/take2rohit/" class="social-btn" target="_blank">
+                                🔗 GitHub
+                            </a>
+                            <a href="https://in.linkedin.com/in/rohit-lal" class="social-btn" target="_blank">
+                                💼 LinkedIn
+                            </a>
+                            <a href="https://scholar.google.com/citations?user=q2nc3QoAAAAJ&hl=en" class="social-btn" target="_blank">
+                                🎓 Scholar
+                            </a>
+                            <a href="mailto:take2rohit@gmail.com" class="social-btn">
+                                📧 Email
+                            </a>
+                        </div>
+                    </div>
+                    <div class="about-right">
+                        <h2 class="about-title">
+                            👨‍💻 About Me
+                        </h2>
+                        <div class="about-content">
+                            <p><strong>Computer Scientist at NASA IMPACT</strong></p>
+                            <p>I am currently a Computer Scientist at <a href="https://www.earthdata.nasa.gov/esds/impact" target="_blank">NASA IMPACT</a>, where my research focuses on building and scaling AI Foundation Models for Science. I completed my MS by Research under the supervision of Dr. Amit K. Roy Chowdhury at University of California-Riverside, where my thesis explored 3D human pose estimation for the IARPA BRIAR project.</p>
+                            <p>Prior to this, I worked at IISc Bangalore's Visual Computing Lab, focusing on Unsupervised Domain Adaptation and Adversarial Vulnerability in Computer Vision algorithms.</p>
+                            <p>Outside of my research, I'm passionate about traveling, hiking, photography, and video editing—and I'm always up for a game of table tennis! 🏓</p>
+                            <p><strong>📍 Location:</strong> National Space Science and Technology Center, Huntsville, AL-35805</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="news" class="section">
+            <div class="section-container glass parallax-card">
+                <div class="section-header">
+                    <div class="section-icon">📰</div>
+                    <h2 class="section-title">Latest News</h2>
+                </div>
+                <div class="grid">
+                    <div class="subcard glass">
+                        <span class="news-date">Aug '25</span>
+                        <div class="card-content">
+                            Released <strong>Surya</strong> - Foundation model for HelioPhysics. Featured by <a href="https://science.data.nasa.gov/features-events/inside-surya-solar-ai-model" target="_blank">NASA</a> and <a href="https://arxiv.org/abs/2508.14112" target="_blank">ArXiv</a>.
+                        </div>
+                    </div>
+                    <div class="subcard glass">
+                        <span class="news-date">Jul '25</span>
+                        <div class="card-content">
+                            Paper on <strong>Layer-wise Alignment</strong> accepted as SPOTLIGHT at ICML 2025 (Top 2.6%)! 🎉
+                        </div>
+                    </div>
+                    <div class="subcard glass">
+                        <span class="news-date">Jun '25</span>
+                        <div class="card-content">
+                            Paper <strong>VOccl3D</strong> accepted at ICCV 2025 on 3D Human Pose under occlusions.
+                        </div>
+                    </div>
+                    <div class="subcard glass">
+                        <span class="news-date">Apr '25</span>
+                        <div class="card-content">
+                            Serving as reviewer for CVPR 2025, ICLR 2025, and ICCV 2025. 📝
+                        </div>
+                    </div>
+                    <div class="subcard glass">
+                        <span class="news-date">Feb '25</span>
+                        <div class="card-content">
+                            Delivered oral presentation of <strong>STRIDE</strong> at WACV 2025.
+                        </div>
+                    </div>
+                    <div class="subcard glass">
+                        <span class="news-date">Sep '24</span>
+                        <div class="card-content">
+                            Released <strong>Prithvi WxC</strong> - AI model for weather and climate. Check out <a href="https://science.nasa.gov/open-science/ai-model-weather-climate/" target="_blank">NASA's announcement</a>.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="experience" class="section">
+            <div class="section-container glass parallax-card">
+                <div class="section-header">
+                    <div class="section-icon">💼</div>
+                    <h2 class="section-title">Experience</h2>
+                </div>
+                <div class="experience-grid">
+                    <div class="subcard glass experience-card">
+                    <div class="experience-header">
+                        <div class="experience-icon">🚀</div>
+                        <div class="experience-info">
+                            <span class="experience-date">Jul 2021 - Current</span>
+                            <h3 class="experience-title">Project Assistant, Visual Computing Lab</h3>
+                            <div class="experience-company">Indian Institute of Science (IISc), Bangalore</div>
+                        </div>
+                    </div>
+                    <div class="experience-description">
+                        Working at Visual Computing Lab, Department of CDS, conducting research in unsupervised learning methodologies and domain adaptation under Dr. Anirban Chakraborty.
+                    </div>
+                </div>
+
+                <div class="subcard glass experience-card">
+                    <div class="experience-header">
+                        <div class="experience-icon">🛡️</div>
+                        <div class="experience-info">
+                            <span class="experience-date">Jul 2020 - Sept 2020</span>
+                            <h3 class="experience-title">Computer Vision Research Intern</h3>
+                            <div class="experience-company">Defence Research Development Organisation (DRDO)</div>
+                        </div>
+                    </div>
+                    <div class="experience-description">
+                        Collaborated with senior scientists at CAIR Lab on building object detection and tracking pipelines using drone cameras at 100m altitude.
+                    </div>
+                </div>
+
+                <div class="subcard glass experience-card">
+                    <div class="experience-header">
+                        <div class="experience-icon">🎓</div>
+                        <div class="experience-info">
+                            <span class="experience-date">Apr 2020 - Nov 2020</span>
+                            <h3 class="experience-title">Deep Learning Research Intern</h3>
+                            <div class="experience-company">National University of Singapore</div>
+                        </div>
+                    </div>
+                    <div class="experience-description">
+                        Worked under Prof. Hongliang Ren at Medical Mechatronics Lab on tracking gaits generated by Origami robots using CV and deep learning for 6D pose estimation.
+                    </div>
+                </div>
+
+                <div class="subcard glass experience-card">
+                    <div class="experience-header">
+                        <div class="experience-icon">⚡</div>
+                        <div class="experience-info">
+                            <span class="experience-date">Jul 2019 - Jul 2020</span>
+                            <h3 class="experience-title">Chairman</h3>
+                            <div class="experience-company">IEEE VNIT Student Branch</div>
+                        </div>
+                    </div>
+                    <div class="experience-description">
+                        Led the council responsible for managing the technical society and involved in decision-making for several initiatives.
+                    </div>
+                </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="projects" class="section">
+            <div class="section-container glass parallax-card">
+                <div class="section-header">
+                    <div class="section-icon">🚀</div>
+                    <h2 class="section-title">Featured Projects</h2>
+                </div>
+                <div class="grid">
+                    <div class="subcard glass">
+                    <div class="card-header">
+                        <div class="icon glass">🤖</div>
+                        <div>
+                            <h3 class="card-title">Person Follower Robot</h3>
+                            <p class="card-subtitle">TurtleBot-2 with ROS</p>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        Multiplexed detection and tracking pipeline using stereo camera in real-time with Robot Operating System integration.
+                    </div>
+                    <div class="project-links">
+                        <a href="https://www.youtube.com/watch?v=XnrbU1050ls" class="btn-glass" target="_blank">▶ Video</a>
+                        <a href="https://github.com/khush3/person_following_bot" class="btn-glass" target="_blank">💻 Code</a>
+                    </div>
+                </div>
+
+                <div class="subcard glass">
+                    <div class="card-header">
+                        <div class="icon glass">🚗</div>
+                        <div>
+                            <h3 class="card-title">License Plate Recognition</h3>
+                            <p class="card-subtitle">Indian ALPR System</p>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        Robust registration plate detection with car model, speed, and face extraction integrated with IoT database.
+                    </div>
+                    <div class="project-links">
+                        <a href="https://youtu.be/Y-EuzsubixI" class="btn-glass" target="_blank">▶ Video</a>
+                        <a href="https://github.com/conspicio-ai/alpr" class="btn-glass" target="_blank">💻 Code</a>
+                    </div>
+                </div>
+
+                <div class="subcard glass">
+                    <div class="card-header">
+                        <div class="icon glass">🎮</div>
+                        <div>
+                            <h3 class="card-title">Taxi v3 OpenAI Gym</h3>
+                            <p class="card-subtitle">Reinforcement Learning</p>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        Q-Learning solution consistently ranking in top-5 on OpenAI Gym Leaderboard for the Taxi-v3 environment.
+                    </div>
+                    <div class="project-links">
+                        <a href="https://github.com/take2rohit/taxi_v3_openai" class="btn-glass" target="_blank">💻 Code</a>
+                    </div>
+                </div>
+
+                <div class="subcard glass">
+                    <div class="card-header">
+                        <div class="icon glass">📷</div>
+                        <div>
+                            <h3 class="card-title">Self-Balancing Platform</h3>
+                            <p class="card-subtitle">Camera Gimbal System</p>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        Control system for camera gimbal stabilization used in airborne systems for target tracking and aerial photography.
+                    </div>
+                    <div class="project-links">
+                        <a href="https://www.youtube.com/watch?v=1D1ZQ6mKg0k" class="btn-glass" target="_blank">▶ Video</a>
+                        <a href="https://github.com/take2rohit/self-balancing-platform" class="btn-glass" target="_blank">💻 Code</a>
+                    </div>
+                </div>
+
+                <div class="subcard glass">
+                    <div class="card-header">
+                        <div class="icon glass">📝</div>
+                        <div>
+                            <h3 class="card-title">Word Embeddings</h3>
+                            <p class="card-subtitle">NLP with Word2Vec</p>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        Reimplementation of Word2Vec research paper with SkipGram and N-Gram models for linguistic context mapping.
+                    </div>
+                    <div class="project-links">
+                        <a href="https://github.com/take2rohit/NLP_word_embedding" class="btn-glass" target="_blank">💻 Code</a>
+                    </div>
+                </div>
+
+                <div class="subcard glass">
+                    <div class="card-header">
+                        <div class="icon glass">✍️</div>
+                        <div>
+                            <h3 class="card-title">Digit Recognition</h3>
+                            <p class="card-subtitle">MNIST from Scratch</p>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        Real-time MNIST digit classifier coded from scratch using Numpy. Mentored summer project at IvLabs, VNIT.
+                    </div>
+                    <div class="project-links">
+                        <a href="https://www.youtube.com/watch?v=SCYhVTUIdoo" class="btn-glass" target="_blank">▶ Video</a>
+                        <a href="https://github.com/GlazeDonuts/Summer-Project-2019" class="btn-glass" target="_blank">💻 Code</a>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="publications" class="section">
+            <div class="section-container glass parallax-card">
+                <div class="section-header">
+                    <div class="section-icon">📚</div>
+                    <h2 class="section-title">Publications</h2>
+                </div>
+                <div class="grid">
+                    <div class="subcard glass">
+                    <div class="pub-title">Prithvi WxC - Foundation model for weather and climate</div>
+                    <div class="pub-authors">J Schmude, S Roy, ..., Rohit Lal, ...</div>
+                    <span class="pub-venue">arXiv preprint</span>
+                    <div class="pub-links">
+                        <a href="https://arxiv.org/abs/2409.13598" class="btn-glass" target="_blank">📄 Paper</a>
+                        <a href="https://github.com/NASA-IMPACT/Prithvi-WxC" class="btn-glass" target="_blank">💻 Code</a>
+                    </div>
+                </div>
+
+                <div class="subcard glass">
+                    <div class="pub-title">STRIDE - Occlusion-Robust 3D Pose Estimation</div>
+                    <div class="pub-authors">Rohit Lal, Saketh Bachu, Yash Garg, Arindam Dutta, Calvin-Khang Ta, Hannah D. Cruz</div>
+                    <span class="pub-venue">WACV 2025</span>
+                    <div class="pub-links">
+                        <a href="https://sites.google.com/view/sample-adv-trustworthy/" class="btn-glass" target="_blank">🌐 Project</a>
+                        <a href="https://github.com/take2rohit/STRIDE" class="btn-glass" target="_blank">💻 Code</a>
+                    </div>
+                </div>
+
+                <div class="subcard glass">
+                    <div class="pub-title">Prior-guided Source-free Domain Adaptation for Human Pose Estimation</div>
+                    <div class="pub-authors">DS Raychaudhuri, CK Ta, A Dutta, Rohit Lal, AK Roy-Chowdhury</div>
+                    <span class="pub-venue">ICCV 2023</span>
+                    <div class="pub-links">
+                        <a href="https://openaccess.thecvf.com/content/ICCV2023/papers/Raychaudhuri_Prior-guided_Source-free_Domain_Adaptation_for_Human_Pose_Estimation_ICCV_2023_paper.pdf" class="btn-glass" target="_blank">📄 Paper</a>
+                        <a href="https://github.com/driptaRC/POST" class="btn-glass" target="_blank">💻 Code</a>
+                    </div>
+                </div>
+
+                <div class="subcard glass">
+                    <div class="pub-title">CoNMix for Source-free Domain Adaptation</div>
+                    <div class="pub-authors">Vikash Kumar*, Rohit Lal*, Himanshu Patil, Anirban Chakraborty</div>
+                    <span class="pub-venue">WACV 2023</span>
+                    <div class="pub-links">
+                        <a href="https://sites.google.com/view/conmix-vcl" class="btn-glass" target="_blank">🌐 Project</a>
+                    </div>
+                </div>
+
+                <div class="subcard glass">
+                    <div class="pub-title">Holistic Approach to Measure Sample-level Adversarial Vulnerability</div>
+                    <div class="pub-authors">Gaurav Kumar Nayak*, Ruchit Rawal*, Rohit Lal*, Himanshu Patil, Anirban Chakraborty</div>
+                    <span class="pub-venue">HCIS Workshop, CVPR 2022</span>
+                    <div class="pub-links">
+                        <a href="https://sites.google.com/view/sample-adv-trustworthy/" class="btn-glass" target="_blank">🌐 Project</a>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="achievements" class="section">
+            <div class="section-container glass parallax-card">
+                <div class="section-header">
+                    <div class="section-icon">🏆</div>
+                    <h2 class="section-title">Patents & Achievements</h2>
+                </div>
+                <div class="grid">
+                    <div class="subcard glass">
+                    <div class="card-header">
+                        <div class="icon glass">📜</div>
+                        <div>
+                            <h3 class="card-title">Navigation System Patent</h3>
+                            <p class="card-subtitle">Dec 1, 2019</p>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <span class="patent-number">Patent No: 201921049473</span>
+                        <div style="margin-top: 0.5rem;">
+                            <strong>Authors:</strong> Pandya Karan, Kotecha Prakrut, Iyer V Aadhithya, Gaikwad Ravishankar, Lal Rohit, Agrawal Rishesh and Shital Chiddarwar
+                        </div>
+                    </div>
+                    <div class="project-links">
+                        <a href="https://www.youtube.com/watch?v=ePORvzIond8" class="btn-glass" target="_blank">▶ Video</a>
+                    </div>
+                </div>
+
+                <div class="subcard glass">
+                    <div class="card-header">
+                        <div class="icon glass">🏆</div>
+                        <div>
+                            <h3 class="card-title">Smart India Hackathon 2020</h3>
+                            <p class="card-subtitle">First Position</p>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        Won first position at Smart India Hackathon 2020 conducted by MHRD with cash prize of Rs. 1,00,000.
+                    </div>
+                    <div class="project-links">
+                        <a href="https://youtu.be/Y-EuzsubixI" class="btn-glass" target="_blank">▶ Video</a>
+                    </div>
+                </div>
+
+                <div class="subcard glass">
+                    <div class="card-header">
+                        <div class="icon glass">🥇</div>
+                        <div>
+                            <h3 class="card-title">AXIS'20 Competitions</h3>
+                            <p class="card-subtitle">Double Victory</p>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        Bagged two first positions in 'Techno.Docx' and 'Electroblitz' competitions at AXIS'20, VNIT - Central India's Largest Techfest.
+                    </div>
+                </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="skills" class="section">
+            <div class="section-container glass parallax-card">
+                <div class="section-header">
+                    <div class="section-icon">⚡</div>
+                    <h2 class="section-title">Skills & Technologies</h2>
+                </div>
+                <div class="skills-grid">
+                    <div class="skill-card subcard glass">
+                    <div class="skill-icon">🐍</div>
+                    <div class="skill-name">Python</div>
+                </div>
+                <div class="skill-card subcard glass">
+                    <div class="skill-icon">🔥</div>
+                    <div class="skill-name">PyTorch</div>
+                </div>
+                <div class="skill-card subcard glass">
+                    <div class="skill-icon">🧠</div>
+                    <div class="skill-name">TensorFlow</div>
+                </div>
+                <div class="skill-card subcard glass">
+                    <div class="skill-icon">👁️</div>
+                    <div class="skill-name">OpenCV</div>
+                </div>
+                <div class="skill-card subcard glass">
+                    <div class="skill-icon">⚙️</div>
+                    <div class="skill-name">C/C++</div>
+                </div>
+                <div class="skill-card subcard glass">
+                    <div class="skill-icon">📊</div>
+                    <div class="skill-name">MATLAB</div>
+                </div>
+                <div class="skill-card subcard glass">
+                    <div class="skill-icon">🎨</div>
+                    <div class="skill-name">Photoshop</div>
+                </div>
+                <div class="skill-card subcard glass">
+                    <div class="skill-icon">✏️</div>
+                    <div class="skill-name">Illustrator</div>
+                </div>
+                <div class="skill-card subcard glass">
+                    <div class="skill-icon">🔀</div>
+                    <div class="skill-name">GitHub</div>
+                </div>
+                <div class="skill-card subcard glass">
+                    <div class="skill-icon">📝</div>
+                    <div class="skill-name">LaTeX</div>
+                </div>
+                <div class="skill-card subcard glass">
+                    <div class="skill-icon">☁️</div>
+                    <div class="skill-name">GCP</div>
+                </div>
+                <div class="skill-card subcard glass">
+                    <div class="skill-icon">🤖</div>
+                    <div class="skill-name">Arduino</div>
+                </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="courses" class="section">
+            <div class="section-container glass parallax-card">
+                <div class="section-header">
+                    <div class="section-icon">🎓</div>
+                    <h2 class="section-title">Courses & Certifications</h2>
+                </div>
+                <div class="grid">
+                    <div class="subcard glass">
+                    <div class="card-header">
+                        <div class="icon glass">🎓</div>
+                        <div>
+                            <h3 class="card-title">Machine Learning</h3>
+                            <p class="card-subtitle">by Andrew Ng</p>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div class="course-source">Coursera</div>
+                    </div>
+                    <a href="https://www.coursera.org/account/accomplishments/verify/G9XX9CYSFJUY" class="btn-glass" target="_blank">📜 Certificate</a>
+                </div>
+
+                <div class="subcard glass">
+                    <div class="card-header">
+                        <div class="icon glass">🧠</div>
+                        <div>
+                            <h3 class="card-title">Neural Networks and Deep Learning</h3>
+                            <p class="card-subtitle">deeplearning.ai</p>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div class="course-source">Coursera</div>
+                    </div>
+                    <a href="https://www.coursera.org/account/accomplishments/verify/G9XX9CYSFJUY" class="btn-glass" target="_blank">📜 Certificate</a>
+                </div>
+
+                <div class="subcard glass">
+                    <div class="card-header">
+                        <div class="icon glass">⚡</div>
+                        <div>
+                            <h3 class="card-title">Improving Deep Neural Networks</h3>
+                            <p class="card-subtitle">Hyperparameter tuning</p>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div class="course-source">deeplearning.ai</div>
+                    </div>
+                    <a href="https://www.coursera.org/account/accomplishments/verify/K5CL3SVXLY7Q" class="btn-glass" target="_blank">📜 Certificate</a>
+                </div>
+
+                <div class="subcard glass">
+                    <div class="card-header">
+                        <div class="icon glass">🔍</div>
+                        <div>
+                            <h3 class="card-title">Convolutional Neural Networks</h3>
+                            <p class="card-subtitle">deeplearning.ai</p>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div class="course-source">Coursera</div>
+                    </div>
+                    <a href="https://www.coursera.org/account/accomplishments/certificate/7ADJEDF2ETRH" class="btn-glass" target="_blank">📜 Certificate</a>
+                </div>
+
+                <div class="subcard glass">
+                    <div class="card-header">
+                        <div class="icon glass">📐</div>
+                        <div>
+                            <h3 class="card-title">Structuring ML Projects</h3>
+                            <p class="card-subtitle">deeplearning.ai</p>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div class="course-source">Coursera</div>
+                    </div>
+                    <a href="https://www.coursera.org/account/accomplishments/verify/YWUNM3JRUZJW" class="btn-glass" target="_blank">📜 Certificate</a>
+                </div>
+
+                <div class="subcard glass">
+                    <div class="card-header">
+                        <div class="icon glass">👀</div>
+                        <div>
+                            <h3 class="card-title">Introduction to Computer Vision</h3>
+                            <p class="card-subtitle">Aaron Bobbick</p>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div class="course-source">Udacity</div>
+                    </div>
+                </div>
+
+                <div class="subcard glass">
+                    <div class="card-header">
+                        <div class="icon glass">🔢</div>
+                        <div>
+                            <h3 class="card-title">Sequence Models</h3>
+                            <p class="card-subtitle">Andrew Ng</p>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div class="course-source">deeplearning.ai</div>
+                    </div>
+                </div>
+
+                <div class="subcard glass">
+                    <div class="card-header">
+                        <div class="icon glass">📊</div>
+                        <div>
+                            <h3 class="card-title">Multivariate Calculus</h3>
+                            <p class="card-subtitle">Mathematical Foundations</p>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div class="course-source">Integral and Discrete Transforms</div>
+                    </div>
+                </div>
+
+                <div class="subcard glass">
+                    <div class="card-header">
+                        <div class="icon glass">📈</div>
+                        <div>
+                            <h3 class="card-title">Statistical Analysis</h3>
+                            <p class="card-subtitle">Advanced Statistics</p>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div class="course-source">Probability and Queuing Theory</div>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <div class="glass" style="max-width: 600px; margin: 0 auto; padding: 2rem;">
+                <div class="card-header">
+                    <div class="icon glass">📧</div>
+                    <div>
+                        <h3 class="card-title">Get In Touch</h3>
+                        <p class="card-subtitle">Let's connect!</p>
+                    </div>
+                </div>
+                <div class="card-content" style="text-align: center;">
+                    <p>© 2025 Rohit Lal. Built with passion for AI and research.</p>
+                    <p style="margin-top: 1rem;">📍 National Space Science and Technology Center, Huntsville, AL</p>
+                    <p style="margin-top: 1rem;">
+                        <a href="mailto:take2rohit@gmail.com" style="color: white; text-decoration: underline;">take2rohit@gmail.com</a>
+                    </p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // No scroll animations - elements are always visible
+        // Only keep button animations
+
+        // Simple Background Scroll Effect
+        function initBackgroundScroll() {
+            const parallaxLayers = {
+                layer1: document.querySelector('.parallax-layer-1'),
+                layer2: document.querySelector('.parallax-layer-2'),
+                layer3: document.querySelector('.parallax-layer-3')
+            };
+            
+            function handleScroll() {
+                const scrolled = window.pageYOffset;
+                const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+                const scrollPercent = scrolled / docHeight;
+                
+                // Move background from bottom to top as user scrolls
+                if (parallaxLayers.layer1) {
+                    const bgMove = scrollPercent * 100; // Move 100vh over full scroll
+                    parallaxLayers.layer1.style.transform = `translateY(${bgMove}vh)`;
+                }
+                if (parallaxLayers.layer2) {
+                    const bgMove = scrollPercent * 80;
+                    parallaxLayers.layer2.style.transform = `translateY(${bgMove}vh)`;
+                }
+                if (parallaxLayers.layer3) {
+                    const bgMove = scrollPercent * 60;
+                    parallaxLayers.layer3.style.transform = `translateY(${bgMove}vh)`;
+                }
+            }
+            
+            // Use requestAnimationFrame for smooth performance
+            let ticking = false;
+            window.addEventListener('scroll', () => {
+                if (!ticking) {
+                    window.requestAnimationFrame(() => {
+                        handleScroll();
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            });
+            
+            // Initial call
+            handleScroll();
+        }
+        
+        // Initialize background scroll after page load
+        window.addEventListener('load', initBackgroundScroll);
+
+        // Add ripple effect on button clicks
+        document.querySelectorAll('.btn-glass, .social-btn').forEach(button => {
+            button.addEventListener('click', function(e) {
+                const ripple = document.createElement('span');
+                const rect = this.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                const x = e.clientX - rect.left - size / 2;
+                const y = e.clientY - rect.top - size / 2;
+                
+                ripple.style.width = ripple.style.height = size + 'px';
+                ripple.style.left = x + 'px';
+                ripple.style.top = y + 'px';
+                ripple.style.position = 'absolute';
+                ripple.style.borderRadius = '50%';
+                ripple.style.background = 'rgba(255, 255, 255, 0.4)';
+                ripple.style.transform = 'scale(0)';
+                ripple.style.animation = 'ripple 0.6s ease-out';
+                ripple.style.pointerEvents = 'none';
+                ripple.style.zIndex = '5';
+                
+                this.appendChild(ripple);
+                
+                setTimeout(() => ripple.remove(), 600);
+            });
+        });
+
+        // Add CSS for ripple animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes ripple {
+                to {
+                    transform: scale(4);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // No page load animation - immediate display
+
+        // Active navigation state on scroll
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('section[id]');
+            const scrollY = window.pageYOffset;
+
+            sections.forEach(section => {
+                const sectionHeight = section.offsetHeight;
+                const sectionTop = section.offsetTop - 100;
+                const sectionId = section.getAttribute('id');
+                const navLink = document.querySelector(`.nav-links a[href="#${sectionId}"]`);
+
+                if (navLink) {
+                    if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
+                        navLink.style.background = 'rgba(255, 255, 255, 0.2)';
+                    } else {
+                        navLink.style.background = '';
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
