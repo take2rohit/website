@@ -49,8 +49,9 @@
             height: 300vh;
             background-image: url('./bg.jpeg');
             background-size: cover;
-            background-position: center bottom;
+            background-position: center top;
             background-repeat: no-repeat;
+            transform: translateY(-200vh);
         }
 
         .parallax-layer-2 {
@@ -61,6 +62,7 @@
             height: 300vh;
             background: radial-gradient(circle at 30% 50%, rgba(120, 119, 198, 0.2) 0%, transparent 60%),
                 radial-gradient(circle at 70% 80%, rgba(255, 119, 198, 0.15) 0%, transparent 60%);
+            transform: translateY(-200vh);
         }
 
         .parallax-layer-3 {
@@ -70,6 +72,7 @@
             width: 100%;
             height: 300vh;
             background: radial-gradient(circle at 80% 20%, rgba(120, 219, 255, 0.15) 0%, transparent 50%);
+            transform: translateY(-200vh);
         }
 
         /* Remove parallax card effects */
@@ -1570,17 +1573,18 @@
                 const docHeight = document.documentElement.scrollHeight - window.innerHeight;
                 const scrollPercent = scrolled / docHeight;
                 
-                // Move background from bottom to top as user scrolls
+                // Start at -200vh (showing bottom) and move toward 0 (showing top)
+                // This reveals the top of the background as you scroll down
                 if (parallaxLayers.layer1) {
-                    const bgMove = scrollPercent * 100; // Move 100vh over full scroll
+                    const bgMove = -200 + (scrollPercent * 200); // From -200vh to 0vh
                     parallaxLayers.layer1.style.transform = `translateY(${bgMove}vh)`;
                 }
                 if (parallaxLayers.layer2) {
-                    const bgMove = scrollPercent * 80;
+                    const bgMove = -200 + (scrollPercent * 160); // Slower parallax
                     parallaxLayers.layer2.style.transform = `translateY(${bgMove}vh)`;
                 }
                 if (parallaxLayers.layer3) {
-                    const bgMove = scrollPercent * 60;
+                    const bgMove = -200 + (scrollPercent * 120); // Even slower
                     parallaxLayers.layer3.style.transform = `translateY(${bgMove}vh)`;
                 }
             }
