@@ -1,30 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
+<!--
+╔═══════════════════════════════════════════════════════════════════════════╗
+║                     LIQUID GLASS CUSTOMIZATION GUIDE                       ║
+╚═══════════════════════════════════════════════════════════════════════════╝
+
+This website uses a "liquid glass morphism" effect on the navbar and cards.
+All glass effects are controlled by CSS custom properties (variables) defined
+in the :root selector at the top of the <style> section.
+
+QUICK START - To customize the liquid glass appearance:
+-------------------------------------------------------
+
+1. SCROLL DOWN to the :root { } section in the <style> tag below
+2. MODIFY the CSS variable values to change the glass effect
+3. READ the comments next to each variable for guidance
+
+KEY VARIABLES TO CUSTOMIZE:
+---------------------------
+
+--tint-color: RGB values (e.g., 255, 255, 255 for white)
+  → Changes the color overlay on the glass
+  → Try: 200, 150, 255 for purple, 150, 200, 255 for blue
+
+--tint-opacity: 0 to 1 (e.g., 0.4)
+  → Controls transparency of the color tint
+  → Higher = more opaque, Lower = more transparent
+
+--frost-blur: pixel value (e.g., 2px)
+  → Controls the backdrop blur (frosted glass effect)
+  → Higher = more blur, Lower = clearer glass
+
+--noise-frequency: decimal (e.g., 0.008)
+  → Controls the detail of liquid distortion
+  → Higher = finer ripples, Lower = larger waves
+
+--distortion-strength: number (e.g., 77)
+  → Controls intensity of liquid ripple effect
+  → Higher = more pronounced waves, Lower = subtler effect
+
+--shadow-blur: pixel value (e.g., 20px)
+  → Controls inner shadow softness
+  → Higher = softer glow, Lower = sharper shadow
+
+NAVBAR-SPECIFIC CUSTOMIZATION:
+------------------------------
+To customize ONLY the navbar without affecting other cards,
+uncomment and modify these variables in the :root section:
+  --nav-tint-color
+  --nav-tint-opacity
+  --nav-frost-blur
+  --nav-shadow-blur
+
+TECHNICAL NOTES:
+---------------
+- The liquid distortion uses an SVG filter (scroll to <svg> tag near line 1010)
+- The filter parameters sync with CSS variables via JavaScript
+- Glass effect layers are created using ::before and ::after pseudo-elements
+
+For advanced customization, search for "LIQUID GLASS" comments in the code.
+-->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rohit Lal - Research Portfolio</title>
     <style>
         :root {
-            /* Inner shadow */
+            /* ========================================
+               LIQUID GLASS EFFECT CUSTOMIZATION
+               ======================================== */
+            
+            /* Inner shadow - Creates depth inside the glass */
+            /* Change shadow-color for different highlight colors */
+            /* Increase shadow-blur for softer inner glow */
             --shadow-offset: 0;
             --shadow-blur: 20px;
             --shadow-spread: -5px;
             --shadow-color: rgba(255, 255, 255, 0.7);
 
-            /* Painted glass */
+            /* Painted glass tint - Adds color overlay to glass */
+            /* Change tint-color RGB values (e.g., 200, 150, 255 for purple tint) */
+            /* Adjust tint-opacity (0-1) to control tint strength */
+            /* LOWER values = MORE transparent, HIGHER values = MORE opaque */
             --tint-color: 255, 255, 255;
-            --tint-opacity: 0.4;
+            --tint-opacity: 0.15;
 
-            /* Background frost */
-            --frost-blur: 2px;
+            /* Background frost - Controls blur effect */
+            /* Increase frost-blur (e.g., 10px) for more frosted look */
+            /* Decrease for sharper glass appearance */
+            --frost-blur: 10px;
 
-            /* SVG noise/distortion */
+            /* SVG noise/distortion - Creates liquid ripple effect */
+            /* Increase noise-frequency (e.g., 0.015) for finer distortion */
+            /* Increase distortion-strength (e.g., 100) for more pronounced waves */
             --noise-frequency: 0.008;
             --distortion-strength: 77;
 
-            /* Outer shadow blur */
+            /* Outer shadow blur - Drop shadow beneath glass elements */
+            /* Increase for more dramatic floating effect */
             --outer-shadow-blur: 24px;
+            
+            /* ========================================
+               NAVBAR LIQUID GLASS CUSTOMIZATION
+               ======================================== */
+            
+            /* Navbar-specific glass settings (inherits from above if not set) */
+            /* Uncomment and modify these to customize navbar separately: */
+            /* --nav-tint-color: 255, 255, 255; */
+            /* --nav-tint-opacity: 0.35; */
+            /* --nav-frost-blur: 10px; */
+            /* --nav-shadow-blur: 15px; */
         }
 
         * {
@@ -100,6 +185,13 @@
         /* Remove parallax card effects */
         .parallax-card { position: relative; }
 
+        /* ========================================
+           MAIN CARD LIQUID GLASS EFFECT
+           ======================================== 
+           All content cards use this liquid glass effect.
+           Same technique as navbar but applied to all .glass elements.
+           Customization: Modify CSS variables in :root section at top of file.
+        */
         .glass {
             position: relative;
             border-radius: 2rem;
@@ -109,6 +201,7 @@
             box-shadow: 0px 6px var(--outer-shadow-blur) rgba(0, 0, 0, 0.2);
         }
 
+        /* Inner glass layer - tint and inner shadow */
         .glass::before {
             content: '';
             position: absolute;
@@ -121,6 +214,7 @@
             pointer-events: none;
         }
 
+        /* Outer glass layer - backdrop blur and liquid distortion */
         .glass::after {
             content: '';
             position: absolute;
@@ -135,6 +229,7 @@
             pointer-events: none;
         }
 
+        /* Ensure content appears above glass layers */
         .glass > * {
             position: relative;
             z-index: 1;
@@ -143,17 +238,6 @@
         .glass:hover {
             transform: translateY(-5px);
             box-shadow: 0 12px 40px rgba(31, 38, 135, 0.3);
-        }
-
-        nav {
-            position: fixed;
-            top: 1.5rem;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 1000;
-            max-width: 1100px;
-            width: calc(100% - 4rem);
-            animation: slideDown 0.6s ease forwards;
         }
 
         @keyframes slideDown {
@@ -167,61 +251,77 @@
             }
         }
 
-        .nav-glass-container {
-            position: relative;
-            display: flex;
-            align-items: center;
-            background: transparent;
+        /* ========================================
+           NAVBAR LIQUID GLASS EFFECT
+           ======================================== 
+           This creates the liquid glass morphism effect on the navbar
+           EXACT structure copied from index_liquid.html for proper transparency
+        */
+        .liquidGlassNav {
+            position: absolute;
+            width: 100%;
+            height: 100%;
             border-radius: 2rem;
-            overflow: hidden;
-            box-shadow: 0 6px 6px rgba(0, 0, 0, 0.2), 0 0 20px rgba(0, 0, 0, 0.1);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 2.2);
+            isolation: isolate;
+            box-shadow: 0px 6px var(--outer-shadow-blur) rgba(0, 0, 0, 0.2);
         }
 
-        .nav-glass-container:hover {
-            box-shadow: 0 8px 8px rgba(0, 0, 0, 0.25), 0 0 24px rgba(0, 0, 0, 0.15);
-        }
-
-        .nav-glass-container:hover .nav-glass-specular {
-            box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.85),
-                inset 0 0 8px rgba(255, 255, 255, 0.85);
-        }
-
-        .nav-glass-filter,
-        .nav-glass-overlay,
-        .nav-glass-specular {
+        /* Inner layer: tint color and inner shadow */
+        .liquidGlassNav::before {
+            content: '';
             position: absolute;
             inset: 0;
-            border-radius: inherit;
+            z-index: 0;
+            border-radius: 2rem;
+            box-shadow:
+                inset var(--shadow-offset) var(--shadow-offset) var(--shadow-blur) var(--shadow-spread) var(--shadow-color);
+            background-color: rgba(var(--tint-color), var(--tint-opacity));
+        }
+
+        /* Outer layer: backdrop blur and liquid distortion - THIS makes it see-through */
+        .liquidGlassNav::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+            border-radius: 2rem;
+            backdrop-filter: blur(var(--frost-blur));
+            filter: url(#glass-distortion);
+            isolation: isolate;
+            -webkit-backdrop-filter: blur(var(--frost-blur));
+            -webkit-filter: url("#glass-distortion");
+        }
+
+        nav {
+            position: fixed;
+            top: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            max-width: 1100px;
+            width: calc(100% - 4rem);
+            height: 70px;
+            animation: slideDown 0.6s ease forwards;
+        }
+
+        nav:hover .liquidGlassNav {
+            box-shadow: 0 8px calc(var(--outer-shadow-blur) + 6px) rgba(0, 0, 0, 0.25);
+        }
+
+        /* Text content layer - sits on TOP of the liquid glass */
+        .nav-content {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            height: 100%;
             pointer-events: none;
         }
 
-        .nav-glass-filter {
-            z-index: 0;
-            backdrop-filter: blur(10px) saturate(150%);
-            -webkit-backdrop-filter: blur(10px) saturate(150%);
-        }
-
-        .nav-glass-overlay {
-            z-index: 1;
-            background: rgba(255, 255, 255, 0.3);
-        }
-
-        .nav-glass-specular {
-            z-index: 2;
-            box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.75),
-                inset 0 0 5px rgba(255, 255, 255, 0.75);
-            transition: box-shadow 0.3s ease;
-        }
-
-        .nav-content {
-            position: relative;
-            z-index: 3;
-            display: flex;
-            flex: 1 1 auto;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0.75rem 2rem;
+        .nav-content > * {
+            pointer-events: auto;
         }
 
         .logo {
@@ -237,6 +337,8 @@
             display: flex;
             gap: 1.5rem;
             list-style: none;
+            margin: 0;
+            padding: 0;
         }
 
         .nav-links li {
@@ -908,10 +1010,11 @@
             nav {
                 top: 1rem;
                 width: calc(100% - 2rem);
+                height: 60px;
             }
 
             .nav-content {
-                padding: 0.75rem 1.5rem;
+                padding: 0 1.5rem;
             }
 
             .nav-links {
@@ -958,25 +1061,47 @@
     </div>
 
     <nav>
-        <div class="nav-glass-container">
-            <div class="nav-glass-filter"></div>
-            <div class="nav-glass-overlay"></div>
-            <div class="nav-glass-specular"></div>
-            <div class="nav-content">
-                <div class="logo">Rohit Lal</div>
-                <ul class="nav-links">
-                    <li><a href="#about">About</a></li>
-                    <li><a href="#news">News</a></li>
-                    <li><a href="#experience">Experience</a></li>
-                    <li><a href="#projects">Projects</a></li>
-                    <li><a href="#publications">Publications</a></li>
-                    <li><a href="#skills">Skills</a></li>
-                </ul>
-            </div>
+        <!-- Liquid glass background layer - creates the see-through distorted effect -->
+        <div class="liquidGlassNav"></div>
+        
+        <!-- Text content layer - positioned on top of the glass -->
+        <div class="nav-content">
+            <div class="logo">Rohit Lal</div>
+            <ul class="nav-links">
+                <li><a href="#about">About</a></li>
+                <li><a href="#news">News</a></li>
+                <li><a href="#experience">Experience</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#publications">Publications</a></li>
+                <li><a href="#skills">Skills</a></li>
+            </ul>
         </div>
     </nav>
 
-    <!-- SVG Filter for liquid glass effect -->
+    <!-- 
+        ========================================
+        LIQUID GLASS SVG FILTERS
+        ========================================
+        These SVG filters create the liquid ripple distortion effect.
+        
+        The 'glass-distortion' filter is automatically synchronized with CSS variables:
+        - baseFrequency is set from --noise-frequency variable
+        - scale is set from --distortion-strength variable
+        
+        These values are applied on page load via JavaScript (see initLiquidGlass function).
+        
+        To customize:
+        1. Change CSS variables in the :root section above (recommended)
+        2. OR manually edit the baseFrequency and scale attributes below
+        
+        feTurbulence: Creates the noise pattern for distortion
+          - baseFrequency: Controls ripple detail (higher = finer)
+          - numOctaves: Complexity of pattern (2 = good balance)
+          - seed: Random seed for pattern (92 = default)
+        
+        feDisplacementMap: Applies the distortion
+          - scale: Intensity of distortion (higher = more pronounced)
+    -->
     <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
         <defs>
             <filter id="glass-distortion" x="0%" y="0%" width="100%" height="100%">
@@ -1585,6 +1710,32 @@
     </div>
 
     <script>
+        // ========================================
+        // LIQUID GLASS INITIALIZATION
+        // ========================================
+        // Sync SVG filter parameters with CSS variables
+        (function initLiquidGlass() {
+            const root = document.documentElement;
+            const computedStyle = getComputedStyle(root);
+            
+            // Get CSS variable values
+            const frequency = parseFloat(computedStyle.getPropertyValue('--noise-frequency'));
+            const strength = parseFloat(computedStyle.getPropertyValue('--distortion-strength'));
+            
+            // Apply to SVG filter elements
+            const turbulence = document.querySelector('#glass-distortion feTurbulence');
+            const displacement = document.querySelector('#glass-distortion feDisplacementMap');
+            
+            if (turbulence && frequency) {
+                turbulence.setAttribute('baseFrequency', `${frequency} ${frequency}`);
+            }
+            if (displacement && strength) {
+                displacement.setAttribute('scale', strength);
+            }
+            
+            console.log('✨ Liquid glass initialized with frequency:', frequency, 'strength:', strength);
+        })();
+
         // Smooth scrolling for navigation links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
