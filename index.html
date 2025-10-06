@@ -76,9 +76,7 @@
         }
 
         /* Remove parallax card effects */
-        .parallax-card {
-            /* No animations on scroll */
-        }
+        .parallax-card { position: relative; }
 
         .glass {
             position: relative;
@@ -290,7 +288,10 @@
             margin-bottom: 1.5rem;
             border: 4px solid rgba(255, 255, 255, 0.5);
             box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background-image: url('./dp.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
             object-fit: cover;
             animation: float 3s ease-in-out infinite;
         }
