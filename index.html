@@ -1,2428 +1,643 @@
 <!DOCTYPE html>
 <html lang="en">
-<!--
-╔═══════════════════════════════════════════════════════════════════════════╗
-║                     LIQUID GLASS CUSTOMIZATION GUIDE                       ║
-╚═══════════════════════════════════════════════════════════════════════════╝
 
-This website uses a "liquid glass morphism" effect on the navbar and cards.
-All glass effects are controlled by CSS custom properties (variables) defined
-in the :root selector at the top of the <style> section.
-
-QUICK START - To customize the liquid glass appearance:
--------------------------------------------------------
-
-1. SCROLL DOWN to the :root { } section in the <style> tag below
-2. MODIFY the CSS variable values to change the glass effect
-3. READ the comments next to each variable for guidance
-
-KEY VARIABLES TO CUSTOMIZE:
----------------------------
-
---tint-color: RGB values (e.g., 255, 255, 255 for white)
-  → Changes the color overlay on the glass
-  → Try: 200, 150, 255 for purple, 150, 200, 255 for blue
-
---tint-opacity: 0 to 1 (e.g., 0.4)
-  → Controls transparency of the color tint
-  → Higher = more opaque, Lower = more transparent
-
---frost-blur: pixel value (e.g., 2px)
-  → Controls the backdrop blur (frosted glass effect)
-  → Higher = more blur, Lower = clearer glass
-
---noise-frequency: decimal (e.g., 0.008)
-  → Controls the detail of liquid distortion
-  → Higher = finer ripples, Lower = larger waves
-
---distortion-strength: number (e.g., 77)
-  → Controls intensity of liquid ripple effect
-  → Higher = more pronounced waves, Lower = subtler effect
-
---shadow-blur: pixel value (e.g., 20px)
-  → Controls inner shadow softness
-  → Higher = softer glow, Lower = sharper shadow
-
-NAVBAR-SPECIFIC CUSTOMIZATION:
-------------------------------
-To customize ONLY the navbar without affecting other cards,
-uncomment and modify these variables in the :root section:
-  --nav-tint-color
-  --nav-tint-opacity
-  --nav-frost-blur
-  --nav-shadow-blur
-
-TECHNICAL NOTES:
----------------
-- The liquid distortion uses an SVG filter (scroll to <svg> tag near line 1010)
-- The filter parameters sync with CSS variables via JavaScript
-- Glass effect layers are created using ::before and ::after pseudo-elements
-
-For advanced customization, search for "LIQUID GLASS" comments in the code.
--->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rohit Lal - Research Portfolio</title>
-    <style>
-        /* ========================================
-           BUTTON ANGLE ANIMATIONS
-           ======================================== */
-        @property --angle-1 {
-            syntax: "<angle>";
-            inherits: false;
-            initial-value: -75deg;
-        }
-
-        @property --angle-2 {
-            syntax: "<angle>";
-            inherits: false;
-            initial-value: -45deg;
-        }
-
-        :root {
-            /* ========================================
-               LIQUID GLASS EFFECT CUSTOMIZATION
-               ======================================== */
-            
-            /* Inner shadow - Creates depth inside the glass */
-            /* Change shadow-color for different highlight colors */
-            /* Increase shadow-blur for softer inner glow */
-            --shadow-offset: 0;
-            --shadow-blur: 20px;
-            --shadow-spread: -5px;
-            --shadow-color: rgba(255, 255, 255, 0.7);
-
-            /* Painted glass tint - Adds color overlay to glass */
-            /* Change tint-color RGB values (e.g., 200, 150, 255 for purple tint) */
-            /* Adjust tint-opacity (0-1) to control tint strength */
-            /* LOWER values = MORE transparent, HIGHER values = MORE opaque */
-            --tint-color: 200, 220, 255;
-            --tint-opacity: 0.12;
-
-            /* Background frost - Controls blur effect */
-            /* Increase frost-blur (e.g., 10px) for more frosted look */
-            /* Decrease for sharper glass appearance */
-            --frost-blur: 10px;
-
-            /* SVG noise/distortion - Creates liquid ripple effect */
-            /* Increase noise-frequency (e.g., 0.015) for finer distortion */
-            /* Increase distortion-strength (e.g., 100) for more pronounced waves */
-            --noise-frequency: 0.008;
-            --distortion-strength: 77;
-
-            /* Outer shadow blur - Drop shadow beneath glass elements */
-            /* Increase for more dramatic floating effect */
-            --outer-shadow-blur: 24px;
-            
-            /* ========================================
-               NAVBAR LIQUID GLASS CUSTOMIZATION
-               ======================================== */
-            
-            /* Navbar-specific glass settings (inherits from above if not set) */
-            /* Uncomment and modify these to customize navbar separately: */
-            /* --nav-tint-color: 255, 255, 255; */
-            /* --nav-tint-opacity: 0.35; */
-            /* --nav-frost-blur: 10px; */
-            /* --nav-shadow-blur: 15px; */
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            font-size: 100%;
-            scroll-behavior: smooth;
-            overflow-x: hidden;
-        }
-
-        /* Smooth scrolling with momentum */
-        * {
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-
-        body {
-            min-height: 100vh;
-            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 50%, #3b82f6 100%);
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            overflow-x: hidden;
-            position: relative;
-        }
-
-        /* Parallax background layers */
-        .parallax-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-        }
-
-        .parallax-layer-1 {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 300vh;
-            background-image: url('./bg.jpeg');
-            background-size: cover;
-            background-position: center top;
-            background-repeat: no-repeat;
-            transform: translateY(-200vh);
-        }
-
-        .parallax-layer-2 {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 300vh;
-            background: radial-gradient(circle at 30% 50%, rgba(120, 119, 198, 0.2) 0%, transparent 10%),
-                radial-gradient(circle at 70% 80%, rgba(255, 119, 198, 0.15) 0%, transparent 10%);
-            transform: translateY(-200vh);
-        }
-
-        .parallax-layer-3 {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 300vh;
-            background: radial-gradient(circle at 80% 20%, rgba(120, 219, 255, 0.15) 0%, transparent 10%);
-            transform: translateY(-200vh);
-        }
-
-        /* Remove parallax card effects */
-        .parallax-card { position: relative; }
-
-        /* ========================================
-           MAIN CARD LIQUID GLASS EFFECT
-           ======================================== 
-           All content cards use this liquid glass effect.
-           Same technique as navbar but applied to all .glass elements.
-           Customization: Modify CSS variables in :root section at top of file.
-        */
-        .glass {
-            position: relative;
-            border-radius: 2rem;
-            padding: 1.25rem;
-            isolation: isolate;
-            transition: transform 0.3s ease;
-            box-shadow: 0px 6px var(--outer-shadow-blur) rgba(0, 0, 0, 0.2);
-        }
-
-        /* Inner glass layer - tint and inner shadow */
-        .glass::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            z-index: 0;
-            border-radius: 2rem;
-            box-shadow:
-                inset var(--shadow-offset) var(--shadow-offset) var(--shadow-blur) var(--shadow-spread) var(--shadow-color);
-            background-color: rgba(var(--tint-color), var(--tint-opacity));
-            pointer-events: none;
-        }
-
-        /* Outer glass layer - backdrop blur and liquid distortion */
-        .glass::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            z-index: -1;
-            border-radius: 2rem;
-            backdrop-filter: blur(var(--frost-blur));
-            -webkit-backdrop-filter: blur(var(--frost-blur));
-            filter: url(#glass-distortion);
-            -webkit-filter: url("#glass-distortion");
-            isolation: isolate;
-            pointer-events: none;
-        }
-
-        /* Ensure content appears above glass layers */
-        .glass > * {
-            position: relative;
-            z-index: 1;
-        }
-
-        .glass:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 40px rgba(31, 38, 135, 0.3);
-        }
-
-        /* ========================================
-           NAVBAR LIQUID GLASS - EXACT COPY FROM index_liquid.html
-           ======================================== */
-        
-        .navbarGlass {
-            position: fixed;
-            top: 2rem;
-            left: 50%;
-            transform: translateX(-50%);
-            width: calc(100% - 2rem);
-            max-width: 1400px;
-            height: 80px;
-            border-radius: 28px;
-            isolation: isolate;
-            box-shadow: 0px 6px var(--outer-shadow-blur) rgba(0, 0, 0, 0.2);
-            z-index: 1000;
-        }
-
-        .navbarGlass::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            z-index: 0;
-            border-radius: 28px;
-            box-shadow:
-                inset var(--shadow-offset) var(--shadow-offset) var(--shadow-blur) var(--shadow-spread) var(--shadow-color);
-            background-color: rgba(var(--tint-color), var(--tint-opacity));
-        }
-
-        .navbarGlass::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            z-index: -1;
-            border-radius: 28px;
-            backdrop-filter: blur(var(--frost-blur));
-            filter: url(#glass-distortion);
-            isolation: isolate;
-            -webkit-backdrop-filter: blur(var(--frost-blur));
-            -webkit-filter: url("#glass-distortion");
-        }
-
-        /* Navigation content on top of glass */
-        .navbarContent {
-            position: relative;
-            z-index: 1;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            height: 100%;
-            padding: 0 2.5rem;
-        }
-
-        .navLogo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #fff 0%, #f0f9ff 50%, #fff 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-shadow: none;
-            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
-        }
-
-        .navLinks {
-            display: flex;
-            gap: 0.5rem;
-            list-style: none;
-            margin: 0;
-            padding: 0.375rem;
-            align-items: center;
-            position: relative;
-            background: linear-gradient(135deg, 
-                rgba(255, 255, 255, 0.1) 0%, 
-                rgba(255, 255, 255, 0.05) 100%);
-            border-radius: 999px;
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 
-                0 4px 16px rgba(0, 0, 0, 0.1),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2);
-        }
-
-        /* Liquid Glass Active Bubble */
-        .nav-bubble {
-            position: absolute;
-            top: 0.375rem;
-            left: 0.375rem;
-            height: calc(100% - 0.75rem);
-            border-radius: 999px;
-            z-index: 1;
-            pointer-events: none;
-            isolation: isolate;
-            transform-origin: left center;
-            will-change: transform, width;
-        }
-
-        /* Liquid Glass Layers for Bubble */
-        .nav-bubble::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border-radius: inherit;
-            background: linear-gradient(135deg,
-                rgba(255, 255, 255, 0.7) 0%,
-                rgba(255, 255, 255, 0.6) 50%,
-                rgba(255, 255, 255, 0.65) 100%);
-            box-shadow: 
-                inset 0 1px 2px rgba(255, 255, 255, 0.8),
-                inset 0 -1px 2px rgba(0, 0, 0, 0.08),
-                0 6px 20px rgba(59, 130, 246, 0.15),
-                0 2px 6px rgba(0, 0, 0, 0.1);
-            z-index: 0;
-        }
-
-        /* Liquid distortion effect for bubble */
-        .nav-bubble::after {
-            content: '';
-            position: absolute;
-            inset: -1px;
-            border-radius: inherit;
-            backdrop-filter: blur(8px);
-            filter: url(#glass-distortion);
-            z-index: -1;
-            opacity: 0.4;
-        }
-
-        /* Nav Button Styles */
-        .navLinks li {
-            position: relative;
-            z-index: 2;
-        }
-
-        .navLinks button {
-            all: unset;
-            cursor: pointer;
-            padding: 0.6rem 1.4rem;
-            font-size: 0.85rem;
-            font-weight: 500;
-            color: rgba(255, 255, 255, 0.65);
-            transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
-            border-radius: 999px;
-            white-space: nowrap;
-            position: relative;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            letter-spacing: -0.01em;
-        }
-
-        .navLinks button:hover {
-            color: rgba(255, 255, 255, 0.9);
-            transform: scale(1.02);
-        }
-
-        .navLinks button.active {
-            color: rgba(30, 58, 138, 0.95);
-            font-weight: 600;
-            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
-            transition: all 0.3s ease;
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 7rem 1rem 2rem;
-            position: relative;
-            z-index: 1;
-        }
-
-        .hero {
-            padding: 2rem 0 3rem;
-        }
-
-        .about-container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .about-card {
-            display: grid;
-            grid-template-columns: 320px 1fr;
-            gap: 3rem;
-            padding: 2.5rem;
-            align-items: start;
-        }
-
-        .about-left {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            padding-right: 2rem;
-            border-right: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .hero-avatar {
-            width: 200px;
-            height: 200px;
-            border-radius: 50%;
-            margin-bottom: 1.5rem;
-            border: 4px solid rgba(147, 197, 253, 0.6);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4),
-                        0 0 60px rgba(59, 130, 246, 0.5),
-                        inset 0 0 20px rgba(255, 255, 255, 0.1);
-            background-image: url('./dp.png');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            object-fit: cover;
-            animation: float 3s ease-in-out infinite, pulse 4s ease-in-out infinite;
-            position: relative;
-        }
-
-        @keyframes pulse {
-            0%, 100% {
-                box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4),
-                            0 0 60px rgba(59, 130, 246, 0.5),
-                            inset 0 0 20px rgba(255, 255, 255, 0.1);
-            }
-            50% {
-                box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4),
-                            0 0 80px rgba(96, 165, 250, 0.7),
-                            inset 0 0 20px rgba(255, 255, 255, 0.1);
-            }
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-
-        .hero-name {
-            font-size: 2rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #fff 0%, #bfdbfe 30%, #dbeafe 60%, #fff 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 0.5rem;
-            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
-            animation: gradientShift 6s ease-in-out infinite;
-            background-size: 200% 200%;
-        }
-
-        @keyframes gradientShift {
-            0%, 100% {
-                background-position: 0% 50%;
-            }
-            50% {
-                background-position: 100% 50%;
-            }
-        }
-
-        .hero-expertise {
-            font-size: 1.1rem;
-            color: rgba(255, 255, 255, 0.9);
-            margin-bottom: 1.5rem;
-        }
-
-        .about-right {
-            display: flex;
-            flex-direction: column;
-            padding-left: 1rem;
-        }
-
-        .card-header {
-            display: flex;
-            align-items: center;
-            gap: 0.9375rem;
-            margin-bottom: 0.9375rem;
-        }
-
-        .icon {
-            position: relative;
-            width: 2.5rem;
-            height: 2.5rem;
-            border-radius: 0.625rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.25rem;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.1));
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-
-        .icon::after {
-            border-radius: 0.625rem;
-        }
-
-        .card-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: white;
-            margin: 0;
-        }
-
-        .card-subtitle {
-            font-size: 1.1rem;
-            color: rgba(255, 255, 255, 0.8);
-            margin: 0.3125rem 0 0 0;
-        }
-
-        .social-links {
-            display: flex;
-            gap: 0.75rem;
-            width: 100%;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .social-btn {
-            padding: 0;
-            font-size: 0;
-            white-space: nowrap;
-            margin-top: 0;
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-        }
-
-        .social-btn svg {
-            width: 22px;
-            height: 22px;
-            fill: white;
-            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
-            transition: all 0.3s ease;
-        }
-
-        .social-btn:hover {
-            transform: scale(1.1) translateY(-2px);
-        }
-
-        .social-btn:hover svg {
-            transform: scale(1.1);
-            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.4));
-        }
-
-        .social-btn.github {
-            background: linear-gradient(-75deg, rgba(71, 85, 105, 0.4), rgba(51, 65, 85, 0.6), rgba(71, 85, 105, 0.4));
-        }
-
-        .social-btn.linkedin {
-            background: linear-gradient(-75deg, rgba(37, 99, 235, 0.4), rgba(29, 78, 216, 0.6), rgba(37, 99, 235, 0.4));
-        }
-
-        .social-btn.scholar {
-            background: linear-gradient(-75deg, rgba(59, 130, 246, 0.4), rgba(37, 99, 235, 0.6), rgba(59, 130, 246, 0.4));
-        }
-
-        .social-btn.email {
-            background: linear-gradient(-75deg, rgba(239, 68, 68, 0.4), rgba(220, 38, 38, 0.6), rgba(239, 68, 68, 0.4));
-        }
-
-        .about-title {
-            font-size: 2rem;
-            font-weight: 700;
-            color: white;
-            margin-bottom: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-        }
-
-        .about-title::before {
-            content: '';
-            width: 4px;
-            height: 30px;
-            background: linear-gradient(180deg, #3b82f6, #2563eb, #60a5fa);
-            border-radius: 2px;
-            margin-left: -1rem;
-        }
-
-        .about-content {
-            color: white;
-            line-height: 1.8;
-            font-size: 1.05rem;
-        }
-
-        .about-content p {
-            margin-bottom: 1rem;
-        }
-
-        .about-content p:last-child {
-            margin-top: 1.5rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.15);
-        }
-
-        .about-content strong {
-            color: rgba(255, 255, 255, 1);
-        }
-
-        .about-content a {
-            color: rgba(255, 255, 255, 0.95);
-            text-decoration: underline;
-            transition: color 0.3s;
-        }
-
-        .about-content a:hover {
-            color: white;
-        }
-
-        .section {
-            margin-bottom: 5rem;
-            position: relative;
-            scroll-margin-top: 140px;
-        }
-
-        .section::before {
-            content: '';
-            position: absolute;
-            top: -2rem;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80%;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-            opacity: 0.5;
-        }
-
-        .section-container {
-            padding: 2.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .section-header {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-            margin-bottom: 2.5rem;
-            padding-bottom: 1.5rem;
-            border-bottom: 2px solid transparent;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent) bottom/100% 2px no-repeat;
-        }
-
-        .section-icon {
-            font-size: 3.5rem;
-            line-height: 1;
-            animation: float 3s ease-in-out infinite;
-            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
-        }
-
-        .section-title {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: white;
-            margin: 0;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-            position: relative;
-        }
-
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: -8px;
-            left: 0;
-            width: 60px;
-            height: 4px;
-            background: linear-gradient(90deg, #3b82f6, #2563eb, #60a5fa);
-            border-radius: 2px;
-            opacity: 0.8;
-        }
-
-        .subcard {
-            background: rgba(255, 255, 255, 0.08) !important;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            transition: all 0.3s ease;
-        }
-
-        .subcard:hover {
-            background: rgba(255, 255, 255, 0.12) !important;
-            transform: translateY(-3px) scale(1.02) !important;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 1.25rem;
-        }
-
-        .experience-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .card-content {
-            color: white;
-            line-height: 1.6;
-        }
-
-        .card-content a {
-            color: rgba(255, 255, 255, 0.9);
-            text-decoration: underline;
-        }
-
-        .news-date {
-            display: inline-block;
-            padding: 0.5rem 1rem;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.15));
-            backdrop-filter: blur(10px);
-            border-radius: 0.75rem;
-            font-size: 0.9rem;
-            font-weight: 700;
-            margin-bottom: 0;
-            margin-right: 1rem;
-            color: white;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            min-width: 90px;
-            text-align: center;
-        }
-
-        .news-list {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-            padding: 0;
-            margin: 0;
-        }
-
-        .news-item {
-            display: flex;
-            align-items: center;
-            padding: 1.2rem 1.5rem;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
-            border-radius: 1rem;
-            border-left: 4px solid rgba(255, 255, 255, 0.4);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .news-item::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            height: 100%;
-            width: 4px;
-            background: linear-gradient(180deg, #3b82f6, #2563eb, #60a5fa);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .news-item:hover {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
-            transform: translateX(8px);
-            border-left-color: transparent;
-        }
-
-        .news-item:hover::before {
-            opacity: 1;
-        }
-
-        .news-item:hover .news-date {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.25));
-            transform: scale(1.05);
-        }
-
-        .news-content {
-            color: rgba(255, 255, 255, 0.95);
-            line-height: 1.6;
-            font-size: 1rem;
-            flex: 1;
-        }
-
-        .news-content strong {
-            color: white;
-            font-weight: 600;
-        }
-
-        .news-content a {
-            color: rgba(255, 255, 255, 0.95);
-            text-decoration: underline;
-            transition: color 0.3s;
-        }
-
-        .news-content a:hover {
-            color: white;
-        }
-
-        .experience-card {
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .experience-card:hover {
-            transform: translateY(-8px) scale(1.02) !important;
-            box-shadow: 0 16px 48px rgba(31, 38, 135, 0.35) !important;
-        }
-
-        .experience-header {
-            display: flex;
-            align-items: flex-start;
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .experience-icon {
-            font-size: 2rem;
-            min-width: 2.5rem;
-            transition: all 0.3s ease;
-            filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.3));
-        }
-
-        .experience-card:hover .experience-icon {
-            transform: scale(1.2) rotate(5deg);
-            filter: drop-shadow(0 4px 12px rgba(59, 130, 246, 0.7));
-        }
-
-        .experience-info {
-            flex: 1;
-        }
-
-        .experience-date {
-            display: inline-block;
-            padding: 0.4rem 0.9rem;
-            background: linear-gradient(135deg, rgba(96, 165, 250, 0.5), rgba(59, 130, 246, 0.5));
-            backdrop-filter: blur(10px);
-            border-radius: 0.5rem;
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin-bottom: 0.8rem;
-            color: white;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(147, 197, 253, 0.4);
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
-        }
-
-        .experience-card:hover .experience-date {
-            background: linear-gradient(135deg, rgba(96, 165, 250, 0.7), rgba(59, 130, 246, 0.7));
-            transform: scale(1.05);
-        }
-
-        .experience-title {
-            font-size: 1.3rem;
-            font-weight: 600;
-            color: white;
-            margin-bottom: 0.4rem;
-        }
-
-        .experience-company {
-            color: rgba(255, 255, 255, 0.85);
-            margin-bottom: 0.8rem;
-            font-size: 1rem;
-            font-weight: 500;
-        }
-
-        .experience-description {
-            color: rgba(255, 255, 255, 0.9);
-            line-height: 1.7;
-            font-size: 0.98rem;
-        }
-
-        /* Glass Button Styles */
-        .btn-glass, .social-btn {
-            all: unset;
-            cursor: pointer;
-            position: relative;
-            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-            pointer-events: auto;
-            overflow: hidden;
-            z-index: 3;
-            background: linear-gradient(
-                -75deg,
-                rgba(255, 255, 255, 0.12),
-                rgba(255, 255, 255, 0.32),
-                rgba(255, 255, 255, 0.12)
-            );
-            border-radius: 999vw;
-            box-shadow: inset 0 0.125rem 0.125rem rgba(0, 0, 0, 0.08),
-                inset 0 -0.125rem 0.125rem rgba(255, 255, 255, 0.65),
-                0 0.25rem 0.25rem -0.125rem rgba(0, 0, 0, 0.25),
-                0 0 0 0.15rem inset rgba(255, 255, 255, 0.35),
-                0 0.125rem 0.5rem rgba(0, 0, 0, 0.15);
-            backdrop-filter: blur(6px) saturate(120%);
-            -webkit-backdrop-filter: blur(6px) saturate(120%);
-            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            padding: 0.75rem 1.5rem;
-            color: white;
-            font-weight: 500;
-            text-decoration: none;
-            font-size: 0.95rem;
-            text-shadow: 0 0.125rem 0.3rem rgba(0, 0, 0, 0.35);
-            border: 1px solid rgba(255, 255, 255, 0.45);
-            margin-top: 0.9375rem;
-        }
-
-        .btn-glass {
-            background: linear-gradient(
-                -75deg,
-                rgba(59, 130, 246, 0.25),
-                rgba(96, 165, 250, 0.35),
-                rgba(59, 130, 246, 0.25)
-            );
-        }
-
-        .btn-glass:hover, .social-btn:hover {
-            transform: scale(0.97) translateY(-3px);
-            backdrop-filter: blur(8px) saturate(130%);
-            -webkit-backdrop-filter: blur(8px) saturate(130%);
-            box-shadow: inset 0 0.125rem 0.125rem rgba(0, 0, 0, 0.05),
-                inset 0 -0.125rem 0.15rem rgba(255, 255, 255, 0.75),
-                0 0.4rem 0.35rem -0.125rem rgba(0, 0, 0, 0.3),
-                0 0 0 0.2rem inset rgba(255, 255, 255, 0.45),
-                0 0.125rem 0.75rem rgba(59, 130, 246, 0.5);
-            background: linear-gradient(
-                -75deg,
-                rgba(255, 255, 255, 0.18),
-                rgba(255, 255, 255, 0.38),
-                rgba(255, 255, 255, 0.18)
-            );
-            border-color: rgba(255, 255, 255, 0.55);
-        }
-
-        .btn-glass:hover {
-            box-shadow: inset 0 0.125rem 0.125rem rgba(0, 0, 0, 0.05),
-                inset 0 -0.125rem 0.15rem rgba(255, 255, 255, 0.75),
-                0 0.4rem 0.35rem -0.125rem rgba(0, 0, 0, 0.3),
-                0 0 0 0.2rem inset rgba(255, 255, 255, 0.45),
-                0 0.125rem 1rem rgba(96, 165, 250, 0.6);
-        }
-
-        .btn-glass:active, .social-btn:active {
-            transform: scale(0.95) translateY(0);
-            backdrop-filter: blur(6px) saturate(110%);
-            -webkit-backdrop-filter: blur(6px) saturate(110%);
-            box-shadow: inset 0 0.15rem 0.2rem rgba(0, 0, 0, 0.15),
-                inset 0 -0.1rem 0.125rem rgba(255, 255, 255, 0.5),
-                0 0.1rem 0.15rem -0.125rem rgba(0, 0, 0, 0.2),
-                inset 0 0.3rem 0.3rem 0 rgba(0, 0, 0, 0.12),
-                0 0 0 0.1rem inset rgba(255, 255, 255, 0.25);
-        }
-
-        /* Glass button specular highlight */
-        .btn-glass::after, .social-btn::after {
-            content: "";
-            display: block;
-            position: absolute;
-            z-index: 3;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            box-sizing: border-box;
-            border-radius: 999vw;
-            background: linear-gradient(
-                -45deg,
-                rgba(255, 255, 255, 0) 0%,
-                rgba(255, 255, 255, 0.6) 45% 50%,
-                rgba(255, 255, 255, 0) 55%
-            );
-            mix-blend-mode: screen;
-            pointer-events: none;
-            background-size: 200% 200%;
-            background-position: 0% 50%;
-            background-repeat: no-repeat;
-            transition: background-position 0.5s cubic-bezier(0.25, 1, 0.5, 1);
-        }
-
-        .btn-glass:hover::after, .social-btn:hover::after {
-            background-position: 100% 50%;
-        }
-
-        .btn-glass:active::after, .social-btn:active::after {
-            background-position: 150% 15%;
-        }
-
-        /* Ensure text and icons are above the highlight */
-        .btn-glass > *, .social-btn > * {
-            position: relative;
-            z-index: 4;
-        }
-
-        /* Touch device optimizations */
-        @media (hover: none) and (pointer: coarse) {
-            .btn-glass:hover::after, .social-btn:hover::after,
-            .btn-glass:active::after, .social-btn:active::after {
-                background-position: 50% 50%;
-            }
-            
-            .btn-glass:hover, .social-btn:hover {
-                transform: scale(0.97) translateY(-2px);
-            }
-            
-            .btn-glass:active, .social-btn:active {
-                transform: scale(0.93);
-            }
-        }
-
-        /* Button press animation */
-        @keyframes buttonPress {
-            0% { transform: scale(1); }
-            50% { transform: scale(0.95); }
-            100% { transform: scale(1); }
-        }
-
-        /* Subtle button entrance animation */
-        .btn-glass, .social-btn {
-            animation: none;
-        }
-
-        @keyframes buttonGlow {
-            0%, 100% { 
-                box-shadow: inset 0 0.125rem 0.125rem rgba(0, 0, 0, 0.08),
-                    inset 0 -0.125rem 0.125rem rgba(255, 255, 255, 0.65),
-                    0 0.25rem 0.25rem -0.125rem rgba(0, 0, 0, 0.25),
-                    0 0 0 0.15rem inset rgba(255, 255, 255, 0.35),
-                    0 0.125rem 0.5rem rgba(0, 0, 0, 0.15);
-            }
-            50% { 
-                box-shadow: inset 0 0.125rem 0.125rem rgba(0, 0, 0, 0.08),
-                    inset 0 -0.125rem 0.125rem rgba(255, 255, 255, 0.7),
-                    0 0.25rem 0.25rem -0.125rem rgba(0, 0, 0, 0.25),
-                    0 0 0 0.2rem inset rgba(255, 255, 255, 0.4),
-                    0 0.125rem 0.6rem rgba(255, 255, 255, 0.2);
-            }
-        }
-
-        .project-links {
-            display: flex;
-            gap: 0.8rem;
-            margin-top: 1rem;
-            flex-wrap: wrap;
-        }
-
-        .project-links .btn-glass {
-            margin-top: 0;
-        }
-
-        .pub-title {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: white;
-            margin-bottom: 0.5rem;
-        }
-
-        .pub-authors {
-            color: rgba(255, 255, 255, 0.8);
-            margin-bottom: 0.3rem;
-            font-size: 0.95rem;
-        }
-
-        .pub-venue {
-            display: inline-block;
-            padding: 0.3rem 0.8rem;
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.5), rgba(37, 99, 235, 0.5));
-            border: 1px solid rgba(147, 197, 253, 0.4);
-            border-radius: 0.5rem;
-            color: white;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            font-size: 0.85rem;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
-        }
-
-        .pub-links {
-            display: flex;
-            gap: 0.8rem;
-            flex-wrap: wrap;
-        }
-
-        .pub-links .btn-glass {
-            margin-top: 0;
-        }
-
-        .skills-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            gap: 1.25rem;
-        }
-
-        .skill-card {
-            text-align: center;
-            padding: 1.5rem 1rem;
-            transition: all 0.3s ease;
-        }
-
-        .skill-card:hover {
-            transform: translateY(-5px) scale(1.05);
-        }
-
-        .skill-icon {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-            filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.3));
-            transition: all 0.3s ease;
-        }
-
-        .skill-card:hover .skill-icon {
-            transform: scale(1.15) rotate(-5deg);
-            filter: drop-shadow(0 4px 12px rgba(59, 130, 246, 0.7));
-        }
-
-        .skill-name {
-            color: white;
-            font-weight: 500;
-            font-size: 0.95rem;
-        }
-
-        .course-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: white;
-            margin-bottom: 0.3rem;
-        }
-
-        .course-source {
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 0.9rem;
-        }
-
-        .patent-title {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: white;
-            margin-bottom: 0.5rem;
-        }
-
-        .patent-number {
-            display: inline-block;
-            padding: 0.3rem 0.8rem;
-            background: linear-gradient(135deg, rgba(96, 165, 250, 0.5), rgba(59, 130, 246, 0.5));
-            border: 1px solid rgba(147, 197, 253, 0.4);
-            border-radius: 0.5rem;
-            color: white;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            font-size: 0.85rem;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
-        }
-
-        footer {
-            text-align: center;
-            padding: 3rem 0;
-            color: rgba(255, 255, 255, 0.9);
-            position: relative;
-            z-index: 1;
-        }
-
-        @media (max-width: 968px) {
-            .social-links {
-                gap: 0.5rem;
-            }
-
-            .social-btn {
-                width: 42px;
-                height: 42px;
-            }
-
-            .social-btn svg {
-                width: 20px;
-                height: 20px;
-            }
-
-            .about-card {
-                grid-template-columns: 1fr;
-                gap: 2rem;
-                text-align: center;
-            }
-
-            .about-left {
-                margin: 0 auto;
-                padding-right: 0;
-                border-right: none;
-                border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-                padding-bottom: 2rem;
-            }
-
-            .about-right {
-                align-items: center;
-            }
-
-            .about-title {
-                justify-content: center;
-            }
-
-            .about-content {
-                text-align: left;
-            }
-
-            .section-container {
-                padding: 1.5rem;
-            }
-
-            .section-header {
-                flex-direction: column;
-                text-align: center;
-                gap: 1rem;
-            }
-
-            .section-icon {
-                font-size: 2.5rem;
-            }
-
-            .section-title {
-                font-size: 2rem;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .navbarGlass {
-                top: 1rem;
-                width: calc(100% - 1rem);
-                height: auto;
-                min-height: 60px;
-            }
-
-            .container {
-                padding: 7rem 0.75rem 2rem;
-            }
-
-            .navbarContent {
-                padding: 0.75rem 1.5rem;
-                flex-direction: column;
-                gap: 0.75rem;
-            }
-
-            .navLinks {
-                flex-wrap: wrap;
-                justify-content: center;
-                gap: 0.375rem;
-                padding: 0.25rem;
-            }
-
-            .navLinks button {
-                font-size: 0.75rem;
-                padding: 0.5rem 1rem;
-            }
-
-            .nav-bubble {
-                top: 0.25rem;
-                left: 0.25rem;
-                height: calc(100% - 0.5rem);
-            }
-
-            .navLogo {
-                font-size: 1.2rem;
-            }
-
-            .hero-name {
-                font-size: 1.75rem;
-            }
-
-            .hero-avatar {
-                width: 160px;
-                height: 160px;
-            }
-
-            .section-title {
-                font-size: 2rem;
-            }
-
-            .grid {
-                grid-template-columns: 1fr;
-            }
-
-            .experience-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .social-links {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
+    <title>Rohit Lal — AI Researcher & Computer Scientist</title>
+    <meta name="description"
+        content="Rohit Lal — Computer Scientist at NASA IMPACT. Research in AI Foundation Models, Computer Vision, and Generative AI.">
+    <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
-    <!-- Parallax Background -->
-    <div class="parallax-bg">
-        <div class="parallax-layer-1"></div>
-        <div class="parallax-layer-2"></div>
-        <div class="parallax-layer-3"></div>
+
+    <!-- Page Loader -->
+    <div id="pageLoader" class="page-loader">
+        <div class="loader-ring"></div>
     </div>
 
-    <!-- LIQUID GLASS NAVBAR - Same structure as glassDiv in index_liquid.html -->
-    <div class="navbarGlass">
-        <div class="navbarContent">
-            <div class="navLogo">Rohit Lal</div>
-            <ul class="navLinks" id="navLinks">
-                <div class="nav-bubble" id="navBubble"></div>
-                <li>
-                    <button data-section="about" class="nav-item active">About</button>
-                </li>
-                <li>
-                    <button data-section="news" class="nav-item">News</button>
-                </li>
-                <li>
-                    <button data-section="experience" class="nav-item">Experience</button>
-                </li>
-                <li>
-                    <button data-section="projects" class="nav-item">Projects</button>
-                </li>
-                <li>
-                    <button data-section="publications" class="nav-item">Publications</button>
-                </li>
-            </ul>
-        </div>
+    <!-- Custom Cursor -->
+    <div class="cursor-dot"></div>
+    <div class="cursor-ring"></div>
+    <div class="cursor-glow"></div>
+
+    <!-- Starfield Canvas (includes small random shooting stars) -->
+    <canvas id="starfield"></canvas>
+
+    <!-- Background Layer (parallax scroll) -->
+    <div class="bg-scroll-layer">
+        <div class="nebula nebula-1"></div>
+        <div class="nebula nebula-2"></div>
+        <div class="nebula nebula-3"></div>
+
+        <!-- Subtle Planets -->
+        <div class="space-planet planet-1"></div>
+        <div class="space-planet planet-2"></div>
+
+        <!-- Constellation -->
+        <svg class="constellation" width="200" height="160" style="top:10%;left:15%;" viewBox="0 0 200 160">
+            <line x1="20" y1="30" x2="80" y2="10" />
+            <line x1="80" y1="10" x2="140" y2="50" />
+            <line x1="140" y1="50" x2="170" y2="120" />
+            <line x1="80" y1="10" x2="60" y2="80" />
+            <circle cx="20" cy="30" r="2" />
+            <circle cx="80" cy="10" r="2.5" />
+            <circle cx="140" cy="50" r="2" />
+            <circle cx="170" cy="120" r="1.5" />
+            <circle cx="60" cy="80" r="1.5" />
+        </svg>
+        <svg class="constellation" width="180" height="140" style="top:55%;right:10%;" viewBox="0 0 180 140">
+            <line x1="30" y1="20" x2="90" y2="60" />
+            <line x1="90" y1="60" x2="150" y2="30" />
+            <line x1="90" y1="60" x2="100" y2="120" />
+            <circle cx="30" cy="20" r="2" />
+            <circle cx="90" cy="60" r="2.5" />
+            <circle cx="150" cy="30" r="1.5" />
+            <circle cx="100" cy="120" r="2" />
+        </svg>
     </div>
 
-    <!-- 
-        ========================================
-        LIQUID GLASS SVG FILTERS
-        ========================================
-        These SVG filters create the liquid ripple distortion effect.
-        
-        The 'glass-distortion' filter is automatically synchronized with CSS variables:
-        - baseFrequency is set from --noise-frequency variable
-        - scale is set from --distortion-strength variable
-        
-        These values are applied on page load via JavaScript (see initLiquidGlass function).
-        
-        To customize:
-        1. Change CSS variables in the :root section above (recommended)
-        2. OR manually edit the baseFrequency and scale attributes below
-        
-        feTurbulence: Creates the noise pattern for distortion
-          - baseFrequency: Controls ripple detail (higher = finer)
-          - numOctaves: Complexity of pattern (2 = good balance)
-          - seed: Random seed for pattern (92 = default)
-        
-        feDisplacementMap: Applies the distortion
-          - scale: Intensity of distortion (higher = more pronounced)
-    -->
-    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+    <!-- SVG Filters -->
+    <svg xmlns="http://www.w3.org/2000/svg" style="display:none;">
         <defs>
             <filter id="glass-distortion" x="0%" y="0%" width="100%" height="100%">
-                <feTurbulence type="fractalNoise" baseFrequency="0.008 0.008" numOctaves="2" seed="92" result="noise" />
+                <feTurbulence type="fractalNoise" baseFrequency="0.006 0.006" numOctaves="2" seed="92" result="noise" />
                 <feGaussianBlur in="noise" stdDeviation="2" result="blurred" />
-                <feDisplacementMap in="SourceGraphic" in2="blurred" scale="77" xChannelSelector="R"
+                <feDisplacementMap in="SourceGraphic" in2="blurred" scale="50" xChannelSelector="R"
                     yChannelSelector="G" />
-            </filter>
-            <filter id="lensFilter" x="0%" y="0%" width="100%" height="100%" filterUnits="objectBoundingBox">
-                <feComponentTransfer in="SourceAlpha" result="alpha">
-                    <feFuncA type="identity" />
-                </feComponentTransfer>
-                <feGaussianBlur in="alpha" stdDeviation="50" result="blur" />
-                <feDisplacementMap in="SourceGraphic" in2="blur" scale="50" xChannelSelector="A" yChannelSelector="A" />
             </filter>
         </defs>
     </svg>
 
+    <!-- ===== NAVBAR ===== -->
+    <nav class="navbar">
+        <div class="nav-inner">
+            <div class="nav-logo">⟨RL⟩</div>
+            <ul class="nav-links" id="navLinks">
+                <div class="nav-bubble" id="navBubble"></div>
+                <li><button data-section="about" class="nav-item active">About</button></li>
+                <li><button data-section="news" class="nav-item">News</button></li>
+                <li><button data-section="experience" class="nav-item">Experience</button></li>
+                <li><button data-section="projects" class="nav-item">Projects</button></li>
+                <li><button data-section="publications" class="nav-item">Publications</button></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ===== MAIN CONTENT ===== -->
     <div class="container">
+
+        <!-- HERO / ABOUT -->
         <section id="about" class="hero">
-            <div class="about-container">
-                <div class="about-card glass">
-                    <div class="about-left">
+            <div class="hero-card glass tilt-card reveal">
+                <div class="hero-left">
+                    <div class="hero-avatar-wrap">
                         <div class="hero-avatar"></div>
-                        <h1 class="hero-name">Rohit Lal</h1>
-                        <p class="hero-expertise">Computer Vision | Generative AI | NLP</p>
-                        <div class="social-links">
-                            <a href="https://github.com/take2rohit/" class="social-btn github" target="_blank" title="GitHub">
-                                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
-                                </svg>
-                            </a>
-                            <a href="https://in.linkedin.com/in/rohit-lal" class="social-btn linkedin" target="_blank" title="LinkedIn">
-                                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-                                </svg>
-                            </a>
-                            <a href="https://scholar.google.com/citations?user=q2nc3QoAAAAJ&hl=en" class="social-btn scholar" target="_blank" title="Google Scholar">
-                                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M12 24a7 7 0 110-14 7 7 0 010 14zm0-24L0 9.5l4.838 3.94A8 8 0 0112 9a8 8 0 017.162 4.44L24 9.5z"/>
-                                </svg>
-                            </a>
-                            <a href="mailto:take2rohit@gmail.com" class="social-btn email" title="Email">
-                                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
-                                </svg>
-                            </a>
-                        </div>
+                        <div class="hero-avatar-ring"></div>
                     </div>
-                    <div class="about-right">
-                        <h2 class="about-title">
-                            👨‍💻 About Me
-                        </h2>
-                        <div class="about-content">
-                            <p><strong>Computer Scientist at NASA IMPACT</strong></p>
-                            <p>I am currently a Computer Scientist at <a href="https://www.earthdata.nasa.gov/esds/impact" target="_blank">NASA IMPACT</a>, where my research focuses on building and scaling AI Foundation Models for Science. I completed my MS by Research under the supervision of Dr. Amit K. Roy Chowdhury at University of California-Riverside, where my thesis explored 3D human pose estimation for the IARPA BRIAR project.</p>
-                            <p>Prior to this, I worked at IISc Bangalore's Visual Computing Lab, focusing on Unsupervised Domain Adaptation and Adversarial Vulnerability in Computer Vision algorithms.</p>
-                            <p>Outside of my research, I'm passionate about traveling, hiking, photography, and video editing—and I'm always up for a game of table tennis! 🏓</p>
-                            <p><strong>📍 Location:</strong> National Space Science and Technology Center, Huntsville, AL-35805</p>
+                    <h1 class="hero-name">Rohit Lal</h1>
+                    <p class="hero-tagline" id="heroTagline" data-text="Computer Vision · Generative AI · NLP">Computer
+                        Vision · Generative AI · NLP</p>
+                    <div class="social-row">
+                        <a href="https://github.com/take2rohit/" class="social-btn" target="_blank" title="GitHub">
+                            <svg viewBox="0 0 24 24">
+                                <path
+                                    d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                            </svg>
+                        </a>
+                        <a href="https://in.linkedin.com/in/rohit-lal" class="social-btn" target="_blank"
+                            title="LinkedIn">
+                            <svg viewBox="0 0 24 24">
+                                <path
+                                    d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+                            </svg>
+                        </a>
+                        <a href="https://scholar.google.com/citations?user=q2nc3QoAAAAJ&hl=en" class="social-btn"
+                            target="_blank" title="Google Scholar">
+                            <svg viewBox="0 0 24 24">
+                                <path
+                                    d="M12 24a7 7 0 110-14 7 7 0 010 14zm0-24L0 9.5l4.838 3.94A8 8 0 0112 9a8 8 0 017.162 4.44L24 9.5z" />
+                            </svg>
+                        </a>
+                        <a href="mailto:take2rohit@gmail.com" class="social-btn" target="_blank" title="Email">
+                            <svg viewBox="0 0 24 24">
+                                <path
+                                    d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                <div class="hero-right">
+                    <h2 class="about-title">👨‍💻 About Me</h2>
+                    <div class="about-content">
+                        <p><strong>Computer Scientist at NASA IMPACT</strong></p>
+                        <p>Building and scaling <strong>AI Foundation Models for Science</strong> at <a
+                                href="https://www.earthdata.nasa.gov/esds/impact" target="_blank">NASA IMPACT</a>.
+                            Completed MS by Research at UC Riverside under Dr. Amit K. Roy Chowdhury — thesis on
+                            <strong>3D human pose estimation</strong> for IARPA BRIAR.
+                        </p>
+                        <p>Previously at <strong>IISc Bangalore's Visual Computing Lab</strong>, working on unsupervised
+                            domain
+                            adaptation and adversarial robustness in computer vision.</p>
+                        <p>📍 National Space Science and Technology Center, Huntsville, AL</p>
+                    </div>
+                    <div class="hero-stats">
+                        <div class="stat-item">
+                            <span class="stat-number" data-count="7" data-suffix="+">0</span>
+                            <span class="stat-label">Publications</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" data-count="6" data-suffix="+">0</span>
+                            <span class="stat-label">Projects</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" data-count="4" data-suffix="+">0</span>
+                            <span class="stat-label">Years Exp</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" data-count="1">0</span>
+                            <span class="stat-label">Patent</span>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
+        <!-- NEWS -->
         <section id="news" class="section">
-            <div class="section-container glass parallax-card">
+            <div class="section-card glass reveal">
                 <div class="section-header">
                     <div class="section-icon">📰</div>
                     <h2 class="section-title">Latest News</h2>
                 </div>
-                <div class="news-list">
-                    <div class="news-item">
+                <div class="news-list stagger-children">
+                    <div class="news-item reveal">
                         <span class="news-date">Aug '25</span>
-                        <div class="news-content">
-                            Released <strong>Surya</strong> - Foundation model for HelioPhysics. Featured by <a href="https://science.data.nasa.gov/features-events/inside-surya-solar-ai-model" target="_blank">NASA</a> and <a href="https://arxiv.org/abs/2508.14112" target="_blank">ArXiv</a>.
-                        </div>
+                        <div class="news-text">Released <strong>Surya</strong> — foundation model for heliophysics.
+                            Featured by <a
+                                href="https://science.data.nasa.gov/features-events/inside-surya-solar-ai-model"
+                                target="_blank">NASA</a> and <a href="https://arxiv.org/abs/2508.14112"
+                                target="_blank">ArXiv</a>.</div>
                     </div>
-                    <div class="news-item">
+                    <div class="news-item reveal">
                         <span class="news-date">Jul '25</span>
-                        <div class="news-content">
-                            Paper on <strong>Layer-wise Alignment</strong> accepted as SPOTLIGHT at ICML 2025 (Top 2.6%)! 🎉
-                        </div>
+                        <div class="news-text"><strong>Layer-wise Alignment</strong> accepted as
+                            <strong>SPOTLIGHT</strong> at ICML 2025 (Top 2.6%) 🎉</div>
                     </div>
-                    <div class="news-item">
+                    <div class="news-item reveal">
                         <span class="news-date">Jun '25</span>
-                        <div class="news-content">
-                            Paper <strong>VOccl3D</strong> accepted at ICCV 2025 on 3D Human Pose under occlusions.
-                        </div>
+                        <div class="news-text"><strong>VOccl3D</strong> accepted at ICCV 2025 — 3D pose estimation under
+                            occlusions.</div>
                     </div>
-                    <div class="news-item">
+                    <div class="news-item reveal">
                         <span class="news-date">Apr '25</span>
-                        <div class="news-content">
-                            Serving as reviewer for CVPR 2025, ICLR 2025, and ICCV 2025. 📝
+                        <div class="news-text">Serving as reviewer for <strong>CVPR, ICLR, and ICCV 2025</strong>. 📝
                         </div>
                     </div>
-                    <div class="news-item">
+                    <div class="news-item reveal">
                         <span class="news-date">Feb '25</span>
-                        <div class="news-content">
-                            Delivered oral presentation of <strong>STRIDE</strong> at WACV 2025.
-                        </div>
+                        <div class="news-text">Oral presentation of <strong>STRIDE</strong> at WACV 2025.</div>
                     </div>
-                    <div class="news-item">
+                    <div class="news-item reveal">
                         <span class="news-date">Sep '24</span>
-                        <div class="news-content">
-                            Released <strong>Prithvi WxC</strong> - AI model for weather and climate. Check out <a href="https://science.nasa.gov/open-science/ai-model-weather-climate/" target="_blank">NASA's announcement</a>.
+                        <div class="news-text">Released <strong>Prithvi WxC</strong> — AI model for weather & climate.
+                            <a href="https://science.nasa.gov/open-science/ai-model-weather-climate/"
+                                target="_blank">NASA announcement →</a>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
+        <!-- EXPERIENCE -->
         <section id="experience" class="section">
-            <div class="section-container glass parallax-card">
+            <div class="section-card glass reveal">
                 <div class="section-header">
                     <div class="section-icon">💼</div>
                     <h2 class="section-title">Experience</h2>
                 </div>
-                <div class="experience-grid">
-                    <div class="subcard glass experience-card">
-                    <div class="experience-header">
-                        <div class="experience-icon">🚀</div>
-                        <div class="experience-info">
-                            <span class="experience-date">Jul 2021 - Current</span>
-                            <h3 class="experience-title">Project Assistant, Visual Computing Lab</h3>
-                            <div class="experience-company">Indian Institute of Science (IISc), Bangalore</div>
-                        </div>
+                <div class="timeline stagger-children">
+                    <div class="timeline-item reveal">
+                        <span class="timeline-icon">🚀</span>
+                        <span class="timeline-date">Jul 2021 — Present</span>
+                        <h3 class="timeline-title">Computer Scientist</h3>
+                        <div class="timeline-company">NASA IMPACT · IISc Bangalore</div>
+                        <div class="timeline-desc">Research in unsupervised domain adaptation and adversarial
+                            robustness. Building AI foundation models for science at NASA.</div>
                     </div>
-                    <div class="experience-description">
-                        Working at Visual Computing Lab, Department of CDS, conducting research in unsupervised learning methodologies and domain adaptation under Dr. Anirban Chakraborty.
+                    <div class="timeline-item reveal">
+                        <span class="timeline-icon">🎓</span>
+                        <span class="timeline-date">2022 — 2024</span>
+                        <h3 class="timeline-title">MS by Research</h3>
+                        <div class="timeline-company">University of California, Riverside</div>
+                        <div class="timeline-desc">3D human pose estimation under Dr. Amit K. Roy Chowdhury for the
+                            IARPA BRIAR project.</div>
                     </div>
-                </div>
-
-                <div class="subcard glass experience-card">
-                    <div class="experience-header">
-                        <div class="experience-icon">🛡️</div>
-                        <div class="experience-info">
-                            <span class="experience-date">Jul 2020 - Sept 2020</span>
-                            <h3 class="experience-title">Computer Vision Research Intern</h3>
-                            <div class="experience-company">Defence Research Development Organisation (DRDO)</div>
-                        </div>
+                    <div class="timeline-item reveal">
+                        <span class="timeline-icon">🛡️</span>
+                        <span class="timeline-date">Jul — Sep 2020</span>
+                        <h3 class="timeline-title">Computer Vision Research Intern</h3>
+                        <div class="timeline-company">DRDO — CAIR Lab</div>
+                        <div class="timeline-desc">Object detection & tracking from drone cameras at 100m altitude with
+                            senior scientists.</div>
                     </div>
-                    <div class="experience-description">
-                        Collaborated with senior scientists at CAIR Lab on building object detection and tracking pipelines using drone cameras at 100m altitude.
+                    <div class="timeline-item reveal">
+                        <span class="timeline-icon">🧬</span>
+                        <span class="timeline-date">Apr — Nov 2020</span>
+                        <h3 class="timeline-title">Deep Learning Research Intern</h3>
+                        <div class="timeline-company">National University of Singapore</div>
+                        <div class="timeline-desc">6D pose estimation for origami robot gaits using deep learning at
+                            Medical Mechatronics Lab.</div>
                     </div>
-                </div>
-
-                <div class="subcard glass experience-card">
-                    <div class="experience-header">
-                        <div class="experience-icon">🎓</div>
-                        <div class="experience-info">
-                            <span class="experience-date">Apr 2020 - Nov 2020</span>
-                            <h3 class="experience-title">Deep Learning Research Intern</h3>
-                            <div class="experience-company">National University of Singapore</div>
-                        </div>
-                    </div>
-                    <div class="experience-description">
-                        Worked under Prof. Hongliang Ren at Medical Mechatronics Lab on tracking gaits generated by Origami robots using CV and deep learning for 6D pose estimation.
-                    </div>
-                </div>
-
-                <div class="subcard glass experience-card">
-                    <div class="experience-header">
-                        <div class="experience-icon">⚡</div>
-                        <div class="experience-info">
-                            <span class="experience-date">Jul 2019 - Jul 2020</span>
-                            <h3 class="experience-title">Chairman</h3>
-                            <div class="experience-company">IEEE VNIT Student Branch</div>
-                        </div>
-                    </div>
-                    <div class="experience-description">
-                        Led the council responsible for managing the technical society and involved in decision-making for several initiatives.
-                    </div>
-                </div>
                 </div>
             </div>
         </section>
 
+        <!-- PROJECTS -->
         <section id="projects" class="section">
-            <div class="section-container glass parallax-card">
+            <div class="section-card glass reveal">
                 <div class="section-header">
-                    <div class="section-icon">🚀</div>
+                    <div class="section-icon">🛸</div>
                     <h2 class="section-title">Featured Projects</h2>
                 </div>
-                <div class="grid">
-                    <div class="subcard glass">
-                    <div class="card-header">
-                        <div class="icon glass">🤖</div>
-                        <div>
-                            <h3 class="card-title">Person Follower Robot</h3>
-                            <p class="card-subtitle">TurtleBot-2 with ROS</p>
+                <div class="card-grid stagger-children">
+                    <div class="subcard tilt-card reveal">
+                        <div class="card-header">
+                            <div class="card-icon">🤖</div>
+                            <div>
+                                <h3 class="card-title">Person Follower Robot</h3>
+                                <p class="card-subtitle">TurtleBot-2 · ROS · Stereo Vision</p>
+                            </div>
+                        </div>
+                        <div class="card-body">Real-time person detection & tracking using stereo camera with ROS
+                            integration.</div>
+                        <div class="btn-row">
+                            <a href="https://www.youtube.com/watch?v=XnrbU1050ls" class="btn" target="_blank">▶
+                                Video</a>
+                            <a href="https://github.com/khush3/person_following_bot" class="btn" target="_blank">💻
+                                Code</a>
                         </div>
                     </div>
-                    <div class="card-content">
-                        Multiplexed detection and tracking pipeline using stereo camera in real-time with Robot Operating System integration.
-                    </div>
-                    <div class="project-links">
-                        <a href="https://www.youtube.com/watch?v=XnrbU1050ls" class="btn-glass" target="_blank">▶ Video</a>
-                        <a href="https://github.com/khush3/person_following_bot" class="btn-glass" target="_blank">💻 Code</a>
-                    </div>
-                </div>
-
-                <div class="subcard glass">
-                    <div class="card-header">
-                        <div class="icon glass">🚗</div>
-                        <div>
-                            <h3 class="card-title">License Plate Recognition</h3>
-                            <p class="card-subtitle">Indian ALPR System</p>
+                    <div class="subcard tilt-card reveal">
+                        <div class="card-header">
+                            <div class="card-icon">🚗</div>
+                            <div>
+                                <h3 class="card-title">License Plate Recognition</h3>
+                                <p class="card-subtitle">Indian ALPR · IoT Database</p>
+                            </div>
+                        </div>
+                        <div class="card-body">End-to-end plate detection with car model, speed & face extraction — IoT
+                            integrated.</div>
+                        <div class="btn-row">
+                            <a href="https://youtu.be/Y-EuzsubixI" class="btn" target="_blank">▶ Video</a>
+                            <a href="https://github.com/conspicio-ai/alpr" class="btn" target="_blank">💻 Code</a>
                         </div>
                     </div>
-                    <div class="card-content">
-                        Robust registration plate detection with car model, speed, and face extraction integrated with IoT database.
-                    </div>
-                    <div class="project-links">
-                        <a href="https://youtu.be/Y-EuzsubixI" class="btn-glass" target="_blank">▶ Video</a>
-                        <a href="https://github.com/conspicio-ai/alpr" class="btn-glass" target="_blank">💻 Code</a>
-                    </div>
-                </div>
-
-                <div class="subcard glass">
-                    <div class="card-header">
-                        <div class="icon glass">🎮</div>
-                        <div>
-                            <h3 class="card-title">Taxi v3 OpenAI Gym</h3>
-                            <p class="card-subtitle">Reinforcement Learning</p>
+                    <div class="subcard tilt-card reveal">
+                        <div class="card-header">
+                            <div class="card-icon">🎮</div>
+                            <div>
+                                <h3 class="card-title">Taxi v3 · OpenAI Gym</h3>
+                                <p class="card-subtitle">Reinforcement Learning</p>
+                            </div>
+                        </div>
+                        <div class="card-body">Q-Learning solution ranking consistently in top-5 on the Gym leaderboard.
+                        </div>
+                        <div class="btn-row">
+                            <a href="https://github.com/take2rohit/taxi_v3_openai" class="btn" target="_blank">💻
+                                Code</a>
                         </div>
                     </div>
-                    <div class="card-content">
-                        Q-Learning solution consistently ranking in top-5 on OpenAI Gym Leaderboard for the Taxi-v3 environment.
-                    </div>
-                    <div class="project-links">
-                        <a href="https://github.com/take2rohit/taxi_v3_openai" class="btn-glass" target="_blank">💻 Code</a>
-                    </div>
-                </div>
-
-                <div class="subcard glass">
-                    <div class="card-header">
-                        <div class="icon glass">📷</div>
-                        <div>
-                            <h3 class="card-title">Self-Balancing Platform</h3>
-                            <p class="card-subtitle">Camera Gimbal System</p>
+                    <div class="subcard tilt-card reveal">
+                        <div class="card-header">
+                            <div class="card-icon">📷</div>
+                            <div>
+                                <h3 class="card-title">Camera Gimbal System</h3>
+                                <p class="card-subtitle">Self-Balancing Platform</p>
+                            </div>
+                        </div>
+                        <div class="card-body">Control system for airborne camera stabilization — target tracking &
+                            aerial photography.</div>
+                        <div class="btn-row">
+                            <a href="https://www.youtube.com/watch?v=1D1ZQ6mKg0k" class="btn" target="_blank">▶
+                                Video</a>
+                            <a href="https://github.com/take2rohit/self-balancing-platform" class="btn"
+                                target="_blank">💻 Code</a>
                         </div>
                     </div>
-                    <div class="card-content">
-                        Control system for camera gimbal stabilization used in airborne systems for target tracking and aerial photography.
-                    </div>
-                    <div class="project-links">
-                        <a href="https://www.youtube.com/watch?v=1D1ZQ6mKg0k" class="btn-glass" target="_blank">▶ Video</a>
-                        <a href="https://github.com/take2rohit/self-balancing-platform" class="btn-glass" target="_blank">💻 Code</a>
-                    </div>
-                </div>
-
-                <div class="subcard glass">
-                    <div class="card-header">
-                        <div class="icon glass">📝</div>
-                        <div>
-                            <h3 class="card-title">Word Embeddings</h3>
-                            <p class="card-subtitle">NLP with Word2Vec</p>
+                    <div class="subcard tilt-card reveal">
+                        <div class="card-header">
+                            <div class="card-icon">📝</div>
+                            <div>
+                                <h3 class="card-title">Word2Vec Reimplementation</h3>
+                                <p class="card-subtitle">NLP · SkipGram · N-Gram</p>
+                            </div>
+                        </div>
+                        <div class="card-body">From-scratch implementation of Word2Vec with SkipGram and N-Gram models.
+                        </div>
+                        <div class="btn-row">
+                            <a href="https://github.com/take2rohit/NLP_word_embedding" class="btn" target="_blank">💻
+                                Code</a>
                         </div>
                     </div>
-                    <div class="card-content">
-                        Reimplementation of Word2Vec research paper with SkipGram and N-Gram models for linguistic context mapping.
-                    </div>
-                    <div class="project-links">
-                        <a href="https://github.com/take2rohit/NLP_word_embedding" class="btn-glass" target="_blank">💻 Code</a>
-                    </div>
-                </div>
-
-                <div class="subcard glass">
-                    <div class="card-header">
-                        <div class="icon glass">✍️</div>
-                        <div>
-                            <h3 class="card-title">Digit Recognition</h3>
-                            <p class="card-subtitle">MNIST from Scratch</p>
+                    <div class="subcard tilt-card reveal">
+                        <div class="card-header">
+                            <div class="card-icon">✍️</div>
+                            <div>
+                                <h3 class="card-title">MNIST from Scratch</h3>
+                                <p class="card-subtitle">Pure Numpy · IvLabs VNIT</p>
+                            </div>
+                        </div>
+                        <div class="card-body">Real-time digit classifier built from scratch with Numpy — summer
+                            mentorship project.</div>
+                        <div class="btn-row">
+                            <a href="https://www.youtube.com/watch?v=SCYhVTUIdoo" class="btn" target="_blank">▶
+                                Video</a>
+                            <a href="https://github.com/GlazeDonuts/Summer-Project-2019" class="btn" target="_blank">💻
+                                Code</a>
                         </div>
                     </div>
-                    <div class="card-content">
-                        Real-time MNIST digit classifier coded from scratch using Numpy. Mentored summer project at IvLabs, VNIT.
-                    </div>
-                    <div class="project-links">
-                        <a href="https://www.youtube.com/watch?v=SCYhVTUIdoo" class="btn-glass" target="_blank">▶ Video</a>
-                        <a href="https://github.com/GlazeDonuts/Summer-Project-2019" class="btn-glass" target="_blank">💻 Code</a>
-                    </div>
-                </div>
                 </div>
             </div>
         </section>
 
+        <!-- PUBLICATIONS -->
         <section id="publications" class="section">
-            <div class="section-container glass parallax-card">
+            <div class="section-card glass reveal">
                 <div class="section-header">
                     <div class="section-icon">📚</div>
                     <h2 class="section-title">Publications</h2>
                 </div>
-                <div class="grid">
-                    <div class="subcard glass">
-                    <div class="pub-title">Prithvi WxC - Foundation model for weather and climate</div>
-                    <div class="pub-authors">J Schmude, S Roy, ..., Rohit Lal, ...</div>
-                    <span class="pub-venue">arXiv preprint</span>
-                    <div class="pub-links">
-                        <a href="https://arxiv.org/abs/2409.13598" class="btn-glass" target="_blank">📄 Paper</a>
-                        <a href="https://github.com/NASA-IMPACT/Prithvi-WxC" class="btn-glass" target="_blank">💻 Code</a>
+                <div class="card-grid stagger-children">
+                    <div class="subcard tilt-card reveal">
+                        <h3 class="card-title" style="margin-bottom:0.4rem;">Prithvi WxC — Foundation Model for Weather
+                            & Climate</h3>
+                        <div class="pub-authors">J Schmude, S Roy, ..., Rohit Lal, ...</div>
+                        <span class="pub-venue">arXiv preprint</span>
+                        <div class="btn-row">
+                            <a href="https://arxiv.org/abs/2409.13598" class="btn" target="_blank">📄 Paper</a>
+                            <a href="https://github.com/NASA-IMPACT/Prithvi-WxC" class="btn" target="_blank">💻 Code</a>
+                        </div>
                     </div>
-                </div>
-
-                <div class="subcard glass">
-                    <div class="pub-title">STRIDE - Occlusion-Robust 3D Pose Estimation</div>
-                    <div class="pub-authors">Rohit Lal, Saketh Bachu, Yash Garg, Arindam Dutta, Calvin-Khang Ta, Hannah D. Cruz</div>
-                    <span class="pub-venue">WACV 2025</span>
-                    <div class="pub-links">
-                        <a href="https://sites.google.com/view/sample-adv-trustworthy/" class="btn-glass" target="_blank">🌐 Project</a>
-                        <a href="https://github.com/take2rohit/STRIDE" class="btn-glass" target="_blank">💻 Code</a>
+                    <div class="subcard tilt-card reveal">
+                        <h3 class="card-title" style="margin-bottom:0.4rem;">STRIDE — Occlusion-Robust 3D Pose
+                            Estimation</h3>
+                        <div class="pub-authors">Rohit Lal, Saketh Bachu, Yash Garg, Arindam Dutta, Calvin-Khang Ta,
+                            Hannah D. Cruz</div>
+                        <span class="pub-venue">WACV 2025</span>
+                        <div class="btn-row">
+                            <a href="https://sites.google.com/view/sample-adv-trustworthy/" class="btn"
+                                target="_blank">🌐 Project</a>
+                            <a href="https://github.com/take2rohit/STRIDE" class="btn" target="_blank">💻 Code</a>
+                        </div>
                     </div>
-                </div>
-
-                <div class="subcard glass">
-                    <div class="pub-title">Prior-guided Source-free Domain Adaptation for Human Pose Estimation</div>
-                    <div class="pub-authors">DS Raychaudhuri, CK Ta, A Dutta, Rohit Lal, AK Roy-Chowdhury</div>
-                    <span class="pub-venue">ICCV 2023</span>
-                    <div class="pub-links">
-                        <a href="https://openaccess.thecvf.com/content/ICCV2023/papers/Raychaudhuri_Prior-guided_Source-free_Domain_Adaptation_for_Human_Pose_Estimation_ICCV_2023_paper.pdf" class="btn-glass" target="_blank">📄 Paper</a>
-                        <a href="https://github.com/driptaRC/POST" class="btn-glass" target="_blank">💻 Code</a>
+                    <div class="subcard tilt-card reveal">
+                        <h3 class="card-title" style="margin-bottom:0.4rem;">Prior-guided Source-free Domain Adaptation
+                            for HPE</h3>
+                        <div class="pub-authors">DS Raychaudhuri, CK Ta, A Dutta, Rohit Lal, AK Roy-Chowdhury</div>
+                        <span class="pub-venue">ICCV 2023</span>
+                        <div class="btn-row">
+                            <a href="https://openaccess.thecvf.com/content/ICCV2023/papers/Raychaudhuri_Prior-guided_Source-free_Domain_Adaptation_for_Human_Pose_Estimation_ICCV_2023_paper.pdf"
+                                class="btn" target="_blank">📄 Paper</a>
+                            <a href="https://github.com/driptaRC/POST" class="btn" target="_blank">💻 Code</a>
+                        </div>
                     </div>
-                </div>
-
-                <div class="subcard glass">
-                    <div class="pub-title">CoNMix for Source-free Domain Adaptation</div>
-                    <div class="pub-authors">Vikash Kumar*, Rohit Lal*, Himanshu Patil, Anirban Chakraborty</div>
-                    <span class="pub-venue">WACV 2023</span>
-                    <div class="pub-links">
-                        <a href="https://sites.google.com/view/conmix-vcl" class="btn-glass" target="_blank">🌐 Project</a>
+                    <div class="subcard tilt-card reveal">
+                        <h3 class="card-title" style="margin-bottom:0.4rem;">CoNMix for Source-free Domain Adaptation
+                        </h3>
+                        <div class="pub-authors">Vikash Kumar*, Rohit Lal*, Himanshu Patil, Anirban Chakraborty</div>
+                        <span class="pub-venue">WACV 2023</span>
+                        <div class="btn-row">
+                            <a href="https://sites.google.com/view/conmix-vcl" class="btn" target="_blank">🌐
+                                Project</a>
+                        </div>
                     </div>
-                </div>
-
-                <div class="subcard glass">
-                    <div class="pub-title">Holistic Approach to Measure Sample-level Adversarial Vulnerability</div>
-                    <div class="pub-authors">Gaurav Kumar Nayak*, Ruchit Rawal*, Rohit Lal*, Himanshu Patil, Anirban Chakraborty</div>
-                    <span class="pub-venue">HCIS Workshop, CVPR 2022</span>
-                    <div class="pub-links">
-                        <a href="https://sites.google.com/view/sample-adv-trustworthy/" class="btn-glass" target="_blank">🌐 Project</a>
+                    <div class="subcard tilt-card reveal">
+                        <h3 class="card-title" style="margin-bottom:0.4rem;">Holistic Measure of Sample-level
+                            Adversarial Vulnerability</h3>
+                        <div class="pub-authors">GK Nayak*, R Rawal*, Rohit Lal*, H Patil, A Chakraborty</div>
+                        <span class="pub-venue">HCIS Workshop · CVPR 2022</span>
+                        <div class="btn-row">
+                            <a href="https://sites.google.com/view/sample-adv-trustworthy/" class="btn"
+                                target="_blank">🌐 Project</a>
+                        </div>
                     </div>
-                </div>
                 </div>
             </div>
         </section>
 
+        <!-- PATENTS & ACHIEVEMENTS -->
         <section id="achievements" class="section">
-            <div class="section-container glass parallax-card">
+            <div class="section-card glass reveal">
                 <div class="section-header">
                     <div class="section-icon">🏆</div>
                     <h2 class="section-title">Patents & Achievements</h2>
                 </div>
-                <div class="grid">
-                    <div class="subcard glass">
-                    <div class="card-header">
-                        <div class="icon glass">📜</div>
-                        <div>
-                            <h3 class="card-title">Navigation System Patent</h3>
-                            <p class="card-subtitle">Dec 1, 2019</p>
+                <div class="card-grid stagger-children">
+                    <div class="subcard tilt-card reveal">
+                        <div class="card-header">
+                            <div class="card-icon">📜</div>
+                            <div>
+                                <h3 class="card-title">Navigation System Patent</h3>
+                                <p class="card-subtitle">Patent No: 201921049473</p>
+                            </div>
+                        </div>
+                        <div class="card-body">Pandya K, Kotecha P, Iyer VA, Gaikwad R, <strong>Lal R</strong>, Agrawal
+                            R, Chiddarwar S</div>
+                        <div class="btn-row"><a href="https://www.youtube.com/watch?v=ePORvzIond8" class="btn"
+                                target="_blank">▶ Video</a></div>
+                    </div>
+                    <div class="subcard tilt-card reveal">
+                        <div class="card-header">
+                            <div class="card-icon">🏆</div>
+                            <div>
+                                <h3 class="card-title">Smart India Hackathon 2020</h3>
+                                <p class="card-subtitle">🥇 First Place · MHRD</p>
+                            </div>
+                        </div>
+                        <div class="card-body">National winner with ₹1,00,000 cash prize for ALPR system.</div>
+                        <div class="btn-row"><a href="https://youtu.be/Y-EuzsubixI" class="btn" target="_blank">▶
+                                Video</a></div>
+                    </div>
+                    <div class="subcard tilt-card reveal">
+                        <div class="card-header">
+                            <div class="card-icon">🥇</div>
+                            <div>
+                                <h3 class="card-title">AXIS'20 — Double Victory</h3>
+                                <p class="card-subtitle">Central India's Largest Techfest</p>
+                            </div>
+                        </div>
+                        <div class="card-body">Two first-place wins in 'Techno.Docx' and 'Electroblitz' at VNIT AXIS'20.
                         </div>
                     </div>
-                    <div class="card-content">
-                        <span class="patent-number">Patent No: 201921049473</span>
-                        <div style="margin-top: 0.5rem;">
-                            <strong>Authors:</strong> Pandya Karan, Kotecha Prakrut, Iyer V Aadhithya, Gaikwad Ravishankar, Lal Rohit, Agrawal Rishesh and Shital Chiddarwar
-                        </div>
-                    </div>
-                    <div class="project-links">
-                        <a href="https://www.youtube.com/watch?v=ePORvzIond8" class="btn-glass" target="_blank">▶ Video</a>
-                    </div>
-                </div>
-
-                <div class="subcard glass">
-                    <div class="card-header">
-                        <div class="icon glass">🏆</div>
-                        <div>
-                            <h3 class="card-title">Smart India Hackathon 2020</h3>
-                            <p class="card-subtitle">First Position</p>
-                        </div>
-                    </div>
-                    <div class="card-content">
-                        Won first position at Smart India Hackathon 2020 conducted by MHRD with cash prize of Rs. 1,00,000.
-                    </div>
-                    <div class="project-links">
-                        <a href="https://youtu.be/Y-EuzsubixI" class="btn-glass" target="_blank">▶ Video</a>
-                    </div>
-                </div>
-
-                <div class="subcard glass">
-                    <div class="card-header">
-                        <div class="icon glass">🥇</div>
-                        <div>
-                            <h3 class="card-title">AXIS'20 Competitions</h3>
-                            <p class="card-subtitle">Double Victory</p>
-                        </div>
-                    </div>
-                    <div class="card-content">
-                        Bagged two first positions in 'Techno.Docx' and 'Electroblitz' competitions at AXIS'20, VNIT - Central India's Largest Techfest.
-                    </div>
-                </div>
                 </div>
             </div>
         </section>
 
+        <!-- SKILLS -->
         <section id="skills" class="section">
-            <div class="section-container glass parallax-card">
+            <div class="section-card glass reveal">
                 <div class="section-header">
                     <div class="section-icon">⚡</div>
                     <h2 class="section-title">Skills & Technologies</h2>
                 </div>
-                <div class="skills-grid">
-                    <div class="skill-card subcard glass">
-                    <div class="skill-icon">🐍</div>
-                    <div class="skill-name">Python</div>
-                </div>
-                <div class="skill-card subcard glass">
-                    <div class="skill-icon">🔥</div>
-                    <div class="skill-name">PyTorch</div>
-                </div>
-                <div class="skill-card subcard glass">
-                    <div class="skill-icon">🧠</div>
-                    <div class="skill-name">TensorFlow</div>
-                </div>
-                <div class="skill-card subcard glass">
-                    <div class="skill-icon">👁️</div>
-                    <div class="skill-name">OpenCV</div>
-                </div>
-                <div class="skill-card subcard glass">
-                    <div class="skill-icon">⚙️</div>
-                    <div class="skill-name">C/C++</div>
-                </div>
-                <div class="skill-card subcard glass">
-                    <div class="skill-icon">📊</div>
-                    <div class="skill-name">MATLAB</div>
-                </div>
-                <div class="skill-card subcard glass">
-                    <div class="skill-icon">🎨</div>
-                    <div class="skill-name">Photoshop</div>
-                </div>
-                <div class="skill-card subcard glass">
-                    <div class="skill-icon">✏️</div>
-                    <div class="skill-name">Illustrator</div>
-                </div>
-                <div class="skill-card subcard glass">
-                    <div class="skill-icon">🔀</div>
-                    <div class="skill-name">GitHub</div>
-                </div>
-                <div class="skill-card subcard glass">
-                    <div class="skill-icon">📝</div>
-                    <div class="skill-name">LaTeX</div>
-                </div>
-                <div class="skill-card subcard glass">
-                    <div class="skill-icon">☁️</div>
-                    <div class="skill-name">GCP</div>
-                </div>
-                <div class="skill-card subcard glass">
-                    <div class="skill-icon">🤖</div>
-                    <div class="skill-name">Arduino</div>
-                </div>
+                <div class="skills-orbit stagger-children">
+                    <div class="skill-node reveal"><span class="skill-icon">🐍</span><span
+                            class="skill-name">Python</span></div>
+                    <div class="skill-node reveal"><span class="skill-icon">🔥</span><span
+                            class="skill-name">PyTorch</span></div>
+                    <div class="skill-node reveal"><span class="skill-icon">🧠</span><span
+                            class="skill-name">TensorFlow</span></div>
+                    <div class="skill-node reveal"><span class="skill-icon">👁️</span><span
+                            class="skill-name">OpenCV</span></div>
+                    <div class="skill-node reveal"><span class="skill-icon">⚙️</span><span
+                            class="skill-name">C/C++</span></div>
+                    <div class="skill-node reveal"><span class="skill-icon">📊</span><span
+                            class="skill-name">MATLAB</span></div>
+                    <div class="skill-node reveal"><span class="skill-icon">🎨</span><span
+                            class="skill-name">Photoshop</span></div>
+                    <div class="skill-node reveal"><span class="skill-icon">✏️</span><span
+                            class="skill-name">Illustrator</span></div>
+                    <div class="skill-node reveal"><span class="skill-icon">🔀</span><span
+                            class="skill-name">GitHub</span></div>
+                    <div class="skill-node reveal"><span class="skill-icon">📝</span><span
+                            class="skill-name">LaTeX</span></div>
+                    <div class="skill-node reveal"><span class="skill-icon">☁️</span><span class="skill-name">GCP</span>
+                    </div>
+                    <div class="skill-node reveal"><span class="skill-icon">🤖</span><span
+                            class="skill-name">Arduino</span></div>
                 </div>
             </div>
         </section>
 
+        <!-- COURSES -->
         <section id="courses" class="section">
-            <div class="section-container glass parallax-card">
+            <div class="section-card glass reveal">
                 <div class="section-header">
                     <div class="section-icon">🎓</div>
                     <h2 class="section-title">Courses & Certifications</h2>
                 </div>
-                <div class="grid">
-                    <div class="subcard glass">
-                    <div class="card-header">
-                        <div class="icon glass">🎓</div>
-                        <div>
-                            <h3 class="card-title">Machine Learning</h3>
-                            <p class="card-subtitle">by Andrew Ng</p>
+                <div class="course-grid stagger-children">
+                    <div class="subcard reveal">
+                        <div class="card-header">
+                            <div class="card-icon">🎓</div>
+                            <div>
+                                <h3 class="card-title">Machine Learning</h3>
+                                <p class="card-subtitle">Andrew Ng · Coursera</p>
+                            </div>
+                        </div>
+                        <div class="btn-row"><a
+                                href="https://www.coursera.org/account/accomplishments/verify/G9XX9CYSFJUY" class="btn"
+                                target="_blank">📜 Certificate</a></div>
+                    </div>
+                    <div class="subcard reveal">
+                        <div class="card-header">
+                            <div class="card-icon">🧠</div>
+                            <div>
+                                <h3 class="card-title">Neural Networks & Deep Learning</h3>
+                                <p class="card-subtitle">deeplearning.ai · Coursera</p>
+                            </div>
+                        </div>
+                        <div class="btn-row"><a
+                                href="https://www.coursera.org/account/accomplishments/verify/G9XX9CYSFJUY" class="btn"
+                                target="_blank">📜 Certificate</a></div>
+                    </div>
+                    <div class="subcard reveal">
+                        <div class="card-header">
+                            <div class="card-icon">⚡</div>
+                            <div>
+                                <h3 class="card-title">Improving Deep Neural Networks</h3>
+                                <p class="card-subtitle">deeplearning.ai</p>
+                            </div>
+                        </div>
+                        <div class="btn-row"><a
+                                href="https://www.coursera.org/account/accomplishments/verify/K5CL3SVXLY7Q" class="btn"
+                                target="_blank">📜 Certificate</a></div>
+                    </div>
+                    <div class="subcard reveal">
+                        <div class="card-header">
+                            <div class="card-icon">🔍</div>
+                            <div>
+                                <h3 class="card-title">Convolutional Neural Networks</h3>
+                                <p class="card-subtitle">deeplearning.ai · Coursera</p>
+                            </div>
+                        </div>
+                        <div class="btn-row"><a
+                                href="https://www.coursera.org/account/accomplishments/certificate/7ADJEDF2ETRH"
+                                class="btn" target="_blank">📜 Certificate</a></div>
+                    </div>
+                    <div class="subcard reveal">
+                        <div class="card-header">
+                            <div class="card-icon">📐</div>
+                            <div>
+                                <h3 class="card-title">Structuring ML Projects</h3>
+                                <p class="card-subtitle">deeplearning.ai · Coursera</p>
+                            </div>
+                        </div>
+                        <div class="btn-row"><a
+                                href="https://www.coursera.org/account/accomplishments/verify/YWUNM3JRUZJW" class="btn"
+                                target="_blank">📜 Certificate</a></div>
+                    </div>
+                    <div class="subcard reveal">
+                        <div class="card-header">
+                            <div class="card-icon">👀</div>
+                            <div>
+                                <h3 class="card-title">Intro to Computer Vision</h3>
+                                <p class="card-subtitle">Aaron Bobbick · Udacity</p>
+                            </div>
                         </div>
                     </div>
-                    <div class="card-content">
-                        <div class="course-source">Coursera</div>
-                    </div>
-                    <a href="https://www.coursera.org/account/accomplishments/verify/G9XX9CYSFJUY" class="btn-glass" target="_blank">📜 Certificate</a>
-                </div>
-
-                <div class="subcard glass">
-                    <div class="card-header">
-                        <div class="icon glass">🧠</div>
-                        <div>
-                            <h3 class="card-title">Neural Networks and Deep Learning</h3>
-                            <p class="card-subtitle">deeplearning.ai</p>
+                    <div class="subcard reveal">
+                        <div class="card-header">
+                            <div class="card-icon">🔢</div>
+                            <div>
+                                <h3 class="card-title">Sequence Models</h3>
+                                <p class="card-subtitle">Andrew Ng · deeplearning.ai</p>
+                            </div>
                         </div>
                     </div>
-                    <div class="card-content">
-                        <div class="course-source">Coursera</div>
-                    </div>
-                    <a href="https://www.coursera.org/account/accomplishments/verify/G9XX9CYSFJUY" class="btn-glass" target="_blank">📜 Certificate</a>
-                </div>
-
-                <div class="subcard glass">
-                    <div class="card-header">
-                        <div class="icon glass">⚡</div>
-                        <div>
-                            <h3 class="card-title">Improving Deep Neural Networks</h3>
-                            <p class="card-subtitle">Hyperparameter tuning</p>
+                    <div class="subcard reveal">
+                        <div class="card-header">
+                            <div class="card-icon">📊</div>
+                            <div>
+                                <h3 class="card-title">Multivariate Calculus</h3>
+                                <p class="card-subtitle">Mathematical Foundations</p>
+                            </div>
                         </div>
                     </div>
-                    <div class="card-content">
-                        <div class="course-source">deeplearning.ai</div>
-                    </div>
-                    <a href="https://www.coursera.org/account/accomplishments/verify/K5CL3SVXLY7Q" class="btn-glass" target="_blank">📜 Certificate</a>
-                </div>
-
-                <div class="subcard glass">
-                    <div class="card-header">
-                        <div class="icon glass">🔍</div>
-                        <div>
-                            <h3 class="card-title">Convolutional Neural Networks</h3>
-                            <p class="card-subtitle">deeplearning.ai</p>
+                    <div class="subcard reveal">
+                        <div class="card-header">
+                            <div class="card-icon">📈</div>
+                            <div>
+                                <h3 class="card-title">Statistical Analysis</h3>
+                                <p class="card-subtitle">Probability & Queuing Theory</p>
+                            </div>
                         </div>
                     </div>
-                    <div class="card-content">
-                        <div class="course-source">Coursera</div>
-                    </div>
-                    <a href="https://www.coursera.org/account/accomplishments/certificate/7ADJEDF2ETRH" class="btn-glass" target="_blank">📜 Certificate</a>
-                </div>
-
-                <div class="subcard glass">
-                    <div class="card-header">
-                        <div class="icon glass">📐</div>
-                        <div>
-                            <h3 class="card-title">Structuring ML Projects</h3>
-                            <p class="card-subtitle">deeplearning.ai</p>
-                        </div>
-                    </div>
-                    <div class="card-content">
-                        <div class="course-source">Coursera</div>
-                    </div>
-                    <a href="https://www.coursera.org/account/accomplishments/verify/YWUNM3JRUZJW" class="btn-glass" target="_blank">📜 Certificate</a>
-                </div>
-
-                <div class="subcard glass">
-                    <div class="card-header">
-                        <div class="icon glass">👀</div>
-                        <div>
-                            <h3 class="card-title">Introduction to Computer Vision</h3>
-                            <p class="card-subtitle">Aaron Bobbick</p>
-                        </div>
-                    </div>
-                    <div class="card-content">
-                        <div class="course-source">Udacity</div>
-                    </div>
-                </div>
-
-                <div class="subcard glass">
-                    <div class="card-header">
-                        <div class="icon glass">🔢</div>
-                        <div>
-                            <h3 class="card-title">Sequence Models</h3>
-                            <p class="card-subtitle">Andrew Ng</p>
-                        </div>
-                    </div>
-                    <div class="card-content">
-                        <div class="course-source">deeplearning.ai</div>
-                    </div>
-                </div>
-
-                <div class="subcard glass">
-                    <div class="card-header">
-                        <div class="icon glass">📊</div>
-                        <div>
-                            <h3 class="card-title">Multivariate Calculus</h3>
-                            <p class="card-subtitle">Mathematical Foundations</p>
-                        </div>
-                    </div>
-                    <div class="card-content">
-                        <div class="course-source">Integral and Discrete Transforms</div>
-                    </div>
-                </div>
-
-                <div class="subcard glass">
-                    <div class="card-header">
-                        <div class="icon glass">📈</div>
-                        <div>
-                            <h3 class="card-title">Statistical Analysis</h3>
-                            <p class="card-subtitle">Advanced Statistics</p>
-                        </div>
-                    </div>
-                    <div class="card-content">
-                        <div class="course-source">Probability and Queuing Theory</div>
-                    </div>
-                </div>
                 </div>
             </div>
         </section>
 
-        <footer>
-            <div class="glass" style="max-width: 600px; margin: 0 auto; padding: 2rem;">
-                <div class="card-header">
-                    <div class="icon glass">📧</div>
+        <!-- FOOTER -->
+        <footer class="footer">
+            <div class="footer-card glass reveal">
+                <div class="card-header" style="justify-content:center;">
+                    <div class="card-icon">📧</div>
                     <div>
                         <h3 class="card-title">Get In Touch</h3>
                         <p class="card-subtitle">Let's connect!</p>
                     </div>
                 </div>
-                <div class="card-content" style="text-align: center;">
-                    <p>© 2025 Rohit Lal. Built with passion for AI and research.</p>
-                    <p style="margin-top: 1rem;">📍 National Space Science and Technology Center, Huntsville, AL</p>
-                    <p style="margin-top: 1rem;">
-                        <a href="mailto:take2rohit@gmail.com" style="color: white; text-decoration: underline;">take2rohit@gmail.com</a>
-                    </p>
-                </div>
+                <p>© 2025 Rohit Lal. Built with passion for AI and research.</p>
+                <p>📍 National Space Science and Technology Center, Huntsville, AL</p>
+                <p><a href="mailto:take2rohit@gmail.com">take2rohit@gmail.com</a></p>
             </div>
         </footer>
+
     </div>
 
-    <script>
-        // ========================================
-        // LIQUID GLASS INITIALIZATION
-        // ========================================
-        // Sync SVG filter parameters with CSS variables
-        (function initLiquidGlass() {
-            const root = document.documentElement;
-            const computedStyle = getComputedStyle(root);
-            
-            // Get CSS variable values
-            const frequency = parseFloat(computedStyle.getPropertyValue('--noise-frequency'));
-            const strength = parseFloat(computedStyle.getPropertyValue('--distortion-strength'));
-            
-            // Apply to SVG filter elements
-            const turbulence = document.querySelector('#glass-distortion feTurbulence');
-            const displacement = document.querySelector('#glass-distortion feDisplacementMap');
-            
-            if (turbulence && frequency) {
-                turbulence.setAttribute('baseFrequency', `${frequency} ${frequency}`);
-            }
-            if (displacement && strength) {
-                displacement.setAttribute('scale', strength);
-            }
-            
-            console.log('✨ Liquid glass initialized with frequency:', frequency, 'strength:', strength);
-        })();
-
-        // Liquid Glass Navbar Bubble Animation
-        (function initNavBubble() {
-            const navBubble = document.getElementById('navBubble');
-            const navItems = document.querySelectorAll('.nav-item');
-            const sections = Array.from(document.querySelectorAll('section[id]'));
-            
-            let isUserScrolling = false;
-            let userClickedSection = null;
-            let scrollTimeout = null;
-            let currentTransform = 0;
-            let currentWidth = 0;
-            let targetTransform = 0;
-            let targetWidth = 0;
-            let animationFrame = null;
-            let lastKnownSection = 'about';
-
-            // Smooth interpolation function
-            function lerp(start, end, factor) {
-                return start + (end - start) * factor;
-            }
-
-            // Smooth update bubble position with animation
-            function animateBubble() {
-                const smoothFactor = 0.18; // Balanced for smooth yet responsive
-                
-                currentTransform = lerp(currentTransform, targetTransform, smoothFactor);
-                currentWidth = lerp(currentWidth, targetWidth, smoothFactor);
-                
-                navBubble.style.transform = `translateX(${currentTransform}px)`;
-                navBubble.style.width = `${currentWidth}px`;
-                
-                // Continue animation if not close enough to target
-                const transformDiff = Math.abs(currentTransform - targetTransform);
-                const widthDiff = Math.abs(currentWidth - targetWidth);
-                
-                if (transformDiff > 0.3 || widthDiff > 0.3) {
-                    animationFrame = requestAnimationFrame(animateBubble);
-                } else {
-                    // Snap to final position
-                    navBubble.style.transform = `translateX(${targetTransform}px)`;
-                    navBubble.style.width = `${targetWidth}px`;
-                    currentTransform = targetTransform;
-                    currentWidth = targetWidth;
-                    animationFrame = null;
-                }
-            }
-
-            // Function to update bubble target position
-            function updateBubble(button, immediate = false) {
-                if (!button) return;
-                
-                const buttonRect = button.getBoundingClientRect();
-                const navLinksRect = button.closest('.navLinks').getBoundingClientRect();
-                const navLinksPadding = parseFloat(getComputedStyle(button.closest('.navLinks')).paddingLeft);
-                
-                // Calculate position relative to the padding edge, not the outer edge
-                const newTransform = buttonRect.left - navLinksRect.left - navLinksPadding;
-                const newWidth = buttonRect.width;
-                
-                // Only update if values actually changed
-                if (Math.abs(newTransform - targetTransform) > 0.1 || 
-                    Math.abs(newWidth - targetWidth) > 0.1) {
-                    
-                    targetTransform = newTransform;
-                    targetWidth = newWidth;
-                    
-                    if (immediate) {
-                        // Instant positioning
-                        currentTransform = targetTransform;
-                        currentWidth = targetWidth;
-                        navBubble.style.transform = `translateX(${currentTransform}px)`;
-                        navBubble.style.width = `${currentWidth}px`;
-                        
-                        // Cancel any ongoing animation
-                        if (animationFrame) {
-                            cancelAnimationFrame(animationFrame);
-                            animationFrame = null;
-                        }
-                    } else {
-                        // Start smooth animation if not already running
-                        if (!animationFrame) {
-                            animationFrame = requestAnimationFrame(animateBubble);
-                        }
-                    }
-                }
-            }
-
-            // Find the closest/most relevant section based on scroll position
-            function getActiveSection() {
-                const scrollY = window.pageYOffset + 200; // Offset for navbar
-                const windowHeight = window.innerHeight;
-                const documentHeight = document.documentElement.scrollHeight;
-                
-                // Handle top of page - always show first section
-                if (scrollY < 300) {
-                    return sections[0]?.id || 'about';
-                }
-                
-                // Handle bottom of page - always show last section
-                if (scrollY + windowHeight >= documentHeight - 100) {
-                    return sections[sections.length - 1]?.id || 'publications';
-                }
-                
-                // Find section that occupies most of the viewport
-                let bestSection = lastKnownSection;
-                let maxVisible = 0;
-                
-                sections.forEach(section => {
-                    const rect = section.getBoundingClientRect();
-                    const sectionTop = rect.top;
-                    const sectionBottom = rect.bottom;
-                    const sectionHeight = rect.height;
-                    
-                    // Calculate how much of this section is visible
-                    const visibleTop = Math.max(0, Math.min(windowHeight, sectionBottom));
-                    const visibleBottom = Math.max(0, Math.min(windowHeight, windowHeight - sectionTop));
-                    const visibleHeight = Math.max(0, visibleTop - (windowHeight - visibleBottom));
-                    
-                    // Prefer sections that are more centered in viewport
-                    const centerDistance = Math.abs((sectionTop + sectionBottom) / 2 - windowHeight / 2);
-                    const score = visibleHeight - (centerDistance * 0.3);
-                    
-                    if (score > maxVisible) {
-                        maxVisible = score;
-                        bestSection = section.id;
-                    }
-                });
-                
-                return bestSection || lastKnownSection;
-            }
-
-            // Check if we've actually reached the target section
-            function hasReachedTarget(targetSectionId) {
-                const targetSection = document.getElementById(targetSectionId);
-                if (!targetSection) return true; // If section doesn't exist, consider reached
-                
-                const rect = targetSection.getBoundingClientRect();
-                const targetOffset = 140; // Match scroll offset
-                
-                // Section is considered "reached" if it's at the correct offset position
-                return Math.abs(rect.top - targetOffset) < 50;
-            }
-
-            // Set initial bubble position
-            const activeButton = document.querySelector('.nav-item.active');
-            if (activeButton) {
-                updateBubble(activeButton, true);
-            }
-
-            // Handle button clicks
-            navItems.forEach(button => {
-                button.addEventListener('click', function() {
-                    // Clear any existing timeouts
-                    if (scrollTimeout) {
-                        clearTimeout(scrollTimeout);
-                    }
-                    
-                    // Mark as user-initiated action
-                    isUserScrolling = true;
-                    const sectionId = this.getAttribute('data-section');
-                    userClickedSection = sectionId;
-                    
-                    // Update active state immediately and keep it there
-                    navItems.forEach(btn => btn.classList.remove('active'));
-                    this.classList.add('active');
-                    lastKnownSection = sectionId;
-                    
-                    // Update bubble immediately
-                    updateBubble(this, false);
-                    
-                    // Smooth scroll to section with offset for navbar
-                    const section = document.getElementById(sectionId);
-                    if (section) {
-                        const navbarHeight = 140; // Navbar height + desired spacing
-                        const elementPosition = section.getBoundingClientRect().top;
-                        const offsetPosition = elementPosition + window.pageYOffset - navbarHeight;
-
-                        window.scrollTo({
-                            top: offsetPosition,
-                            behavior: 'smooth'
-                        });
-                    }
-                    
-                    // Keep checking if we've reached the target
-                    const checkInterval = setInterval(() => {
-                        if (hasReachedTarget(userClickedSection)) {
-                            // We've reached the target, allow scroll detection after a delay
-                            clearInterval(checkInterval);
-                            scrollTimeout = setTimeout(() => {
-                                isUserScrolling = false;
-                                userClickedSection = null;
-                            }, 800);
-                        }
-                    }, 100);
-                    
-                    // Failsafe: release after 3 seconds no matter what
-                    setTimeout(() => {
-                        clearInterval(checkInterval);
-                        isUserScrolling = false;
-                        userClickedSection = null;
-                    }, 3000);
-                });
-            });
-
-            // Track scroll position and update active section
-            let scrollTicking = false;
-            let updateTimeout;
-            
-            function updateActiveSection() {
-                // Skip if user is actively clicking/scrolling to their target
-                if (isUserScrolling) {
-                    scrollTicking = false;
-                    return;
-                }
-                
-                const currentSection = getActiveSection();
-                
-                // Only update if section actually changed
-                if (currentSection && currentSection !== lastKnownSection) {
-                    clearTimeout(updateTimeout);
-                    
-                    // Small delay to prevent jitter during fast scrolling
-                    updateTimeout = setTimeout(() => {
-                        const currentButton = document.querySelector(`.nav-item[data-section="${currentSection}"]`);
-                        
-                        if (currentButton && !isUserScrolling) {
-                            navItems.forEach(btn => btn.classList.remove('active'));
-                            currentButton.classList.add('active');
-                            updateBubble(currentButton, false);
-                            lastKnownSection = currentSection;
-                        }
-                    }, 100);
-                }
-
-                scrollTicking = false;
-            }
-
-            window.addEventListener('scroll', () => {
-                if (!scrollTicking) {
-                    window.requestAnimationFrame(updateActiveSection);
-                    scrollTicking = true;
-                }
-            }, { passive: true });
-
-            // Update bubble on window resize with debouncing
-            let resizeTimeout;
-            window.addEventListener('resize', () => {
-                clearTimeout(resizeTimeout);
-                resizeTimeout = setTimeout(() => {
-                    const activeButton = document.querySelector('.nav-item.active');
-                    if (activeButton) {
-                        updateBubble(activeButton, true);
-                    }
-                }, 150);
-            });
-
-            // Ensure bubble is always positioned correctly on page load
-            window.addEventListener('load', () => {
-                setTimeout(() => {
-                    const activeButton = document.querySelector('.nav-item.active');
-                    if (activeButton) {
-                        updateBubble(activeButton, true);
-                    }
-                }, 100);
-            });
-        })();
-
-        // Smooth scrolling for any remaining anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
-
-        // No scroll animations - elements are always visible
-        // Only keep button animations
-
-        // Simple Background Scroll Effect
-        function initBackgroundScroll() {
-            const parallaxLayers = {
-                layer1: document.querySelector('.parallax-layer-1'),
-                layer2: document.querySelector('.parallax-layer-2'),
-                layer3: document.querySelector('.parallax-layer-3')
-            };
-            
-            function handleScroll() {
-                const scrolled = window.pageYOffset;
-                const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-                const scrollPercent = scrolled / docHeight;
-                
-                // Start at -200vh (showing bottom) and move toward 0 (showing top)
-                // This reveals the top of the background as you scroll down
-                if (parallaxLayers.layer1) {
-                    const bgMove = -200 + (scrollPercent * 200); // From -200vh to 0vh
-                    parallaxLayers.layer1.style.transform = `translateY(${bgMove}vh)`;
-                }
-                if (parallaxLayers.layer2) {
-                    const bgMove = -200 + (scrollPercent * 160); // Slower parallax
-                    parallaxLayers.layer2.style.transform = `translateY(${bgMove}vh)`;
-                }
-                if (parallaxLayers.layer3) {
-                    const bgMove = -200 + (scrollPercent * 120); // Even slower
-                    parallaxLayers.layer3.style.transform = `translateY(${bgMove}vh)`;
-                }
-            }
-            
-            // Use requestAnimationFrame for smooth performance
-            let ticking = false;
-            window.addEventListener('scroll', () => {
-                if (!ticking) {
-                    window.requestAnimationFrame(() => {
-                        handleScroll();
-                        ticking = false;
-                    });
-                    ticking = true;
-                }
-            });
-            
-            // Initial call
-            handleScroll();
-        }
-        
-        // Initialize background scroll after page load
-        window.addEventListener('load', initBackgroundScroll);
-
-        // Add ripple effect on button clicks
-        document.querySelectorAll('.btn-glass, .social-btn').forEach(button => {
-            button.addEventListener('click', function(e) {
-                const ripple = document.createElement('span');
-                const rect = this.getBoundingClientRect();
-                const size = Math.max(rect.width, rect.height);
-                const x = e.clientX - rect.left - size / 2;
-                const y = e.clientY - rect.top - size / 2;
-                
-                ripple.style.width = ripple.style.height = size + 'px';
-                ripple.style.left = x + 'px';
-                ripple.style.top = y + 'px';
-                ripple.style.position = 'absolute';
-                ripple.style.borderRadius = '50%';
-                ripple.style.background = 'rgba(255, 255, 255, 0.4)';
-                ripple.style.transform = 'scale(0)';
-                ripple.style.animation = 'ripple 0.6s ease-out';
-                ripple.style.pointerEvents = 'none';
-                ripple.style.zIndex = '5';
-                
-                this.appendChild(ripple);
-                
-                setTimeout(() => ripple.remove(), 600);
-            });
-        });
-
-        // Add CSS for ripple animation
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes ripple {
-                to {
-                    transform: scale(4);
-                    opacity: 0;
-                }
-            }
-        `;
-        document.head.appendChild(style);
-
-        // No page load animation - immediate display
-
-        // Active navigation state on scroll
-        window.addEventListener('scroll', () => {
-            const sections = document.querySelectorAll('section[id]');
-            const scrollY = window.pageYOffset;
-
-            sections.forEach(section => {
-                const sectionHeight = section.offsetHeight;
-                const sectionTop = section.offsetTop - 100;
-                const sectionId = section.getAttribute('id');
-                const navLink = document.querySelector(`.navLinks a[href="#${sectionId}"]`);
-
-                if (navLink) {
-                    if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
-                        navLink.style.background = 'rgba(255, 255, 255, 0.2)';
-                    } else {
-                        navLink.style.background = '';
-                    }
-                }
-            });
-        });
-    </script>
+    <script src="script.js"></script>
 </body>
+
 </html>
