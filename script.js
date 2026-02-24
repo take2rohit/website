@@ -74,32 +74,14 @@ window.addEventListener('load', () => {
   requestAnimationFrame(draw);
 })();
 
-// ---- Custom Cursor ----
-(function initCursor() {
-  const dot = document.querySelector('.cursor-dot');
-  const ring = document.querySelector('.cursor-ring');
+// ---- Cursor Glow Trail ----
+(function initCursorGlow() {
   const glow = document.querySelector('.cursor-glow');
-  if (!dot || !ring) return;
-  let mx = -100, my = -100, ringX = -100, ringY = -100;
-
+  if (!glow) return;
   document.addEventListener('mousemove', e => {
-    mx = e.clientX; my = e.clientY;
-    dot.style.left = mx + 'px'; dot.style.top = my + 'px';
-    if (glow) { glow.style.left = mx + 'px'; glow.style.top = my + 'px'; }
-  });
-
-  function animateRing() {
-    ringX += (mx - ringX) * 0.15; ringY += (my - ringY) * 0.15;
-    ring.style.left = ringX + 'px'; ring.style.top = ringY + 'px';
-    requestAnimationFrame(animateRing);
-  }
-  animateRing();
-
-  const hoverTargets = 'a, button, .btn, .social-btn, .subcard, .exp-card, .nav-item, .skill-pill, .news-item';
-  document.addEventListener('mouseover', e => { if (e.target.closest(hoverTargets)) { dot.classList.add('hovering'); ring.classList.add('hovering'); } });
-  document.addEventListener('mouseout', e => { if (e.target.closest(hoverTargets)) { dot.classList.remove('hovering'); ring.classList.remove('hovering'); } });
-  document.addEventListener('mouseleave', () => { dot.style.opacity = '0'; ring.style.opacity = '0'; });
-  document.addEventListener('mouseenter', () => { dot.style.opacity = '1'; ring.style.opacity = '1'; });
+    glow.style.left = e.clientX + 'px';
+    glow.style.top = e.clientY + 'px';
+  }, { passive: true });
 })();
 
 // ---- Mouse-Position Card Glare ----
@@ -184,9 +166,17 @@ window.addEventListener('load', () => {
   const bubble = document.getElementById('navBubble');
   const sections = document.querySelectorAll('section[id]');
 
-  // Scroll class
+  // Scroll class and Scroll-driven Logo Color
   window.addEventListener('scroll', () => {
-    if (navbar) navbar.classList.toggle('scrolled', window.scrollY > 30);
+    const scrollY = window.scrollY;
+    if (navbar) navbar.classList.toggle('scrolled', scrollY > 30);
+
+    // Update logo color based on scroll distance (moves faster and loops)
+    const logo = document.querySelector('.nav-logo');
+    if (logo) {
+      // Shift background 15% for every 100px scrolled
+      logo.style.setProperty('--scroll-prog', (scrollY * 0.15) + '%');
+    }
   }, { passive: true });
 
   // Bubble positioning
@@ -336,4 +326,21 @@ window.addEventListener('load', () => {
       ticking = true;
     }
   }, { passive: true });
+})();
+
+// ---- News Modal ----
+(function initNewsModal() {
+  const btn = document.getElementById('newsViewMoreBtn');
+  const modal = document.getElementById('newsModal');
+  const close = document.getElementById('newsModalClose');
+  if (!btn || !modal || !close) return;
+
+  btn.addEventListener('click', () => modal.classList.add('active'));
+  close.addEventListener('click', () => modal.classList.remove('active'));
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) modal.classList.remove('active');
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') modal.classList.remove('active');
+  });
 })();

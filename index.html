@@ -18,8 +18,6 @@
     </div>
 
     <!-- Custom Cursor -->
-    <div class="cursor-dot"></div>
-    <div class="cursor-ring"></div>
     <div class="cursor-glow"></div>
 
     <!-- Starfield Canvas -->
@@ -72,7 +70,7 @@
     <!-- NAVBAR -->
     <nav class="navbar">
         <div class="nav-inner">
-            <div class="nav-logo">⟨RL⟩</div>
+            <div class="nav-logo" data-text="Rohit Lal">Rohit Lal</div>
             <ul class="nav-links" id="navLinks">
                 <div class="nav-bubble" id="navBubble"></div>
                 <li><button data-section="about" class="nav-item active">About</button></li>
@@ -168,81 +166,87 @@
                         <div class="news-item" data-index="0">
                             <div class="timeline-node"></div>
                             <div class="news-content">
-                                <div class="news-meta">
-                                    <span class="news-category-icon">🚀</span>
-                                    <span class="news-date">Aug 2025</span>
-                                </div>
-                                <div class="news-text">Released <strong>Surya</strong> — foundation model for
-                                    heliophysics.
-                                    Featured by <a
+                                <span class="news-date">Aug 2025</span>
+                                <span class="news-text">Released <strong>Surya</strong> — foundation model for
+                                    heliophysics. Featured by <a
                                         href="https://science.data.nasa.gov/features-events/inside-surya-solar-ai-model"
                                         target="_blank">NASA</a> and <a href="https://arxiv.org/abs/2508.14112"
-                                        target="_blank">ArXiv</a>.</div>
+                                        target="_blank">ArXiv</a>.</span>
                             </div>
                         </div>
                         <div class="news-item" data-index="1">
                             <div class="timeline-node"></div>
                             <div class="news-content">
-                                <div class="news-meta">
-                                    <span class="news-category-icon">🎯</span>
-                                    <span class="news-date">Jul 2025</span>
-                                </div>
-                                <div class="news-text"><strong>Layer-wise Alignment</strong> accepted as
-                                    <strong>SPOTLIGHT</strong> at ICML 2025 (Top 2.6%) 🎉
-                                </div>
+                                <span class="news-date">Jul 2025</span>
+                                <span class="news-text"><strong>Layer-wise Alignment</strong> accepted as
+                                    <strong>SPOTLIGHT</strong> at ICML 2025 (Top 2.6%).</span>
                             </div>
                         </div>
                         <div class="news-item" data-index="2">
                             <div class="timeline-node"></div>
                             <div class="news-content">
-                                <div class="news-meta">
-                                    <span class="news-category-icon">🏗️</span>
-                                    <span class="news-date">Jun 2025</span>
-                                </div>
-                                <div class="news-text"><strong>VOccl3D</strong> accepted at ICCV 2025 — 3D pose
-                                    estimation under
-                                    occlusions.</div>
-                            </div>
-                        </div>
-                        <div class="news-item" data-index="3">
-                            <div class="timeline-node"></div>
-                            <div class="news-content">
-                                <div class="news-meta">
-                                    <span class="news-category-icon">📝</span>
-                                    <span class="news-date">Apr 2025</span>
-                                </div>
-                                <div class="news-text">Serving as reviewer for <strong>CVPR, ICLR, and ICCV
-                                        2025</strong>.</div>
-                            </div>
-                        </div>
-                        <div class="news-item" data-index="4">
-                            <div class="timeline-node"></div>
-                            <div class="news-content">
-                                <div class="news-meta">
-                                    <span class="news-category-icon">📢</span>
-                                    <span class="news-date">Feb 2025</span>
-                                </div>
-                                <div class="news-text">Oral presentation of <strong>STRIDE</strong> at WACV 2025.</div>
-                            </div>
-                        </div>
-                        <div class="news-item" data-index="5">
-                            <div class="timeline-node"></div>
-                            <div class="news-content">
-                                <div class="news-meta">
-                                    <span class="news-category-icon">🚀</span>
-                                    <span class="news-date">Sep 2024</span>
-                                </div>
-                                <div class="news-text">Released <strong>Prithvi WxC</strong> — AI model for weather &
-                                    climate.
-                                    <a href="https://science.nasa.gov/open-science/ai-model-weather-climate/"
-                                        target="_blank">NASA announcement →</a>
-                                </div>
+                                <span class="news-date">Jun 2025</span>
+                                <span class="news-text"><strong>VOccl3D</strong> accepted at ICCV 2025 — 3D pose
+                                    estimation under occlusions.</span>
                             </div>
                         </div>
                     </div>
                 </div>
+                <button class="news-view-more" id="newsViewMoreBtn">View older news →</button>
             </div>
         </section>
+
+        <!-- NEWS MODAL -->
+        <div class="news-modal-overlay" id="newsModal">
+            <div class="news-modal">
+                <div class="news-modal-header">
+                    <h3>All News</h3>
+                    <button class="news-modal-close" id="newsModalClose">✕</button>
+                </div>
+                <div class="news-modal-body">
+                    <div class="news-modal-item">
+                        <span class="news-date">Aug 2025</span>
+                        <span>Released <strong>Surya</strong> — foundation model for heliophysics. Featured by <a
+                                href="https://science.data.nasa.gov/features-events/inside-surya-solar-ai-model"
+                                target="_blank">NASA</a> and <a href="https://arxiv.org/abs/2508.14112"
+                                target="_blank">ArXiv</a>.</span>
+                    </div>
+                    <div class="news-modal-item">
+                        <span class="news-date">Jul 2025</span>
+                        <span><strong>Layer-wise Alignment</strong> accepted as <strong>SPOTLIGHT</strong> at ICML 2025
+                            (Top 2.6%).</span>
+                    </div>
+                    <div class="news-modal-item">
+                        <span class="news-date">Jun 2025</span>
+                        <span><strong>VOccl3D</strong> accepted at ICCV 2025 — 3D pose estimation under
+                            occlusions.</span>
+                    </div>
+                    <div class="news-modal-item">
+                        <span class="news-date">Apr 2025</span>
+                        <span>Serving as reviewer for <strong>CVPR, ICLR, and ICCV 2025</strong>.</span>
+                    </div>
+                    <div class="news-modal-item">
+                        <span class="news-date">Feb 2025</span>
+                        <span>Oral presentation of <strong>STRIDE</strong> at WACV 2025.</span>
+                    </div>
+                    <div class="news-modal-item">
+                        <span class="news-date">Sep 2024</span>
+                        <span>Released <strong>Prithvi WxC</strong> — AI model for weather & climate. <a
+                                href="https://science.nasa.gov/open-science/ai-model-weather-climate/"
+                                target="_blank">NASA announcement →</a></span>
+                    </div>
+                    <div class="news-modal-item">
+                        <span class="news-date">Oct 2023</span>
+                        <span><strong>Prior-guided Source-free Domain Adaptation</strong> accepted at ICCV 2023.</span>
+                    </div>
+                    <div class="news-modal-item">
+                        <span class="news-date">Jan 2023</span>
+                        <span><strong>CoNMix</strong> accepted at WACV 2023 — source-free domain adaptation for image
+                            classification.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!-- EXPERIENCE — FULL-WIDTH VERTICAL -->
         <section id="experience" class="section">
@@ -311,7 +315,8 @@
                         <div class="exp-bullets">
                             <ul>
                                 <li>3D human pose estimation research under Dr. Amit K. Roy Chowdhury for the
-                                    <strong>IARPA BRIAR</strong> project.</li>
+                                    <strong>IARPA BRIAR</strong> project.
+                                </li>
                                 <li>Developed <strong>STRIDE</strong> and <strong>VOccl3D</strong> — methods for 3D pose
                                     from occluded and long-range video.</li>
                                 <li>Published at <strong>WACV 2025</strong> (Oral) and <strong>ICCV 2025</strong>.</li>
@@ -492,54 +497,122 @@
                     <div class="section-icon">📚</div>
                     <h2 class="section-title">Publications</h2>
                 </div>
-                <div class="card-grid stagger-children">
-                    <div class="subcard tilt-card reveal">
-                        <h3 class="card-title" style="margin-bottom:0.3rem;">Prithvi WxC — Foundation Model for Weather
-                            & Climate</h3>
-                        <div class="pub-authors">J Schmude, S Roy, ..., Rohit Lal, ...</div>
-                        <span class="pub-venue">arXiv preprint</span>
-                        <div class="btn-row"><a href="https://arxiv.org/abs/2409.13598" class="btn" target="_blank">📄
-                                Paper</a><a href="https://github.com/NASA-IMPACT/Prithvi-WxC" class="btn"
-                                target="_blank">💻 Code</a></div>
+                <div class="pub-list stagger-children">
+
+                    <div class="pub-card reveal">
+                        <div class="pub-thumb">
+                            <img src="images/paper_thumb.png" alt="Prithvi WxC figure">
+                        </div>
+                        <div class="pub-info">
+                            <h3 class="pub-title">Prithvi WxC — Foundation Model for Weather & Climate</h3>
+                            <div class="pub-authors">J Schmude, S Roy, ..., <strong>Rohit Lal</strong>, ...</div>
+                            <p class="pub-desc">A massive AI foundation model for weather and climate prediction
+                                developed in collaboration with NASA. Designed to democratize access to earth science
+                                data by providing a scalable, open-source architecture for downstream forecasting tasks.
+                            </p>
+                            <div class="pub-meta-row">
+                                <span class="pub-venue">arXiv preprint, 2024</span>
+                                <div class="pub-btn-row">
+                                    <a href="https://arxiv.org/abs/2409.13598" class="pub-btn" target="_blank">PAPER</a>
+                                    <a href="https://github.com/NASA-IMPACT/Prithvi-WxC" class="pub-btn"
+                                        target="_blank">CODE</a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="subcard tilt-card reveal">
-                        <h3 class="card-title" style="margin-bottom:0.3rem;">STRIDE — Occlusion-Robust 3D Pose
-                            Estimation</h3>
-                        <div class="pub-authors">Rohit Lal, S Bachu, Y Garg, A Dutta, CK Ta, HD Cruz</div>
-                        <span class="pub-venue">WACV 2025</span>
-                        <div class="btn-row"><a href="https://sites.google.com/view/sample-adv-trustworthy/" class="btn"
-                                target="_blank">🌐 Project</a><a href="https://github.com/take2rohit/STRIDE" class="btn"
-                                target="_blank">💻 Code</a></div>
+
+                    <div class="pub-card reveal">
+                        <div class="pub-thumb">
+                            <img src="images/paper_thumb.png" alt="STRIDE figure">
+                        </div>
+                        <div class="pub-info">
+                            <h3 class="pub-title">STRIDE — Occlusion-Robust 3D Pose Estimation</h3>
+                            <div class="pub-authors"><strong>Rohit Lal</strong>, S Bachu, Y Garg, A Dutta, CK Ta, HD
+                                Cruz</div>
+                            <p class="pub-desc">A novel framework for 3D human pose estimation that remains highly
+                                robust even under severe occlusions. Developed for complex, long-range surveillance
+                                scenarios where traditional methods fail.</p>
+                            <div class="pub-meta-row">
+                                <span class="pub-venue">WACV 2025 (Oral)</span>
+                                <div class="pub-btn-row">
+                                    <a href="https://sites.google.com/view/sample-adv-trustworthy/" class="pub-btn"
+                                        target="_blank">PAPER</a>
+                                    <a href="https://github.com/take2rohit/STRIDE" class="pub-btn"
+                                        target="_blank">CODE</a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="subcard tilt-card reveal">
-                        <h3 class="card-title" style="margin-bottom:0.3rem;">Prior-guided Source-free Domain Adaptation
-                            for HPE</h3>
-                        <div class="pub-authors">DS Raychaudhuri, CK Ta, A Dutta, Rohit Lal, AK Roy-Chowdhury</div>
-                        <span class="pub-venue">ICCV 2023</span>
-                        <div class="btn-row"><a
-                                href="https://openaccess.thecvf.com/content/ICCV2023/papers/Raychaudhuri_Prior-guided_Source-free_Domain_Adaptation_for_Human_Pose_Estimation_ICCV_2023_paper.pdf"
-                                class="btn" target="_blank">📄 Paper</a><a href="https://github.com/driptaRC/POST"
-                                class="btn" target="_blank">💻 Code</a></div>
+
+                    <div class="pub-card reveal">
+                        <div class="pub-thumb">
+                            <img src="images/paper_thumb.png" alt="POST figure">
+                        </div>
+                        <div class="pub-info">
+                            <h3 class="pub-title">Prior-guided Source-free Domain Adaptation for Human Pose Estimation
+                            </h3>
+                            <div class="pub-authors">DS Raychaudhuri, CK Ta, A Dutta, <strong>Rohit Lal</strong>, AK
+                                Roy-Chowdhury</div>
+                            <p class="pub-desc">An innovative approach to perform cross-domain human pose estimation
+                                without relying on source data. By leveraging structural priors of the human body, we
+                                achieve state-of-the-art adaptation performance.</p>
+                            <div class="pub-meta-row">
+                                <span class="pub-venue">ICCV 2023</span>
+                                <div class="pub-btn-row">
+                                    <a href="https://openaccess.thecvf.com/content/ICCV2023/papers/Raychaudhuri_Prior-guided_Source-free_Domain_Adaptation_for_Human_Pose_Estimation_ICCV_2023_paper.pdf"
+                                        class="pub-btn" target="_blank">PAPER</a>
+                                    <a href="https://github.com/driptaRC/POST" class="pub-btn" target="_blank">CODE</a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="subcard tilt-card reveal">
-                        <h3 class="card-title" style="margin-bottom:0.3rem;">CoNMix for Source-free Domain Adaptation
-                        </h3>
-                        <div class="pub-authors">Vikash Kumar*, Rohit Lal*, Himanshu Patil, Anirban Chakraborty</div>
-                        <span class="pub-venue">WACV 2023</span>
-                        <div class="btn-row"><a href="https://sites.google.com/view/conmix-vcl" class="btn"
-                                target="_blank">🌐 Project</a></div>
+
+                    <div class="pub-card reveal">
+                        <div class="pub-thumb">
+                            <img src="images/paper_thumb.png" alt="CoNMix figure">
+                        </div>
+                        <div class="pub-info">
+                            <h3 class="pub-title">CoNMix for Source-free Domain Adaptation</h3>
+                            <div class="pub-authors">Vikash Kumar*, <strong>Rohit Lal*</strong>, Himanshu Patil, Anirban
+                                Chakraborty</div>
+                            <p class="pub-desc">A scalable source-free domain adaptation method utilizing contrastive
+                                neighborhood mixing. Our approach effectively aligns target domain features without
+                                requiring any access to the original source training data.</p>
+                            <div class="pub-meta-row">
+                                <span class="pub-venue">WACV 2023</span>
+                                <div class="pub-btn-row">
+                                    <a href="https://sites.google.com/view/conmix-vcl" class="pub-btn"
+                                        target="_blank">PAPER</a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="subcard tilt-card reveal">
-                        <h3 class="card-title" style="margin-bottom:0.3rem;">Holistic Measure of Adversarial
-                            Vulnerability</h3>
-                        <div class="pub-authors">GK Nayak*, R Rawal*, Rohit Lal*, H Patil, A Chakraborty</div>
-                        <span class="pub-venue">HCIS Workshop · CVPR 2022</span>
-                        <div class="btn-row"><a href="https://sites.google.com/view/sample-adv-trustworthy/" class="btn"
-                                target="_blank">🌐 Project</a></div>
+
+                    <div class="pub-card reveal">
+                        <div class="pub-thumb">
+                            <img src="images/paper_thumb.png" alt="Adversarial figure">
+                        </div>
+                        <div class="pub-info">
+                            <h3 class="pub-title">Holistic Measure of Adversarial Vulnerability</h3>
+                            <div class="pub-authors">GK Nayak*, R Rawal*, <strong>Rohit Lal*</strong>, H Patil, A
+                                Chakraborty</div>
+                            <p class="pub-desc">A comprehensive evaluation framework to accurately measure the
+                                adversarial robustness of deep neural networks. We propose a metric that accounts for
+                                various attack vectors to provide a holistic security snapshot.</p>
+                            <div class="pub-meta-row">
+                                <span class="pub-venue">HCIS Workshop · CVPR 2022</span>
+                                <div class="pub-btn-row">
+                                    <a href="https://sites.google.com/view/sample-adv-trustworthy/" class="pub-btn"
+                                        target="_blank">PAPER</a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+
                 </div>
             </div>
         </section>
+
 
         <!-- PATENTS & ACHIEVEMENTS -->
         <section id="achievements" class="section">
