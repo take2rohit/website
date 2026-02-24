@@ -244,17 +244,18 @@
             </div>
         </section>
 
-        <!-- EXPERIENCE — COMPACT GRID -->
+        <!-- EXPERIENCE — FULL-WIDTH VERTICAL -->
         <section id="experience" class="section">
             <div class="section-card glass reveal">
                 <div class="section-header">
                     <div class="section-icon">💼</div>
                     <h2 class="section-title">Experience</h2>
                 </div>
-                <div class="exp-grid stagger-children">
-                    <!-- NASA -->
-                    <div class="exp-card tilt-card reveal">
-                        <div class="exp-top">
+                <div class="exp-list stagger-children">
+
+                    <!-- NASA IMPACT -->
+                    <div class="exp-card reveal">
+                        <div class="exp-top-row">
                             <div class="exp-logo">
                                 <svg viewBox="0 0 24 24" fill="none">
                                     <circle cx="12" cy="12" r="10" stroke="#6c63ff" stroke-width="1.5" />
@@ -264,20 +265,33 @@
                                     <path d="M7 8l5 4 5-4" stroke="#fff" stroke-width="1" opacity="0.5" />
                                 </svg>
                             </div>
-                            <div>
-                                <div class="exp-date">Jul 2021 — Present</div>
+                            <div class="exp-info">
                                 <h3 class="exp-role">Computer Scientist</h3>
-                                <div class="exp-company">NASA IMPACT · IISc Bangalore</div>
+                                <div class="exp-company"><a href="https://impact.earthdata.nasa.gov/"
+                                        target="_blank">NASA IMPACT</a> · IISc Bangalore</div>
                             </div>
+                            <div class="exp-date">Jul 2021 — Present</div>
                         </div>
-                        <div class="exp-desc">Building AI foundation models for science. Research in unsupervised domain
-                            adaptation and adversarial robustness.</div>
+                        <div class="exp-bullets">
+                            <ul>
+                                <li>Building AI foundation models for Earth science, including <strong>Prithvi
+                                        WxC</strong> (weather & climate) and <strong>Surya</strong> (heliophysics),
+                                    featured by NASA.</li>
+                                <li>Research in unsupervised domain adaptation and adversarial robustness for satellite
+                                    imagery.</li>
+                                <li>Developed scalable training pipelines using distributed PyTorch across multi-GPU
+                                    clusters.</li>
+                            </ul>
+                        </div>
                         <div class="exp-tags"><span class="exp-tag">Foundation Models</span><span
-                                class="exp-tag">Computer Vision</span><span class="exp-tag">PyTorch</span></div>
+                                class="exp-tag">Computer Vision</span><span class="exp-tag">PyTorch</span><span
+                                class="exp-tag">Distributed Training</span><span class="exp-tag">Remote Sensing</span>
+                        </div>
                     </div>
-                    <!-- UCR -->
-                    <div class="exp-card tilt-card reveal">
-                        <div class="exp-top">
+
+                    <!-- UC Riverside -->
+                    <div class="exp-card reveal">
+                        <div class="exp-top-row">
                             <div class="exp-logo">
                                 <svg viewBox="0 0 24 24" fill="none">
                                     <rect x="3" y="6" width="18" height="14" rx="2" stroke="#00d4ff"
@@ -287,20 +301,30 @@
                                     <line x1="8" y1="18" x2="16" y2="18" stroke="#fff" stroke-width="1" opacity="0.3" />
                                 </svg>
                             </div>
-                            <div>
-                                <div class="exp-date">2022 — 2024</div>
+                            <div class="exp-info">
                                 <h3 class="exp-role">MS by Research</h3>
-                                <div class="exp-company">UC Riverside</div>
+                                <div class="exp-company"><a href="https://www.ucr.edu/" target="_blank">UC Riverside</a>
+                                    · California, USA</div>
                             </div>
+                            <div class="exp-date">2022 — 2024</div>
                         </div>
-                        <div class="exp-desc">3D human pose estimation under Dr. Amit K. Roy Chowdhury for the IARPA
-                            BRIAR project.</div>
+                        <div class="exp-bullets">
+                            <ul>
+                                <li>3D human pose estimation research under Dr. Amit K. Roy Chowdhury for the
+                                    <strong>IARPA BRIAR</strong> project.</li>
+                                <li>Developed <strong>STRIDE</strong> and <strong>VOccl3D</strong> — methods for 3D pose
+                                    from occluded and long-range video.</li>
+                                <li>Published at <strong>WACV 2025</strong> (Oral) and <strong>ICCV 2025</strong>.</li>
+                            </ul>
+                        </div>
                         <div class="exp-tags"><span class="exp-tag">3D Pose</span><span class="exp-tag">Deep
-                                Learning</span><span class="exp-tag">IARPA</span></div>
+                                Learning</span><span class="exp-tag">IARPA</span><span class="exp-tag">WACV</span><span
+                                class="exp-tag">ICCV</span></div>
                     </div>
+
                     <!-- DRDO -->
-                    <div class="exp-card tilt-card reveal">
-                        <div class="exp-top">
+                    <div class="exp-card reveal">
+                        <div class="exp-top-row">
                             <div class="exp-logo">
                                 <svg viewBox="0 0 24 24" fill="none">
                                     <path d="M12 2L2 7v10l10 5 10-5V7L12 2z" stroke="#ff6ec7" stroke-width="1.5" />
@@ -309,20 +333,29 @@
                                         opacity="0.3" />
                                 </svg>
                             </div>
-                            <div>
-                                <div class="exp-date">Jul — Sep 2020</div>
+                            <div class="exp-info">
                                 <h3 class="exp-role">CV Research Intern</h3>
-                                <div class="exp-company">DRDO — CAIR Lab</div>
+                                <div class="exp-company"><a href="https://www.drdo.gov.in/" target="_blank">DRDO — CAIR
+                                        Lab</a> · Bangalore, India</div>
                             </div>
+                            <div class="exp-date">Jul — Sep 2020</div>
                         </div>
-                        <div class="exp-desc">Object detection & tracking from drone cameras at 100m altitude with
-                            senior scientists.</div>
+                        <div class="exp-bullets">
+                            <ul>
+                                <li>Object detection & tracking from aerial drone cameras at 100m altitude with senior
+                                    scientists.</li>
+                                <li>Built real-time inference pipelines for YOLOv4 on edge GPUs for defense
+                                    applications.</li>
+                            </ul>
+                        </div>
                         <div class="exp-tags"><span class="exp-tag">Object Detection</span><span
-                                class="exp-tag">Drones</span><span class="exp-tag">Tracking</span></div>
+                                class="exp-tag">Drones</span><span class="exp-tag">Tracking</span><span
+                                class="exp-tag">Edge AI</span></div>
                     </div>
+
                     <!-- NUS -->
-                    <div class="exp-card tilt-card reveal">
-                        <div class="exp-top">
+                    <div class="exp-card reveal">
+                        <div class="exp-top-row">
                             <div class="exp-logo">
                                 <svg viewBox="0 0 24 24" fill="none">
                                     <path d="M4 8h16M4 12h16M4 16h16" stroke="#ffd700" stroke-width="1.5"
@@ -334,16 +367,24 @@
                                         stroke-width="1.5" />
                                 </svg>
                             </div>
-                            <div>
-                                <div class="exp-date">Apr — Nov 2020</div>
+                            <div class="exp-info">
                                 <h3 class="exp-role">DL Research Intern</h3>
-                                <div class="exp-company">NUS Singapore</div>
+                                <div class="exp-company"><a href="https://www.nus.edu.sg/" target="_blank">NUS
+                                        Singapore</a> · Medical Mechatronics Lab</div>
                             </div>
+                            <div class="exp-date">Apr — Nov 2020</div>
                         </div>
-                        <div class="exp-desc">6D pose estimation for origami robot gaits using deep learning at Medical
-                            Mechatronics Lab.</div>
+                        <div class="exp-bullets">
+                            <ul>
+                                <li>6D pose estimation for origami robot gaits using deep learning for surgical
+                                    applications.</li>
+                                <li>Developed custom datasets and training pipelines for medical robotics pose
+                                    estimation.</li>
+                            </ul>
+                        </div>
                         <div class="exp-tags"><span class="exp-tag">6D Pose</span><span
-                                class="exp-tag">Robotics</span><span class="exp-tag">Medical AI</span></div>
+                                class="exp-tag">Robotics</span><span class="exp-tag">Medical AI</span><span
+                                class="exp-tag">PyTorch</span></div>
                     </div>
                 </div>
             </div>
