@@ -22,20 +22,16 @@
     <div class="cursor-ring"></div>
     <div class="cursor-glow"></div>
 
-    <!-- Starfield Canvas (includes small random shooting stars) -->
+    <!-- Starfield Canvas -->
     <canvas id="starfield"></canvas>
 
-    <!-- Background Layer (parallax scroll) -->
+    <!-- Background Layer -->
     <div class="bg-scroll-layer">
         <div class="nebula nebula-1"></div>
         <div class="nebula nebula-2"></div>
         <div class="nebula nebula-3"></div>
-
-        <!-- Subtle Planets -->
         <div class="space-planet planet-1"></div>
         <div class="space-planet planet-2"></div>
-
-        <!-- Constellation -->
         <svg class="constellation" width="200" height="160" style="top:10%;left:15%;" viewBox="0 0 200 160">
             <line x1="20" y1="30" x2="80" y2="10" />
             <line x1="80" y1="10" x2="140" y2="50" />
@@ -58,19 +54,22 @@
         </svg>
     </div>
 
-    <!-- SVG Filters -->
-    <svg xmlns="http://www.w3.org/2000/svg" style="display:none;">
-        <defs>
-            <filter id="glass-distortion" x="0%" y="0%" width="100%" height="100%">
-                <feTurbulence type="fractalNoise" baseFrequency="0.006 0.006" numOctaves="2" seed="92" result="noise" />
-                <feGaussianBlur in="noise" stdDeviation="2" result="blurred" />
-                <feDisplacementMap in="SourceGraphic" in2="blurred" scale="50" xChannelSelector="R"
-                    yChannelSelector="G" />
-            </filter>
-        </defs>
+    <!-- Floating Decorative Shapes -->
+    <svg class="deco-shape deco-hex" viewBox="0 0 120 120">
+        <polygon points="60,5 110,30 110,90 60,115 10,90 10,30" fill="none" stroke="rgba(108,99,255,0.5)"
+            stroke-width="1" />
+    </svg>
+    <svg class="deco-shape deco-tri" viewBox="0 0 80 80">
+        <polygon points="40,5 75,70 5,70" fill="none" stroke="rgba(0,212,255,0.5)" stroke-width="1" />
+    </svg>
+    <svg class="deco-shape deco-circle" viewBox="0 0 60 60">
+        <circle cx="30" cy="30" r="28" fill="none" stroke="rgba(255,110,199,0.5)" stroke-width="1" />
+    </svg>
+    <svg class="deco-shape deco-diamond" viewBox="0 0 50 50">
+        <polygon points="25,2 48,25 25,48 2,25" fill="none" stroke="rgba(108,99,255,0.5)" stroke-width="1" />
     </svg>
 
-    <!-- ===== NAVBAR ===== -->
+    <!-- NAVBAR -->
     <nav class="navbar">
         <div class="nav-inner">
             <div class="nav-logo">⟨RL⟩</div>
@@ -85,7 +84,7 @@
         </div>
     </nav>
 
-    <!-- ===== MAIN CONTENT ===== -->
+    <!-- MAIN CONTENT -->
     <div class="container">
 
         <!-- HERO / ABOUT -->
@@ -133,32 +132,22 @@
                     <div class="about-content">
                         <p><strong>Computer Scientist at NASA IMPACT</strong></p>
                         <p>Building and scaling <strong>AI Foundation Models for Science</strong> at <a
-                                href="https://www.earthdata.nasa.gov/esds/impact" target="_blank">NASA IMPACT</a>.
-                            Completed MS by Research at UC Riverside under Dr. Amit K. Roy Chowdhury — thesis on
-                            <strong>3D human pose estimation</strong> for IARPA BRIAR.
-                        </p>
-                        <p>Previously at <strong>IISc Bangalore's Visual Computing Lab</strong>, working on unsupervised
-                            domain
+                                href="https://www.earthdata.nasa.gov/esds/impact" target="_blank">NASA IMPACT</a>. MS by
+                            Research at UC Riverside — thesis on <strong>3D human pose estimation</strong> for IARPA
+                            BRIAR.</p>
+                        <p>Previously at <strong>IISc Bangalore's Visual Computing Lab</strong> — unsupervised domain
                             adaptation and adversarial robustness in computer vision.</p>
-                        <p>📍 National Space Science and Technology Center, Huntsville, AL</p>
+                        <p>📍 National Space Science & Technology Center, Huntsville, AL</p>
                     </div>
                     <div class="hero-stats">
-                        <div class="stat-item">
-                            <span class="stat-number" data-count="7" data-suffix="+">0</span>
-                            <span class="stat-label">Publications</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-number" data-count="6" data-suffix="+">0</span>
-                            <span class="stat-label">Projects</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-number" data-count="4" data-suffix="+">0</span>
-                            <span class="stat-label">Years Exp</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-number" data-count="1">0</span>
-                            <span class="stat-label">Patent</span>
-                        </div>
+                        <div class="stat-item"><span class="stat-number" data-count="7" data-suffix="+">0</span><span
+                                class="stat-label">Publications</span></div>
+                        <div class="stat-item"><span class="stat-number" data-count="6" data-suffix="+">0</span><span
+                                class="stat-label">Projects</span></div>
+                        <div class="stat-item"><span class="stat-number" data-count="4" data-suffix="+">0</span><span
+                                class="stat-label">Years Exp</span></div>
+                        <div class="stat-item"><span class="stat-number" data-count="1">0</span><span
+                                class="stat-label">Patent</span></div>
                     </div>
                 </div>
             </div>
@@ -166,89 +155,195 @@
 
         <!-- NEWS -->
         <section id="news" class="section">
-            <div class="section-card glass reveal">
+            <div class="section-card glass reveal news-section-card">
                 <div class="section-header">
                     <div class="section-icon">📰</div>
                     <h2 class="section-title">Latest News</h2>
                 </div>
-                <div class="news-list stagger-children">
-                    <div class="news-item reveal">
-                        <span class="news-date">Aug '25</span>
-                        <div class="news-text">Released <strong>Surya</strong> — foundation model for heliophysics.
-                            Featured by <a
-                                href="https://science.data.nasa.gov/features-events/inside-surya-solar-ai-model"
-                                target="_blank">NASA</a> and <a href="https://arxiv.org/abs/2508.14112"
-                                target="_blank">ArXiv</a>.</div>
+                <div class="news-timeline">
+                    <div class="timeline-beam">
+                        <div class="beam-traveler"></div>
                     </div>
-                    <div class="news-item reveal">
-                        <span class="news-date">Jul '25</span>
-                        <div class="news-text"><strong>Layer-wise Alignment</strong> accepted as
-                            <strong>SPOTLIGHT</strong> at ICML 2025 (Top 2.6%) 🎉</div>
-                    </div>
-                    <div class="news-item reveal">
-                        <span class="news-date">Jun '25</span>
-                        <div class="news-text"><strong>VOccl3D</strong> accepted at ICCV 2025 — 3D pose estimation under
-                            occlusions.</div>
-                    </div>
-                    <div class="news-item reveal">
-                        <span class="news-date">Apr '25</span>
-                        <div class="news-text">Serving as reviewer for <strong>CVPR, ICLR, and ICCV 2025</strong>. 📝
+                    <div class="news-list">
+                        <div class="news-item" data-index="0">
+                            <div class="timeline-node"></div>
+                            <div class="news-content">
+                                <div class="news-meta">
+                                    <span class="news-category-icon">🚀</span>
+                                    <span class="news-date">Aug 2025</span>
+                                </div>
+                                <div class="news-text">Released <strong>Surya</strong> — foundation model for
+                                    heliophysics.
+                                    Featured by <a
+                                        href="https://science.data.nasa.gov/features-events/inside-surya-solar-ai-model"
+                                        target="_blank">NASA</a> and <a href="https://arxiv.org/abs/2508.14112"
+                                        target="_blank">ArXiv</a>.</div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="news-item reveal">
-                        <span class="news-date">Feb '25</span>
-                        <div class="news-text">Oral presentation of <strong>STRIDE</strong> at WACV 2025.</div>
-                    </div>
-                    <div class="news-item reveal">
-                        <span class="news-date">Sep '24</span>
-                        <div class="news-text">Released <strong>Prithvi WxC</strong> — AI model for weather & climate.
-                            <a href="https://science.nasa.gov/open-science/ai-model-weather-climate/"
-                                target="_blank">NASA announcement →</a>
+                        <div class="news-item" data-index="1">
+                            <div class="timeline-node"></div>
+                            <div class="news-content">
+                                <div class="news-meta">
+                                    <span class="news-category-icon">🎯</span>
+                                    <span class="news-date">Jul 2025</span>
+                                </div>
+                                <div class="news-text"><strong>Layer-wise Alignment</strong> accepted as
+                                    <strong>SPOTLIGHT</strong> at ICML 2025 (Top 2.6%) 🎉
+                                </div>
+                            </div>
+                        </div>
+                        <div class="news-item" data-index="2">
+                            <div class="timeline-node"></div>
+                            <div class="news-content">
+                                <div class="news-meta">
+                                    <span class="news-category-icon">🏗️</span>
+                                    <span class="news-date">Jun 2025</span>
+                                </div>
+                                <div class="news-text"><strong>VOccl3D</strong> accepted at ICCV 2025 — 3D pose
+                                    estimation under
+                                    occlusions.</div>
+                            </div>
+                        </div>
+                        <div class="news-item" data-index="3">
+                            <div class="timeline-node"></div>
+                            <div class="news-content">
+                                <div class="news-meta">
+                                    <span class="news-category-icon">📝</span>
+                                    <span class="news-date">Apr 2025</span>
+                                </div>
+                                <div class="news-text">Serving as reviewer for <strong>CVPR, ICLR, and ICCV
+                                        2025</strong>.</div>
+                            </div>
+                        </div>
+                        <div class="news-item" data-index="4">
+                            <div class="timeline-node"></div>
+                            <div class="news-content">
+                                <div class="news-meta">
+                                    <span class="news-category-icon">📢</span>
+                                    <span class="news-date">Feb 2025</span>
+                                </div>
+                                <div class="news-text">Oral presentation of <strong>STRIDE</strong> at WACV 2025.</div>
+                            </div>
+                        </div>
+                        <div class="news-item" data-index="5">
+                            <div class="timeline-node"></div>
+                            <div class="news-content">
+                                <div class="news-meta">
+                                    <span class="news-category-icon">🚀</span>
+                                    <span class="news-date">Sep 2024</span>
+                                </div>
+                                <div class="news-text">Released <strong>Prithvi WxC</strong> — AI model for weather &
+                                    climate.
+                                    <a href="https://science.nasa.gov/open-science/ai-model-weather-climate/"
+                                        target="_blank">NASA announcement →</a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- EXPERIENCE -->
+        <!-- EXPERIENCE — COMPACT GRID -->
         <section id="experience" class="section">
             <div class="section-card glass reveal">
                 <div class="section-header">
                     <div class="section-icon">💼</div>
                     <h2 class="section-title">Experience</h2>
                 </div>
-                <div class="timeline stagger-children">
-                    <div class="timeline-item reveal">
-                        <span class="timeline-icon">🚀</span>
-                        <span class="timeline-date">Jul 2021 — Present</span>
-                        <h3 class="timeline-title">Computer Scientist</h3>
-                        <div class="timeline-company">NASA IMPACT · IISc Bangalore</div>
-                        <div class="timeline-desc">Research in unsupervised domain adaptation and adversarial
-                            robustness. Building AI foundation models for science at NASA.</div>
+                <div class="exp-grid stagger-children">
+                    <!-- NASA -->
+                    <div class="exp-card tilt-card reveal">
+                        <div class="exp-top">
+                            <div class="exp-logo">
+                                <svg viewBox="0 0 24 24" fill="none">
+                                    <circle cx="12" cy="12" r="10" stroke="#6c63ff" stroke-width="1.5" />
+                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10" stroke="#00d4ff" stroke-width="1.5"
+                                        stroke-dasharray="4 3" />
+                                    <circle cx="12" cy="12" r="3" fill="#6c63ff" opacity="0.6" />
+                                    <path d="M7 8l5 4 5-4" stroke="#fff" stroke-width="1" opacity="0.5" />
+                                </svg>
+                            </div>
+                            <div>
+                                <div class="exp-date">Jul 2021 — Present</div>
+                                <h3 class="exp-role">Computer Scientist</h3>
+                                <div class="exp-company">NASA IMPACT · IISc Bangalore</div>
+                            </div>
+                        </div>
+                        <div class="exp-desc">Building AI foundation models for science. Research in unsupervised domain
+                            adaptation and adversarial robustness.</div>
+                        <div class="exp-tags"><span class="exp-tag">Foundation Models</span><span
+                                class="exp-tag">Computer Vision</span><span class="exp-tag">PyTorch</span></div>
                     </div>
-                    <div class="timeline-item reveal">
-                        <span class="timeline-icon">🎓</span>
-                        <span class="timeline-date">2022 — 2024</span>
-                        <h3 class="timeline-title">MS by Research</h3>
-                        <div class="timeline-company">University of California, Riverside</div>
-                        <div class="timeline-desc">3D human pose estimation under Dr. Amit K. Roy Chowdhury for the
-                            IARPA BRIAR project.</div>
+                    <!-- UCR -->
+                    <div class="exp-card tilt-card reveal">
+                        <div class="exp-top">
+                            <div class="exp-logo">
+                                <svg viewBox="0 0 24 24" fill="none">
+                                    <rect x="3" y="6" width="18" height="14" rx="2" stroke="#00d4ff"
+                                        stroke-width="1.5" />
+                                    <path d="M8 2l4 4 4-4" stroke="#6c63ff" stroke-width="1.5" />
+                                    <circle cx="12" cy="14" r="2" fill="#00d4ff" opacity="0.5" />
+                                    <line x1="8" y1="18" x2="16" y2="18" stroke="#fff" stroke-width="1" opacity="0.3" />
+                                </svg>
+                            </div>
+                            <div>
+                                <div class="exp-date">2022 — 2024</div>
+                                <h3 class="exp-role">MS by Research</h3>
+                                <div class="exp-company">UC Riverside</div>
+                            </div>
+                        </div>
+                        <div class="exp-desc">3D human pose estimation under Dr. Amit K. Roy Chowdhury for the IARPA
+                            BRIAR project.</div>
+                        <div class="exp-tags"><span class="exp-tag">3D Pose</span><span class="exp-tag">Deep
+                                Learning</span><span class="exp-tag">IARPA</span></div>
                     </div>
-                    <div class="timeline-item reveal">
-                        <span class="timeline-icon">🛡️</span>
-                        <span class="timeline-date">Jul — Sep 2020</span>
-                        <h3 class="timeline-title">Computer Vision Research Intern</h3>
-                        <div class="timeline-company">DRDO — CAIR Lab</div>
-                        <div class="timeline-desc">Object detection & tracking from drone cameras at 100m altitude with
+                    <!-- DRDO -->
+                    <div class="exp-card tilt-card reveal">
+                        <div class="exp-top">
+                            <div class="exp-logo">
+                                <svg viewBox="0 0 24 24" fill="none">
+                                    <path d="M12 2L2 7v10l10 5 10-5V7L12 2z" stroke="#ff6ec7" stroke-width="1.5" />
+                                    <circle cx="12" cy="12" r="3" stroke="#fff" stroke-width="1" opacity="0.5" />
+                                    <path d="M12 5v14M5 8.5l14 7M19 8.5l-14 7" stroke="#ff6ec7" stroke-width="0.5"
+                                        opacity="0.3" />
+                                </svg>
+                            </div>
+                            <div>
+                                <div class="exp-date">Jul — Sep 2020</div>
+                                <h3 class="exp-role">CV Research Intern</h3>
+                                <div class="exp-company">DRDO — CAIR Lab</div>
+                            </div>
+                        </div>
+                        <div class="exp-desc">Object detection & tracking from drone cameras at 100m altitude with
                             senior scientists.</div>
+                        <div class="exp-tags"><span class="exp-tag">Object Detection</span><span
+                                class="exp-tag">Drones</span><span class="exp-tag">Tracking</span></div>
                     </div>
-                    <div class="timeline-item reveal">
-                        <span class="timeline-icon">🧬</span>
-                        <span class="timeline-date">Apr — Nov 2020</span>
-                        <h3 class="timeline-title">Deep Learning Research Intern</h3>
-                        <div class="timeline-company">National University of Singapore</div>
-                        <div class="timeline-desc">6D pose estimation for origami robot gaits using deep learning at
-                            Medical Mechatronics Lab.</div>
+                    <!-- NUS -->
+                    <div class="exp-card tilt-card reveal">
+                        <div class="exp-top">
+                            <div class="exp-logo">
+                                <svg viewBox="0 0 24 24" fill="none">
+                                    <path d="M4 8h16M4 12h16M4 16h16" stroke="#ffd700" stroke-width="1.5"
+                                        opacity="0.5" />
+                                    <circle cx="8" cy="8" r="2" fill="#6c63ff" opacity="0.5" />
+                                    <circle cx="16" cy="12" r="2" fill="#00d4ff" opacity="0.5" />
+                                    <circle cx="10" cy="16" r="2" fill="#ff6ec7" opacity="0.5" />
+                                    <rect x="2" y="4" width="20" height="16" rx="2" stroke="#ffd700"
+                                        stroke-width="1.5" />
+                                </svg>
+                            </div>
+                            <div>
+                                <div class="exp-date">Apr — Nov 2020</div>
+                                <h3 class="exp-role">DL Research Intern</h3>
+                                <div class="exp-company">NUS Singapore</div>
+                            </div>
+                        </div>
+                        <div class="exp-desc">6D pose estimation for origami robot gaits using deep learning at Medical
+                            Mechatronics Lab.</div>
+                        <div class="exp-tags"><span class="exp-tag">6D Pose</span><span
+                                class="exp-tag">Robotics</span><span class="exp-tag">Medical AI</span></div>
                     </div>
                 </div>
             </div>
@@ -272,12 +367,9 @@
                         </div>
                         <div class="card-body">Real-time person detection & tracking using stereo camera with ROS
                             integration.</div>
-                        <div class="btn-row">
-                            <a href="https://www.youtube.com/watch?v=XnrbU1050ls" class="btn" target="_blank">▶
-                                Video</a>
-                            <a href="https://github.com/khush3/person_following_bot" class="btn" target="_blank">💻
-                                Code</a>
-                        </div>
+                        <div class="btn-row"><a href="https://www.youtube.com/watch?v=XnrbU1050ls" class="btn"
+                                target="_blank">▶ Video</a><a href="https://github.com/khush3/person_following_bot"
+                                class="btn" target="_blank">💻 Code</a></div>
                     </div>
                     <div class="subcard tilt-card reveal">
                         <div class="card-header">
@@ -289,10 +381,9 @@
                         </div>
                         <div class="card-body">End-to-end plate detection with car model, speed & face extraction — IoT
                             integrated.</div>
-                        <div class="btn-row">
-                            <a href="https://youtu.be/Y-EuzsubixI" class="btn" target="_blank">▶ Video</a>
-                            <a href="https://github.com/conspicio-ai/alpr" class="btn" target="_blank">💻 Code</a>
-                        </div>
+                        <div class="btn-row"><a href="https://youtu.be/Y-EuzsubixI" class="btn" target="_blank">▶
+                                Video</a><a href="https://github.com/conspicio-ai/alpr" class="btn" target="_blank">💻
+                                Code</a></div>
                     </div>
                     <div class="subcard tilt-card reveal">
                         <div class="card-header">
@@ -304,10 +395,8 @@
                         </div>
                         <div class="card-body">Q-Learning solution ranking consistently in top-5 on the Gym leaderboard.
                         </div>
-                        <div class="btn-row">
-                            <a href="https://github.com/take2rohit/taxi_v3_openai" class="btn" target="_blank">💻
-                                Code</a>
-                        </div>
+                        <div class="btn-row"><a href="https://github.com/take2rohit/taxi_v3_openai" class="btn"
+                                target="_blank">💻 Code</a></div>
                     </div>
                     <div class="subcard tilt-card reveal">
                         <div class="card-header">
@@ -319,12 +408,10 @@
                         </div>
                         <div class="card-body">Control system for airborne camera stabilization — target tracking &
                             aerial photography.</div>
-                        <div class="btn-row">
-                            <a href="https://www.youtube.com/watch?v=1D1ZQ6mKg0k" class="btn" target="_blank">▶
-                                Video</a>
-                            <a href="https://github.com/take2rohit/self-balancing-platform" class="btn"
-                                target="_blank">💻 Code</a>
-                        </div>
+                        <div class="btn-row"><a href="https://www.youtube.com/watch?v=1D1ZQ6mKg0k" class="btn"
+                                target="_blank">▶ Video</a><a
+                                href="https://github.com/take2rohit/self-balancing-platform" class="btn"
+                                target="_blank">💻 Code</a></div>
                     </div>
                     <div class="subcard tilt-card reveal">
                         <div class="card-header">
@@ -336,10 +423,8 @@
                         </div>
                         <div class="card-body">From-scratch implementation of Word2Vec with SkipGram and N-Gram models.
                         </div>
-                        <div class="btn-row">
-                            <a href="https://github.com/take2rohit/NLP_word_embedding" class="btn" target="_blank">💻
-                                Code</a>
-                        </div>
+                        <div class="btn-row"><a href="https://github.com/take2rohit/NLP_word_embedding" class="btn"
+                                target="_blank">💻 Code</a></div>
                     </div>
                     <div class="subcard tilt-card reveal">
                         <div class="card-header">
@@ -351,12 +436,9 @@
                         </div>
                         <div class="card-body">Real-time digit classifier built from scratch with Numpy — summer
                             mentorship project.</div>
-                        <div class="btn-row">
-                            <a href="https://www.youtube.com/watch?v=SCYhVTUIdoo" class="btn" target="_blank">▶
-                                Video</a>
-                            <a href="https://github.com/GlazeDonuts/Summer-Project-2019" class="btn" target="_blank">💻
-                                Code</a>
-                        </div>
+                        <div class="btn-row"><a href="https://www.youtube.com/watch?v=SCYhVTUIdoo" class="btn"
+                                target="_blank">▶ Video</a><a href="https://github.com/GlazeDonuts/Summer-Project-2019"
+                                class="btn" target="_blank">💻 Code</a></div>
                     </div>
                 </div>
             </div>
@@ -371,57 +453,48 @@
                 </div>
                 <div class="card-grid stagger-children">
                     <div class="subcard tilt-card reveal">
-                        <h3 class="card-title" style="margin-bottom:0.4rem;">Prithvi WxC — Foundation Model for Weather
+                        <h3 class="card-title" style="margin-bottom:0.3rem;">Prithvi WxC — Foundation Model for Weather
                             & Climate</h3>
                         <div class="pub-authors">J Schmude, S Roy, ..., Rohit Lal, ...</div>
                         <span class="pub-venue">arXiv preprint</span>
-                        <div class="btn-row">
-                            <a href="https://arxiv.org/abs/2409.13598" class="btn" target="_blank">📄 Paper</a>
-                            <a href="https://github.com/NASA-IMPACT/Prithvi-WxC" class="btn" target="_blank">💻 Code</a>
-                        </div>
+                        <div class="btn-row"><a href="https://arxiv.org/abs/2409.13598" class="btn" target="_blank">📄
+                                Paper</a><a href="https://github.com/NASA-IMPACT/Prithvi-WxC" class="btn"
+                                target="_blank">💻 Code</a></div>
                     </div>
                     <div class="subcard tilt-card reveal">
-                        <h3 class="card-title" style="margin-bottom:0.4rem;">STRIDE — Occlusion-Robust 3D Pose
+                        <h3 class="card-title" style="margin-bottom:0.3rem;">STRIDE — Occlusion-Robust 3D Pose
                             Estimation</h3>
-                        <div class="pub-authors">Rohit Lal, Saketh Bachu, Yash Garg, Arindam Dutta, Calvin-Khang Ta,
-                            Hannah D. Cruz</div>
+                        <div class="pub-authors">Rohit Lal, S Bachu, Y Garg, A Dutta, CK Ta, HD Cruz</div>
                         <span class="pub-venue">WACV 2025</span>
-                        <div class="btn-row">
-                            <a href="https://sites.google.com/view/sample-adv-trustworthy/" class="btn"
-                                target="_blank">🌐 Project</a>
-                            <a href="https://github.com/take2rohit/STRIDE" class="btn" target="_blank">💻 Code</a>
-                        </div>
+                        <div class="btn-row"><a href="https://sites.google.com/view/sample-adv-trustworthy/" class="btn"
+                                target="_blank">🌐 Project</a><a href="https://github.com/take2rohit/STRIDE" class="btn"
+                                target="_blank">💻 Code</a></div>
                     </div>
                     <div class="subcard tilt-card reveal">
-                        <h3 class="card-title" style="margin-bottom:0.4rem;">Prior-guided Source-free Domain Adaptation
+                        <h3 class="card-title" style="margin-bottom:0.3rem;">Prior-guided Source-free Domain Adaptation
                             for HPE</h3>
                         <div class="pub-authors">DS Raychaudhuri, CK Ta, A Dutta, Rohit Lal, AK Roy-Chowdhury</div>
                         <span class="pub-venue">ICCV 2023</span>
-                        <div class="btn-row">
-                            <a href="https://openaccess.thecvf.com/content/ICCV2023/papers/Raychaudhuri_Prior-guided_Source-free_Domain_Adaptation_for_Human_Pose_Estimation_ICCV_2023_paper.pdf"
-                                class="btn" target="_blank">📄 Paper</a>
-                            <a href="https://github.com/driptaRC/POST" class="btn" target="_blank">💻 Code</a>
-                        </div>
+                        <div class="btn-row"><a
+                                href="https://openaccess.thecvf.com/content/ICCV2023/papers/Raychaudhuri_Prior-guided_Source-free_Domain_Adaptation_for_Human_Pose_Estimation_ICCV_2023_paper.pdf"
+                                class="btn" target="_blank">📄 Paper</a><a href="https://github.com/driptaRC/POST"
+                                class="btn" target="_blank">💻 Code</a></div>
                     </div>
                     <div class="subcard tilt-card reveal">
-                        <h3 class="card-title" style="margin-bottom:0.4rem;">CoNMix for Source-free Domain Adaptation
+                        <h3 class="card-title" style="margin-bottom:0.3rem;">CoNMix for Source-free Domain Adaptation
                         </h3>
                         <div class="pub-authors">Vikash Kumar*, Rohit Lal*, Himanshu Patil, Anirban Chakraborty</div>
                         <span class="pub-venue">WACV 2023</span>
-                        <div class="btn-row">
-                            <a href="https://sites.google.com/view/conmix-vcl" class="btn" target="_blank">🌐
-                                Project</a>
-                        </div>
+                        <div class="btn-row"><a href="https://sites.google.com/view/conmix-vcl" class="btn"
+                                target="_blank">🌐 Project</a></div>
                     </div>
                     <div class="subcard tilt-card reveal">
-                        <h3 class="card-title" style="margin-bottom:0.4rem;">Holistic Measure of Sample-level
-                            Adversarial Vulnerability</h3>
+                        <h3 class="card-title" style="margin-bottom:0.3rem;">Holistic Measure of Adversarial
+                            Vulnerability</h3>
                         <div class="pub-authors">GK Nayak*, R Rawal*, Rohit Lal*, H Patil, A Chakraborty</div>
                         <span class="pub-venue">HCIS Workshop · CVPR 2022</span>
-                        <div class="btn-row">
-                            <a href="https://sites.google.com/view/sample-adv-trustworthy/" class="btn"
-                                target="_blank">🌐 Project</a>
-                        </div>
+                        <div class="btn-row"><a href="https://sites.google.com/view/sample-adv-trustworthy/" class="btn"
+                                target="_blank">🌐 Project</a></div>
                     </div>
                 </div>
             </div>
@@ -434,7 +507,7 @@
                     <div class="section-icon">🏆</div>
                     <h2 class="section-title">Patents & Achievements</h2>
                 </div>
-                <div class="card-grid stagger-children">
+                <div class="card-grid-3 stagger-children">
                     <div class="subcard tilt-card reveal">
                         <div class="card-header">
                             <div class="card-icon">📜</div>
@@ -452,11 +525,11 @@
                         <div class="card-header">
                             <div class="card-icon">🏆</div>
                             <div>
-                                <h3 class="card-title">Smart India Hackathon 2020</h3>
+                                <h3 class="card-title">Smart India Hackathon</h3>
                                 <p class="card-subtitle">🥇 First Place · MHRD</p>
                             </div>
                         </div>
-                        <div class="card-body">National winner with ₹1,00,000 cash prize for ALPR system.</div>
+                        <div class="card-body">National winner with ₹1,00,000 prize for ALPR system.</div>
                         <div class="btn-row"><a href="https://youtu.be/Y-EuzsubixI" class="btn" target="_blank">▶
                                 Video</a></div>
                     </div>
@@ -464,49 +537,114 @@
                         <div class="card-header">
                             <div class="card-icon">🥇</div>
                             <div>
-                                <h3 class="card-title">AXIS'20 — Double Victory</h3>
+                                <h3 class="card-title">AXIS'20 — Double Win</h3>
                                 <p class="card-subtitle">Central India's Largest Techfest</p>
                             </div>
                         </div>
-                        <div class="card-body">Two first-place wins in 'Techno.Docx' and 'Electroblitz' at VNIT AXIS'20.
-                        </div>
+                        <div class="card-body">Two first-place wins in 'Techno.Docx' and 'Electroblitz' at VNIT.</div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- SKILLS -->
+        <!-- SKILLS — VIBRANT PILLS WITH SVG ICONS -->
         <section id="skills" class="section">
             <div class="section-card glass reveal">
                 <div class="section-header">
                     <div class="section-icon">⚡</div>
                     <h2 class="section-title">Skills & Technologies</h2>
                 </div>
-                <div class="skills-orbit stagger-children">
-                    <div class="skill-node reveal"><span class="skill-icon">🐍</span><span
-                            class="skill-name">Python</span></div>
-                    <div class="skill-node reveal"><span class="skill-icon">🔥</span><span
-                            class="skill-name">PyTorch</span></div>
-                    <div class="skill-node reveal"><span class="skill-icon">🧠</span><span
-                            class="skill-name">TensorFlow</span></div>
-                    <div class="skill-node reveal"><span class="skill-icon">👁️</span><span
-                            class="skill-name">OpenCV</span></div>
-                    <div class="skill-node reveal"><span class="skill-icon">⚙️</span><span
-                            class="skill-name">C/C++</span></div>
-                    <div class="skill-node reveal"><span class="skill-icon">📊</span><span
-                            class="skill-name">MATLAB</span></div>
-                    <div class="skill-node reveal"><span class="skill-icon">🎨</span><span
-                            class="skill-name">Photoshop</span></div>
-                    <div class="skill-node reveal"><span class="skill-icon">✏️</span><span
-                            class="skill-name">Illustrator</span></div>
-                    <div class="skill-node reveal"><span class="skill-icon">🔀</span><span
-                            class="skill-name">GitHub</span></div>
-                    <div class="skill-node reveal"><span class="skill-icon">📝</span><span
-                            class="skill-name">LaTeX</span></div>
-                    <div class="skill-node reveal"><span class="skill-icon">☁️</span><span class="skill-name">GCP</span>
+                <div class="skills-flow stagger-children">
+                    <div class="skill-pill reveal">
+                        <svg viewBox="0 0 24 24" fill="none">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" fill="#3776AB"
+                                opacity="0.8" /><text x="12" y="16" text-anchor="middle" fill="#FFD43B" font-size="10"
+                                font-weight="bold">Py</text>
+                        </svg>
+                        <span class="skill-name">Python</span>
                     </div>
-                    <div class="skill-node reveal"><span class="skill-icon">🤖</span><span
-                            class="skill-name">Arduino</span></div>
+                    <div class="skill-pill reveal">
+                        <svg viewBox="0 0 24 24" fill="none">
+                            <rect x="4" y="6" width="16" height="12" rx="2" fill="#EE4C2C" opacity="0.8" />
+                            <path d="M8 12h8M12 9v6" stroke="#fff" stroke-width="1.5" />
+                        </svg>
+                        <span class="skill-name">PyTorch</span>
+                    </div>
+                    <div class="skill-pill reveal">
+                        <svg viewBox="0 0 24 24" fill="none">
+                            <polygon points="12,2 22,20 2,20" fill="#FF6F00" opacity="0.7" />
+                            <circle cx="12" cy="14" r="3" fill="#fff" opacity="0.6" />
+                        </svg>
+                        <span class="skill-name">TensorFlow</span>
+                    </div>
+                    <div class="skill-pill reveal">
+                        <svg viewBox="0 0 24 24" fill="none">
+                            <circle cx="12" cy="12" r="9" stroke="#5C3EE8" stroke-width="1.5" fill="none" />
+                            <circle cx="12" cy="12" r="4" stroke="#5C3EE8" stroke-width="1" fill="none" />
+                            <circle cx="12" cy="12" r="1.5" fill="#5C3EE8" />
+                        </svg>
+                        <span class="skill-name">OpenCV</span>
+                    </div>
+                    <div class="skill-pill reveal">
+                        <svg viewBox="0 0 24 24" fill="none">
+                            <path d="M6 4h4l2 4-2 4H6l2-4-2-4z" fill="#00599C" opacity="0.8" /><text x="16" y="16"
+                                text-anchor="middle" fill="#659AD2" font-size="8" font-weight="bold">++</text>
+                        </svg>
+                        <span class="skill-name">C/C++</span>
+                    </div>
+                    <div class="skill-pill reveal">
+                        <svg viewBox="0 0 24 24" fill="none">
+                            <rect x="3" y="3" width="18" height="18" rx="3" fill="#0076A8" opacity="0.7" />
+                            <path d="M7 12h10M12 7v10" stroke="#fff" stroke-width="1.5" opacity="0.6" />
+                        </svg>
+                        <span class="skill-name">MATLAB</span>
+                    </div>
+                    <div class="skill-pill reveal">
+                        <svg viewBox="0 0 24 24" fill="none">
+                            <rect x="2" y="2" width="20" height="20" rx="4" fill="#31A8FF" opacity="0.7" /><text x="12"
+                                y="15" text-anchor="middle" fill="#001E36" font-size="8" font-weight="bold">Ps</text>
+                        </svg>
+                        <span class="skill-name">Photoshop</span>
+                    </div>
+                    <div class="skill-pill reveal">
+                        <svg viewBox="0 0 24 24" fill="none">
+                            <rect x="2" y="2" width="20" height="20" rx="4" fill="#FF9A00" opacity="0.7" /><text x="12"
+                                y="15" text-anchor="middle" fill="#330000" font-size="8" font-weight="bold">Ai</text>
+                        </svg>
+                        <span class="skill-name">Illustrator</span>
+                    </div>
+                    <div class="skill-pill reveal">
+                        <svg viewBox="0 0 24 24" fill="#fff">
+                            <path
+                                d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"
+                                opacity="0.7" />
+                        </svg>
+                        <span class="skill-name">GitHub</span>
+                    </div>
+                    <div class="skill-pill reveal">
+                        <svg viewBox="0 0 24 24" fill="none">
+                            <rect x="3" y="3" width="18" height="18" rx="2" fill="#008080" opacity="0.7" /><text x="12"
+                                y="16" text-anchor="middle" fill="#fff" font-size="7" font-weight="bold">LaTeX</text>
+                        </svg>
+                        <span class="skill-name">LaTeX</span>
+                    </div>
+                    <div class="skill-pill reveal">
+                        <svg viewBox="0 0 24 24" fill="none">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"
+                                stroke="#4285F4" stroke-width="1.5" fill="none" />
+                            <path d="M8 14l2-4h4l2 4" stroke="#4285F4" stroke-width="1.5" />
+                            <circle cx="12" cy="8" r="2" fill="#4285F4" opacity="0.5" />
+                        </svg>
+                        <span class="skill-name">GCP</span>
+                    </div>
+                    <div class="skill-pill reveal">
+                        <svg viewBox="0 0 24 24" fill="none">
+                            <circle cx="12" cy="12" r="9" stroke="#00979D" stroke-width="1.5" fill="none" />
+                            <path d="M8 10h8M12 6v12" stroke="#00979D" stroke-width="1.5" />
+                            <circle cx="12" cy="12" r="2" fill="#00979D" opacity="0.5" />
+                        </svg>
+                        <span class="skill-name">Arduino</span>
+                    </div>
                 </div>
             </div>
         </section>
@@ -529,62 +667,62 @@
                         </div>
                         <div class="btn-row"><a
                                 href="https://www.coursera.org/account/accomplishments/verify/G9XX9CYSFJUY" class="btn"
-                                target="_blank">📜 Certificate</a></div>
+                                target="_blank">📜 Cert</a></div>
                     </div>
                     <div class="subcard reveal">
                         <div class="card-header">
                             <div class="card-icon">🧠</div>
                             <div>
-                                <h3 class="card-title">Neural Networks & Deep Learning</h3>
-                                <p class="card-subtitle">deeplearning.ai · Coursera</p>
+                                <h3 class="card-title">Neural Networks & DL</h3>
+                                <p class="card-subtitle">deeplearning.ai</p>
                             </div>
                         </div>
                         <div class="btn-row"><a
                                 href="https://www.coursera.org/account/accomplishments/verify/G9XX9CYSFJUY" class="btn"
-                                target="_blank">📜 Certificate</a></div>
+                                target="_blank">📜 Cert</a></div>
                     </div>
                     <div class="subcard reveal">
                         <div class="card-header">
                             <div class="card-icon">⚡</div>
                             <div>
-                                <h3 class="card-title">Improving Deep Neural Networks</h3>
+                                <h3 class="card-title">Improving DNNs</h3>
                                 <p class="card-subtitle">deeplearning.ai</p>
                             </div>
                         </div>
                         <div class="btn-row"><a
                                 href="https://www.coursera.org/account/accomplishments/verify/K5CL3SVXLY7Q" class="btn"
-                                target="_blank">📜 Certificate</a></div>
+                                target="_blank">📜 Cert</a></div>
                     </div>
                     <div class="subcard reveal">
                         <div class="card-header">
                             <div class="card-icon">🔍</div>
                             <div>
-                                <h3 class="card-title">Convolutional Neural Networks</h3>
+                                <h3 class="card-title">CNNs</h3>
                                 <p class="card-subtitle">deeplearning.ai · Coursera</p>
                             </div>
                         </div>
                         <div class="btn-row"><a
                                 href="https://www.coursera.org/account/accomplishments/certificate/7ADJEDF2ETRH"
-                                class="btn" target="_blank">📜 Certificate</a></div>
+                                class="btn" target="_blank">📜 Cert</a></div>
                     </div>
                     <div class="subcard reveal">
                         <div class="card-header">
                             <div class="card-icon">📐</div>
                             <div>
-                                <h3 class="card-title">Structuring ML Projects</h3>
-                                <p class="card-subtitle">deeplearning.ai · Coursera</p>
+                                <h3 class="card-title">Structuring ML</h3>
+                                <p class="card-subtitle">deeplearning.ai</p>
                             </div>
                         </div>
                         <div class="btn-row"><a
                                 href="https://www.coursera.org/account/accomplishments/verify/YWUNM3JRUZJW" class="btn"
-                                target="_blank">📜 Certificate</a></div>
+                                target="_blank">📜 Cert</a></div>
                     </div>
                     <div class="subcard reveal">
                         <div class="card-header">
                             <div class="card-icon">👀</div>
                             <div>
-                                <h3 class="card-title">Intro to Computer Vision</h3>
-                                <p class="card-subtitle">Aaron Bobbick · Udacity</p>
+                                <h3 class="card-title">Intro to CV</h3>
+                                <p class="card-subtitle">Udacity</p>
                             </div>
                         </div>
                     </div>
@@ -593,7 +731,7 @@
                             <div class="card-icon">🔢</div>
                             <div>
                                 <h3 class="card-title">Sequence Models</h3>
-                                <p class="card-subtitle">Andrew Ng · deeplearning.ai</p>
+                                <p class="card-subtitle">deeplearning.ai</p>
                             </div>
                         </div>
                     </div>
@@ -602,7 +740,7 @@
                             <div class="card-icon">📊</div>
                             <div>
                                 <h3 class="card-title">Multivariate Calculus</h3>
-                                <p class="card-subtitle">Mathematical Foundations</p>
+                                <p class="card-subtitle">Math Foundations</p>
                             </div>
                         </div>
                     </div>
@@ -611,7 +749,7 @@
                             <div class="card-icon">📈</div>
                             <div>
                                 <h3 class="card-title">Statistical Analysis</h3>
-                                <p class="card-subtitle">Probability & Queuing Theory</p>
+                                <p class="card-subtitle">Probability & QT</p>
                             </div>
                         </div>
                     </div>
@@ -630,13 +768,11 @@
                     </div>
                 </div>
                 <p>© 2025 Rohit Lal. Built with passion for AI and research.</p>
-                <p>📍 National Space Science and Technology Center, Huntsville, AL</p>
-                <p><a href="mailto:take2rohit@gmail.com">take2rohit@gmail.com</a></p>
+                <p>📍 NSSTC, Huntsville, AL · <a href="mailto:take2rohit@gmail.com">take2rohit@gmail.com</a></p>
             </div>
         </footer>
 
     </div>
-
     <script src="script.js"></script>
 </body>
 

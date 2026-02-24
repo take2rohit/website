@@ -1,133 +1,74 @@
-/* ============================================
-   SPACE PORTFOLIO — SCRIPTS (v3)
-   ============================================ */
+// ============================================
+//  SPACE PORTFOLIO — SCRIPTS v4
+// ============================================
 
 // ---- Page Loader ----
 window.addEventListener('load', () => {
   const loader = document.getElementById('pageLoader');
-  if (loader) {
-    setTimeout(() => loader.classList.add('hidden'), 500);
-    setTimeout(() => loader.remove(), 1100);
-  }
+  if (loader) { loader.classList.add('hidden'); setTimeout(() => loader.remove(), 600); }
 });
 
-// ---- Starfield Canvas with Shooting Stars ----
+// ---- Starfield + Shooting Stars ----
 (function initStarfield() {
   const canvas = document.getElementById('starfield');
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
   let w, h, stars = [], shootingStars = [];
-  const STAR_COUNT = 200;
+  const STAR_COUNT = 280;
 
-  function resize() {
-    w = canvas.width = window.innerWidth;
-    h = canvas.height = window.innerHeight;
-  }
+  function resize() { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; }
   resize();
   window.addEventListener('resize', resize);
 
-  // Create static stars
   for (let i = 0; i < STAR_COUNT; i++) {
     stars.push({
-      x: Math.random() * w,
-      y: Math.random() * h,
-      r: Math.random() * 1.4 + 0.3,
-      speed: Math.random() * 0.001 + 0.0005,
+      x: Math.random() * w, y: Math.random() * h,
+      r: Math.random() * 1.5 + 0.3,
+      speed: Math.random() * 0.0015 + 0.0005,
       phase: Math.random() * Math.PI * 2,
-      layer: Math.random()
     });
   }
 
-  // Scroll parallax
   let scrollOffset = 0;
-  window.addEventListener('scroll', () => { scrollOffset = window.pageYOffset; }, { passive: true });
+  window.addEventListener('scroll', () => { scrollOffset = window.pageYOffset * 0.03; }, { passive: true });
 
-  // Spawn small shooting stars randomly
+  // Shooting stars
   function spawnShootingStar() {
-    shootingStars.push({
-      x: Math.random() * w * 0.8,
-      y: Math.random() * h * 0.6,
-      len: 40 + Math.random() * 60,
-      speed: 4 + Math.random() * 4,
-      angle: (Math.PI / 6) + Math.random() * (Math.PI / 6), // 30-60 degrees
-      life: 0,
-      maxLife: 30 + Math.random() * 20,
-      opacity: 0.6 + Math.random() * 0.4
-    });
+    const x = Math.random() * w * 0.7 + w * 0.15;
+    const y = Math.random() * h * 0.5;
+    const angle = Math.PI * 0.2 + Math.random() * 0.3;
+    shootingStars.push({ x, y, angle, len: 60 + Math.random() * 80, speed: 8 + Math.random() * 6, life: 1, decay: 0.015 + Math.random() * 0.01 });
+    setTimeout(spawnShootingStar, 3000 + Math.random() * 5000);
   }
-
-  // Random interval for shooting stars (every 3-7 seconds)
-  function scheduleShootingStar() {
-    const delay = 3000 + Math.random() * 4000;
-    setTimeout(() => {
-      spawnShootingStar();
-      scheduleShootingStar();
-    }, delay);
-  }
-  scheduleShootingStar();
-  // Start with 1 after a bit
-  setTimeout(spawnShootingStar, 1500);
+  setTimeout(spawnShootingStar, 2000);
 
   function draw(time) {
     ctx.clearRect(0, 0, w, h);
-
-    // Draw stars
+    // Stars
     stars.forEach(s => {
-      const twinkle = 0.5 + 0.5 * Math.abs(Math.sin(time * s.speed + s.phase));
-      const parallaxFactor = 0.02 + s.layer * 0.04;
-      const sy = ((s.y - scrollOffset * parallaxFactor) % h + h) % h;
-      const sx = ((s.x + Math.sin(time * 0.0001 + s.phase) * 1.5) % w + w) % w;
-
-      ctx.beginPath();
-      ctx.arc(sx, sy, s.r, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(255,255,255,${twinkle * 0.8})`;
-      ctx.fill();
-
-      // Subtle glow on bigger stars
-      if (s.r > 1.1) {
-        ctx.beginPath();
-        ctx.arc(sx, sy, s.r * 2.5, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(200,215,255,${twinkle * 0.04})`;
-        ctx.fill();
-      }
+      const twinkle = 0.4 + 0.6 * Math.abs(Math.sin(time * s.speed + s.phase));
+      const sy = ((s.y - scrollOffset * (0.5 + s.r * 0.5)) % h + h) % h;
+      const sx = ((s.x + Math.sin(time * 0.0002 + s.phase) * 1.5) % w + w) % w;
+      ctx.beginPath(); ctx.arc(sx, sy, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255,255,255,${twinkle * 0.85})`; ctx.fill();
+      if (s.r > 1.1) { ctx.beginPath(); ctx.arc(sx, sy, s.r * 3, 0, Math.PI * 2); ctx.fillStyle = `rgba(180,210,255,${twinkle * 0.06})`; ctx.fill(); }
     });
-
-    // Draw shooting stars
-    for (let i = shootingStars.length - 1; i >= 0; i--) {
-      const ss = shootingStars[i];
-      ss.life++;
+    // Shooting stars
+    shootingStars = shootingStars.filter(ss => {
+      ss.life -= ss.decay;
+      if (ss.life <= 0) return false;
+      const dx = Math.cos(ss.angle) * ss.len;
+      const dy = Math.sin(ss.angle) * ss.len;
+      const grad = ctx.createLinearGradient(ss.x, ss.y, ss.x + dx, ss.y + dy);
+      grad.addColorStop(0, `rgba(255,255,255,0)`);
+      grad.addColorStop(0.4, `rgba(200,220,255,${ss.life * 0.6})`);
+      grad.addColorStop(1, `rgba(255,255,255,${ss.life * 0.9})`);
+      ctx.beginPath(); ctx.moveTo(ss.x, ss.y); ctx.lineTo(ss.x + dx, ss.y + dy);
+      ctx.strokeStyle = grad; ctx.lineWidth = 1.5; ctx.stroke();
       ss.x += Math.cos(ss.angle) * ss.speed;
       ss.y += Math.sin(ss.angle) * ss.speed;
-
-      const progress = ss.life / ss.maxLife;
-      const alpha = ss.opacity * (progress < 0.3 ? progress / 0.3 : (1 - progress) / 0.7);
-
-      const tailX = ss.x - Math.cos(ss.angle) * ss.len;
-      const tailY = ss.y - Math.sin(ss.angle) * ss.len;
-
-      const gradient = ctx.createLinearGradient(tailX, tailY, ss.x, ss.y);
-      gradient.addColorStop(0, `rgba(255,255,255,0)`);
-      gradient.addColorStop(0.7, `rgba(255,255,255,${alpha * 0.5})`);
-      gradient.addColorStop(1, `rgba(255,255,255,${alpha})`);
-
-      ctx.beginPath();
-      ctx.moveTo(tailX, tailY);
-      ctx.lineTo(ss.x, ss.y);
-      ctx.strokeStyle = gradient;
-      ctx.lineWidth = 1.2;
-      ctx.stroke();
-
-      // Small bright dot at head
-      ctx.beginPath();
-      ctx.arc(ss.x, ss.y, 1.5, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(255,255,255,${alpha})`;
-      ctx.fill();
-
-      if (ss.life >= ss.maxLife) {
-        shootingStars.splice(i, 1);
-      }
-    }
-
+      return true;
+    });
     requestAnimationFrame(draw);
   }
   requestAnimationFrame(draw);
@@ -139,7 +80,6 @@ window.addEventListener('load', () => {
   const ring = document.querySelector('.cursor-ring');
   const glow = document.querySelector('.cursor-glow');
   if (!dot || !ring) return;
-
   let mx = -100, my = -100, ringX = -100, ringY = -100;
 
   document.addEventListener('mousemove', e => {
@@ -149,27 +89,22 @@ window.addEventListener('load', () => {
   });
 
   function animateRing() {
-    ringX += (mx - ringX) * 0.12;
-    ringY += (my - ringY) * 0.12;
+    ringX += (mx - ringX) * 0.15; ringY += (my - ringY) * 0.15;
     ring.style.left = ringX + 'px'; ring.style.top = ringY + 'px';
     requestAnimationFrame(animateRing);
   }
   animateRing();
 
-  const hoverTargets = 'a, button, .btn, .social-btn, .subcard, .nav-item, .skill-node, .news-item';
-  document.addEventListener('mouseover', e => {
-    if (e.target.closest(hoverTargets)) { dot.classList.add('hovering'); ring.classList.add('hovering'); }
-  });
-  document.addEventListener('mouseout', e => {
-    if (e.target.closest(hoverTargets)) { dot.classList.remove('hovering'); ring.classList.remove('hovering'); }
-  });
+  const hoverTargets = 'a, button, .btn, .social-btn, .subcard, .exp-card, .nav-item, .skill-pill, .news-item';
+  document.addEventListener('mouseover', e => { if (e.target.closest(hoverTargets)) { dot.classList.add('hovering'); ring.classList.add('hovering'); } });
+  document.addEventListener('mouseout', e => { if (e.target.closest(hoverTargets)) { dot.classList.remove('hovering'); ring.classList.remove('hovering'); } });
   document.addEventListener('mouseleave', () => { dot.style.opacity = '0'; ring.style.opacity = '0'; });
   document.addEventListener('mouseenter', () => { dot.style.opacity = '1'; ring.style.opacity = '1'; });
 })();
 
 // ---- Mouse-Position Card Glare ----
 (function initCardGlare() {
-  document.querySelectorAll('.glass, .subcard').forEach(card => {
+  document.querySelectorAll('.glass, .subcard, .exp-card').forEach(card => {
     if (!card.querySelector('.card-glare')) {
       const glare = document.createElement('div');
       glare.className = 'card-glare';
@@ -177,16 +112,14 @@ window.addEventListener('load', () => {
     }
   });
   document.addEventListener('mousemove', e => {
-    const card = e.target.closest('.glass, .subcard');
-    if (!card) return;
-    const glare = card.querySelector('.card-glare');
-    if (!glare) return;
-    const rect = card.getBoundingClientRect();
-    const x = ((e.clientX - rect.left) / rect.width * 100).toFixed(1);
-    const y = ((e.clientY - rect.top) / rect.height * 100).toFixed(1);
-    glare.style.setProperty('--gx', x + '%');
-    glare.style.setProperty('--gy', y + '%');
-  });
+    document.querySelectorAll('.glass, .subcard, .exp-card').forEach(card => {
+      const rect = card.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / rect.width) * 100;
+      const y = ((e.clientY - rect.top) / rect.height) * 100;
+      card.style.setProperty('--gx', x + '%');
+      card.style.setProperty('--gy', y + '%');
+    });
+  }, { passive: true });
 })();
 
 // ---- Parallax Background ----
@@ -195,13 +128,7 @@ window.addEventListener('load', () => {
   if (!bgLayer) return;
   let ticking = false;
   window.addEventListener('scroll', () => {
-    if (!ticking) {
-      requestAnimationFrame(() => {
-        bgLayer.style.transform = `translateY(${window.pageYOffset * -0.12}px)`;
-        ticking = false;
-      });
-      ticking = true;
-    }
+    if (!ticking) { requestAnimationFrame(() => { bgLayer.style.transform = `translateY(${window.pageYOffset * -0.1}px)`; ticking = false; }); ticking = true; }
   }, { passive: true });
 })();
 
@@ -218,169 +145,195 @@ window.addEventListener('load', () => {
 
 // ---- Animated Counters ----
 (function initCounters() {
-  const counters = document.querySelectorAll('[data-count]');
+  const counters = document.querySelectorAll('.stat-number');
   const observer = new IntersectionObserver(entries => {
     entries.forEach(entry => {
-      if (entry.isIntersecting && !entry.target.dataset.counted) {
-        entry.target.dataset.counted = 'true';
-        const target = parseInt(entry.target.dataset.count);
+      if (entry.isIntersecting && !entry.target.dataset.animated) {
+        entry.target.dataset.animated = '1';
+        const target = parseInt(entry.target.dataset.count, 10);
         const suffix = entry.target.dataset.suffix || '';
         let current = 0;
-        const step = Math.max(1, Math.floor(target / 40));
-        const interval = setInterval(() => {
-          current += step;
-          if (current >= target) { current = target; clearInterval(interval); }
-          entry.target.textContent = current + suffix;
-        }, 30);
+        const step = () => {
+          current++; entry.target.textContent = current + suffix;
+          if (current < target) requestAnimationFrame(step);
+        };
+        step();
       }
     });
   }, { threshold: 0.5 });
-  counters.forEach(el => observer.observe(el));
+  counters.forEach(c => observer.observe(c));
 })();
 
-// ---- 3D Tilt ----
+// ---- 3D Tilt Effect ----
 (function initTilt() {
   document.querySelectorAll('.tilt-card').forEach(card => {
     card.addEventListener('mousemove', e => {
-      const r = card.getBoundingClientRect();
-      const rx = ((e.clientY - r.top - r.height / 2) / r.height) * -3;
-      const ry = ((e.clientX - r.left - r.width / 2) / r.width) * 3;
-      card.style.transform = `perspective(800px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-3px)`;
+      const rect = card.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width - 0.5;
+      const y = (e.clientY - rect.top) / rect.height - 0.5;
+      card.style.transform = `perspective(800px) rotateY(${x * 4}deg) rotateX(${-y * 4}deg) translateY(-3px)`;
     });
-    card.addEventListener('mouseleave', () => {
-      card.style.transform = 'perspective(800px) rotateX(0) rotateY(0) translateY(0)';
-    });
+    card.addEventListener('mouseleave', () => { card.style.transform = ''; });
   });
 })();
 
-// ---- Navbar ----
-(function initNavScroll() {
+// ---- Navbar Scroll + Sliding Bubble ----
+(function initNavbar() {
   const navbar = document.querySelector('.navbar');
-  if (!navbar) return;
+  const buttons = document.querySelectorAll('.nav-item');
+  const bubble = document.getElementById('navBubble');
+  const sections = document.querySelectorAll('section[id]');
+
+  // Scroll class
   window.addEventListener('scroll', () => {
-    navbar.classList.toggle('scrolled', window.scrollY > 50);
+    if (navbar) navbar.classList.toggle('scrolled', window.scrollY > 30);
   }, { passive: true });
-})();
 
-// ---- Nav Bubble ----
-(function initNavBubble() {
-  const navBubble = document.getElementById('navBubble');
-  const navItems = document.querySelectorAll('.nav-item');
-  const sections = Array.from(document.querySelectorAll('section[id]'));
-  if (!navBubble || !navItems.length) return;
-
-  let isUserScrolling = false, scrollTimeout = null, lastKnown = 'about';
-
-  function updateBubble(btn, immediate) {
-    if (!btn) return;
-    const r = btn.getBoundingClientRect();
-    const p = btn.closest('.nav-links');
-    const pr = p.getBoundingClientRect();
-    const pad = parseFloat(getComputedStyle(p).paddingLeft);
-    const tx = r.left - pr.left - pad, w = r.width;
-    if (immediate) {
-      navBubble.style.transition = 'none';
-      navBubble.style.transform = `translateX(${tx}px)`;
-      navBubble.style.width = `${w}px`;
-      requestAnimationFrame(() => { navBubble.style.transition = ''; });
-    } else {
-      navBubble.style.transform = `translateX(${tx}px)`;
-      navBubble.style.width = `${w}px`;
-    }
+  // Bubble positioning
+  function moveBubble(btn) {
+    if (!bubble || !btn) return;
+    const li = btn.closest('li');
+    if (!li) return;
+    bubble.style.width = li.offsetWidth + 'px';
+    bubble.style.transform = `translateX(${li.offsetLeft}px)`;
   }
 
-  function getActive() {
-    const sy = window.pageYOffset + 200, wh = window.innerHeight, dh = document.documentElement.scrollHeight;
-    if (sy < 300) return sections[0]?.id || 'about';
-    if (sy + wh >= dh - 100) return sections[sections.length - 1]?.id;
-    let best = lastKnown, max = -Infinity;
-    sections.forEach(s => {
-      const r = s.getBoundingClientRect();
-      const vis = Math.max(0, Math.min(wh, r.bottom) - Math.max(0, r.top));
-      const cd = Math.abs((r.top + r.bottom) / 2 - wh / 2);
-      const score = vis - cd * 0.3;
-      if (score > max) { max = score; best = s.id; }
-    });
-    return best;
-  }
-
-  const ab = document.querySelector('.nav-item.active');
-  if (ab) updateBubble(ab, true);
-
-  navItems.forEach(btn => {
-    btn.addEventListener('click', function () {
-      if (scrollTimeout) clearTimeout(scrollTimeout);
-      isUserScrolling = true;
-      const sid = this.dataset.section;
-      navItems.forEach(b => b.classList.remove('active'));
-      this.classList.add('active');
-      lastKnown = sid;
-      updateBubble(this);
-      const sec = document.getElementById(sid);
-      if (sec) window.scrollTo({ top: sec.getBoundingClientRect().top + window.pageYOffset - 100, behavior: 'smooth' });
-      scrollTimeout = setTimeout(() => { isUserScrolling = false; }, 1500);
+  // Click nav
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = document.getElementById(btn.dataset.section);
+      if (target) target.scrollIntoView({ behavior: 'smooth' });
+      buttons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      moveBubble(btn);
     });
   });
 
+  // Active section detection
+  const sectionObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.id;
+        buttons.forEach(b => {
+          b.classList.toggle('active', b.dataset.section === id);
+          if (b.dataset.section === id) moveBubble(b);
+        });
+      }
+    });
+  }, { threshold: 0.3, rootMargin: '-20% 0px -50% 0px' });
+  sections.forEach(s => sectionObserver.observe(s));
+
+  // Initial position
+  const active = document.querySelector('.nav-item.active');
+  if (active) setTimeout(() => moveBubble(active), 200);
+})();
+
+// ---- Buttons ----
+(function initButtons() {
+  document.querySelectorAll('.btn').forEach(btn => {
+    btn.addEventListener('mousedown', function () { this.style.transform = 'scale(0.95)'; });
+    btn.addEventListener('mouseup', function () { this.style.transform = ''; });
+  });
+})();
+
+// ---- Typing Effect ----
+(function initTyping() {
+  const el = document.getElementById('heroTagline');
+  if (!el) return;
+  const text = el.dataset.text;
+  if (!text) return;
+  el.textContent = '';
+  let i = 0;
+  function type() {
+    if (i < text.length) { el.textContent += text[i]; i++; setTimeout(type, 50); }
+  }
+  setTimeout(type, 800);
+})();
+
+// ---- Interactive News Timeline ----
+(function initNewsTimeline() {
+  const newsItems = document.querySelectorAll('.news-item');
+  const beamTraveler = document.querySelector('.beam-traveler');
+  const timeline = document.querySelector('.news-timeline');
+  const newsSection = document.getElementById('news');
+  if (!newsItems.length || !beamTraveler || !timeline || !newsSection) return;
+
+  let currentActiveIndex = -1;
+  let revealed = false;
+
+  // -- Staggered entrance when section first scrolls in --
+  const sectionObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && !revealed) {
+        revealed = true;
+        newsItems.forEach((item, i) => {
+          setTimeout(() => {
+            item.classList.add('news-revealed');
+          }, i * 120);
+        });
+        // Set first item active after entrance animation
+        setTimeout(() => {
+          setActive(0);
+          updateBeamPosition(0);
+        }, 200);
+        sectionObserver.disconnect();
+      }
+    });
+  }, { threshold: 0.1 });
+  sectionObserver.observe(newsSection);
+
+  // -- Set the active item by index (sequential, never skips) --
+  function setActive(index) {
+    index = Math.max(0, Math.min(index, newsItems.length - 1));
+    if (index === currentActiveIndex) return;
+    currentActiveIndex = index;
+    newsItems.forEach((item, i) => {
+      if (i === index) {
+        item.classList.add('active');
+      } else {
+        item.classList.remove('active');
+      }
+    });
+  }
+
+  // -- Update beam traveler position smoothly --
+  function updateBeamPosition(index) {
+    const timelineRect = timeline.getBoundingClientRect();
+    const itemRect = newsItems[index].getBoundingClientRect();
+    // Position beam at the center of the active item relative to the timeline
+    const centerY = (itemRect.top + itemRect.height / 2) - timelineRect.top;
+    beamTraveler.style.top = (centerY - 30) + 'px';
+  }
+
+  // -- Scroll handler: determine which item should be active --
+  function onScroll() {
+    const viewportCenter = window.innerHeight * 0.45;
+    let closestIndex = 0;
+    let closestDist = Infinity;
+
+    newsItems.forEach((item, i) => {
+      const rect = item.getBoundingClientRect();
+      const itemCenter = rect.top + rect.height / 2;
+      const dist = Math.abs(itemCenter - viewportCenter);
+      if (dist < closestDist) {
+        closestDist = dist;
+        closestIndex = i;
+      }
+    });
+
+    setActive(closestIndex);
+    updateBeamPosition(closestIndex);
+  }
+
+  // -- Throttled scroll listener at ~60fps --
   let ticking = false;
   window.addEventListener('scroll', () => {
     if (!ticking) {
       requestAnimationFrame(() => {
-        if (!isUserScrolling) {
-          const cs = getActive();
-          if (cs && cs !== lastKnown) {
-            const btn = document.querySelector(`.nav-item[data-section="${cs}"]`);
-            if (btn) {
-              navItems.forEach(b => b.classList.remove('active'));
-              btn.classList.add('active');
-              updateBubble(btn);
-              lastKnown = cs;
-            }
-          }
-        }
+        onScroll();
         ticking = false;
       });
       ticking = true;
     }
   }, { passive: true });
-
-  let rt;
-  window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { const a = document.querySelector('.nav-item.active'); if (a) updateBubble(a, true); }, 150); });
-  window.addEventListener('load', () => { setTimeout(() => { const a = document.querySelector('.nav-item.active'); if (a) updateBubble(a, true); }, 200); });
-})();
-
-// ---- Ripple + Particles ----
-document.addEventListener('click', e => {
-  const btn = e.target.closest('.btn, .social-btn');
-  if (!btn) return;
-  const ripple = document.createElement('span');
-  const r = btn.getBoundingClientRect();
-  const sz = Math.max(r.width, r.height) * 1.5;
-  Object.assign(ripple.style, {
-    position: 'absolute', width: sz + 'px', height: sz + 'px',
-    left: (e.clientX - r.left - sz / 2) + 'px', top: (e.clientY - r.top - sz / 2) + 'px',
-    borderRadius: '50%', background: 'rgba(255,255,255,0.2)', transform: 'scale(0)',
-    animation: 'rippleAnim 0.6s ease-out', pointerEvents: 'none', zIndex: '10'
-  });
-  btn.style.position = btn.style.position || 'relative';
-  btn.appendChild(ripple);
-  setTimeout(() => ripple.remove(), 600);
-});
-const rs = document.createElement('style');
-rs.textContent = `@keyframes rippleAnim{to{transform:scale(3);opacity:0;}}`;
-document.head.appendChild(rs);
-
-// ---- Typing Animation ----
-(function initTyping() {
-  const el = document.getElementById('heroTagline');
-  if (!el) return;
-  const text = el.dataset.text || el.textContent;
-  el.textContent = '';
-  el.style.borderRight = '2px solid var(--accent)';
-  let i = 0;
-  function type() {
-    if (i < text.length) { el.textContent += text[i]; i++; setTimeout(type, 45 + Math.random() * 35); }
-    else { setTimeout(() => { el.style.borderRight = '2px solid transparent'; }, 2000); }
-  }
-  setTimeout(type, 700);
 })();
